@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".CardFragment">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="1dp"
+            android:layout_marginTop="4dp"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/stroke"
+            app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/ivCardEventImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3.5"
+                            android:adjustViewBounds="true"
+                            android:background="#FFFFFF"
+                            android:contentDescription="@string/card_event_image"
+                            android:padding="5dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/event_small"
+                            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize15dp" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2.75"
+                            android:paddingHorizontal="5dp">
+
+                                <TextView
+                                    android:id="@+id/tvCardEventName"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:autoSizeMaxTextSize="100sp"
+                                    android:autoSizeMinTextSize="12sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:maxLines="3"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/ivCardUserImage"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/ivCardUserImage"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:adjustViewBounds="true"
+                                    android:background="#FFFFFF"
+                                    android:contentDescription="@string/user_profile_image"
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/default_user"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="@+id/tvCardEventName"
+                                    app:layout_constraintTop_toBottomOf="@+id/tvCardEventName"
+                                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize15dp" />
+
+                                <TextView
+                                    android:id="@+id/tvCardUsername"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:autoSizeMaxTextSize="20sp"
+                                    android:autoSizeMinTextSize="8sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:text="username"
+                                    app:layout_constraintBottom_toBottomOf="@+id/ivCardUserImage"
+                                    app:layout_constraintStart_toEndOf="@+id/ivCardUserImage"
+                                    app:layout_constraintTop_toTopOf="@+id/ivCardUserImage" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="3"
+                            android:paddingHorizontal="5dp">
+
+                                <ImageView
+                                    android:id="@+id/imageView3"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:contentDescription="@string/location_icon"
+                                    android:src="@drawable/location"
+                                    app:layout_constraintBottom_toBottomOf="@+id/tvCardLocation"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/tvCardLocation" />
+
+                                <ImageView
+                                    android:id="@+id/imageView6"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:contentDescription="@string/calendar_icon"
+                                    android:src="@drawable/calendar"
+                                    app:layout_constraintBottom_toBottomOf="@+id/tvCardTime"
+                                    app:layout_constraintStart_toStartOf="@+id/imageView3"
+                                    app:layout_constraintTop_toTopOf="@+id/tvCardDate" />
+
+                                <TextView
+                                    android:id="@+id/tvCardLocation"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:autoSizeMaxTextSize="20sp"
+                                    android:autoSizeMinTextSize="6sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:maxLines="2"
+                                    android:text="Megerian Carpet Armenia"
+                                    app:layout_constraintBottom_toTopOf="@+id/tvCardDate"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.0"
+                                    app:layout_constraintStart_toEndOf="@+id/imageView3"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="1.0" />
+
+                                <TextView
+                                    android:id="@+id/tvCardDate"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:autoSizeMaxTextSize="20sp"
+                                    android:autoSizeMinTextSize="6sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:maxLines="1"
+                                    android:text="Wed, March 1"
+                                    app:layout_constraintBottom_toTopOf="@+id/tvCardTime"
+                                    app:layout_constraintEnd_toEndOf="@+id/tvCardLocation"
+                                    app:layout_constraintHorizontal_bias="0.0"
+                                    app:layout_constraintStart_toStartOf="@+id/tvCardLocation"
+                                    app:layout_constraintTop_toBottomOf="@+id/tvCardLocation" />
+
+                                <TextView
+                                    android:id="@+id/tvCardTime"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:autoSizeMaxTextSize="20sp"
+                                    android:autoSizeMinTextSize="6sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:maxLines="1"
+                                    android:text="16:00 - 18:00"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="@+id/tvCardLocation"
+                                    app:layout_constraintHorizontal_bias="0.0"
+                                    app:layout_constraintStart_toStartOf="@+id/tvCardLocation"
+                                    app:layout_constraintTop_toBottomOf="@+id/tvCardDate" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+</FrameLayout>

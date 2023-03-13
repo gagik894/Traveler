@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="0dp"
+    tools:context=".EventFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/tvEventImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@color/orange"
+            android:contentDescription="@string/event_image"
+            android:translationZ="-8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_scrollFlags="enterAlways|snap"
+            app:srcCompat="@drawable/event" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <View
+                    android:id="@+id/view3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="w,3:4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/viewBottom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-30dp"
+                    android:nestedScrollingEnabled="true"
+                    android:visibility="visible"
+                    app:cardElevation="8dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view3"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerTopSize35dp">
+
+                    <!--            <ScrollView-->
+                    <!--                android:id="@+id/scrollView"-->
+                    <!--                android:layout_width="match_parent"-->
+                    <!--                android:layout_height="match_parent"-->
+                    <!--                android:fillViewport="true">-->
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="20dp">
+
+                        <TextView
+                            android:id="@+id/tvEventName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:autoSizeMaxTextSize="100sp"
+                            android:autoSizeMinTextSize="12sp"
+                            android:autoSizeTextType="uniform"
+                            android:maxLines="4"
+                            android:text="Driving Force of Science: Data Science, Machine Learning and AI in science"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/imageView3"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:contentDescription="@string/location_icon"
+                            android:src="@drawable/location"
+                            app:layout_constraintBottom_toBottomOf="@+id/tvEventLocation"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/tvEventLocation" />
+
+                        <ImageView
+                            android:id="@+id/imageView6"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:contentDescription="@string/calendar_icon"
+                            android:src="@drawable/calendar"
+                            app:layout_constraintBottom_toBottomOf="@id/tvEventTime"
+                            app:layout_constraintStart_toStartOf="@+id/imageView3"
+                            app:layout_constraintTop_toTopOf="@+id/tvEventDate" />
+
+                        <TextView
+                            android:id="@+id/tvEventLocation"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="20dp"
+                            android:text="Megerian Carpet Armenia"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView3"
+                            app:layout_constraintTop_toBottomOf="@+id/tvEventName" />
+
+                        <TextView
+                            android:id="@+id/tvEventDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="Wednesday, March 1"
+                            app:layout_constraintEnd_toEndOf="@+id/tvEventLocation"
+                            app:layout_constraintHorizontal_bias="1.0"
+                            app:layout_constraintStart_toStartOf="@+id/tvEventLocation"
+                            app:layout_constraintTop_toBottomOf="@+id/tvEventLocation" />
+
+                        <TextView
+                            android:id="@+id/tvEventTime"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="16:00 - 18:00"
+                            app:layout_constraintEnd_toEndOf="@+id/tvEventLocation"
+                            app:layout_constraintHorizontal_bias="1.0"
+                            app:layout_constraintStart_toStartOf="@+id/tvEventLocation"
+                            app:layout_constraintTop_toBottomOf="@+id/tvEventDate" />
+
+                        <TextView
+                            android:id="@+id/textView10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/event_about"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tvEventTime" />
+
+                        <TextView
+                            android:id="@+id/tvEventDescription"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:ellipsize="end"
+                            android:maxLines="4"
+                            android:text="Սիրով հրավիրում ենք մասնակցելու ս․թ․ մարտի 1-ին կազմակերպվող «Գիտության շարժիչ ուժը» խորագրով միջոցառումների շարքի հաջորդ հանդիպմանը, այս անգամ՝ նվիրված գիտական հետազոտություններին, որոնք կատարվում են տվյալագիտության, մեքենայական ուսուցման և արհեստական բանականության գործիքակազմերի կիրառմամամբ։  Միջոցառման ընթացքում մասնակիցներին սպասվում են՝  «Գիտության շարժիչ ուժը․ տվյալագիտության, մեքենայական ուսուցման, արհեստական բանականության կիրառումը գիտական հետազոտություններում» վերտառությամբ պանելային քննարկում՝ «Ասպիրանտների աջակցության» ծրագրի տարբեր տարիների շահառուների մասնակցությամբ, Պանելային քննարկման հատուկ հյուր՝ Մոլեկուլային կենսաբանության ինստիտուտի տնօրեն, «Հետազոտական աշխատանքների ֆինանսավորման ծրագիր 2021»-ի շահառու, դոկտոր Արսեն Առաքելյան։ Թեմատիկ ելույթներ պանելային քննարկման մասնակիցների կողմից՝ Արսեն Առաքելյան, Զգայական ընկալման գենետիկական փոփոխականության տվյալահենք հետազտություն  Սիրաս Հակոբյան, Գիտելիքահենք չափողականության փոքրացում կենսաբանական հետազոտություններում  Էլիզա Գյուլգյուլյան, Մեծ տվյալների որակի համար նախատեսված ահազանգման համակարգ  Հայկ Գասպարյան, Արհեստական բանականությունը հիպերսպեկտրալ պատկերների մշակման մեջ  Շփում, տեղեկատվության փոխանակում և համագործակցության նոր հնարավորություններ։ Տեղերը խիստ սահմանափակ են։"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+                        <TextView
+                            android:id="@+id/textView14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/event_event_by"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.498"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tvEventMore" />
+
+                        <TextView
+                            android:id="@+id/tvEventMore"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/event_read_more"
+                            android:textColor="@color/purple_500"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tvEventDescription" />
+
+                        <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/fragmentContainerView4"
+                            android:name="com.together.traveler.UserCard"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.4"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView14"
+                            tools:layout="@layout/fragment_user_card" />
+
+                        <Button
+                            android:id="@+id/tvEventEnroll"
+                            android:layout_width="0dp"
+                            android:layout_height="60dp"
+                            android:layout_marginTop="40dp"
+                            android:backgroundTint="@color/orange"
+                            android:maxWidth="100dp"
+                            android:text="@string/event_enroll_button"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/fragmentContainerView4" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <!--            </ScrollView>-->
+
+                </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
