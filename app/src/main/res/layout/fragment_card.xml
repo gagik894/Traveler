@@ -23,7 +23,7 @@
 
 
                         <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/ivCardEventImage"
+                            android:id="@+id/cardIvEventImage"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="3.5"
@@ -42,7 +42,7 @@
                             android:paddingHorizontal="5dp">
 
                                 <TextView
-                                    android:id="@+id/tvCardEventName"
+                                    android:id="@+id/cardTvEventName"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:autoSizeMaxTextSize="100sp"
@@ -50,12 +50,12 @@
                                     android:autoSizeTextType="uniform"
                                     android:maxLines="3"
                                     android:textStyle="bold"
-                                    app:layout_constraintBottom_toTopOf="@+id/ivCardUserImage"
+                                    app:layout_constraintBottom_toTopOf="@+id/cardIvUserImage"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
 
                                 <com.google.android.material.imageview.ShapeableImageView
-                                    android:id="@+id/ivCardUserImage"
+                                    android:id="@+id/cardIvUserImage"
                                     android:layout_width="30dp"
                                     android:layout_height="30dp"
                                     android:adjustViewBounds="true"
@@ -64,12 +64,12 @@
                                     android:scaleType="fitCenter"
                                     android:src="@drawable/default_user"
                                     app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintStart_toStartOf="@+id/tvCardEventName"
-                                    app:layout_constraintTop_toBottomOf="@+id/tvCardEventName"
+                                    app:layout_constraintStart_toStartOf="@+id/cardTvEventName"
+                                    app:layout_constraintTop_toBottomOf="@+id/cardTvEventName"
                                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize15dp" />
 
                                 <TextView
-                                    android:id="@+id/tvCardUsername"
+                                    android:id="@+id/cardTvUsername"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
@@ -77,9 +77,9 @@
                                     android:autoSizeMinTextSize="8sp"
                                     android:autoSizeTextType="uniform"
                                     android:text="username"
-                                    app:layout_constraintBottom_toBottomOf="@+id/ivCardUserImage"
-                                    app:layout_constraintStart_toEndOf="@+id/ivCardUserImage"
-                                    app:layout_constraintTop_toTopOf="@+id/ivCardUserImage" />
+                                    app:layout_constraintBottom_toBottomOf="@+id/cardIvUserImage"
+                                    app:layout_constraintStart_toEndOf="@+id/cardIvUserImage"
+                                    app:layout_constraintTop_toTopOf="@+id/cardIvUserImage" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -96,9 +96,9 @@
                                     android:layout_height="20dp"
                                     android:contentDescription="@string/location_icon"
                                     android:src="@drawable/location"
-                                    app:layout_constraintBottom_toBottomOf="@+id/tvCardLocation"
+                                    app:layout_constraintBottom_toBottomOf="@+id/cardTvLocation"
                                     app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="@+id/tvCardLocation" />
+                                    app:layout_constraintTop_toTopOf="@+id/cardTvLocation" />
 
                                 <ImageView
                                     android:id="@+id/imageView6"
@@ -106,12 +106,12 @@
                                     android:layout_height="20dp"
                                     android:contentDescription="@string/calendar_icon"
                                     android:src="@drawable/calendar"
-                                    app:layout_constraintBottom_toBottomOf="@+id/tvCardTime"
+                                    app:layout_constraintBottom_toBottomOf="@+id/cardTvTime"
                                     app:layout_constraintStart_toStartOf="@+id/imageView3"
-                                    app:layout_constraintTop_toTopOf="@+id/tvCardDate" />
+                                    app:layout_constraintTop_toTopOf="@+id/cardTvDate" />
 
                                 <TextView
-                                    android:id="@+id/tvCardLocation"
+                                    android:id="@+id/cardTvLocation"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="5dp"
@@ -120,7 +120,7 @@
                                     android:autoSizeTextType="uniform"
                                     android:maxLines="2"
                                     android:text="Megerian Carpet Armenia"
-                                    app:layout_constraintBottom_toTopOf="@+id/tvCardDate"
+                                    app:layout_constraintBottom_toTopOf="@+id/cardTvDate"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.0"
                                     app:layout_constraintStart_toEndOf="@+id/imageView3"
@@ -128,7 +128,7 @@
                                     app:layout_constraintVertical_bias="1.0" />
 
                                 <TextView
-                                    android:id="@+id/tvCardDate"
+                                    android:id="@+id/cardTvDate"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:autoSizeMaxTextSize="20sp"
@@ -136,14 +136,14 @@
                                     android:autoSizeTextType="uniform"
                                     android:maxLines="1"
                                     android:text="Wed, March 1"
-                                    app:layout_constraintBottom_toTopOf="@+id/tvCardTime"
-                                    app:layout_constraintEnd_toEndOf="@+id/tvCardLocation"
+                                    app:layout_constraintBottom_toTopOf="@+id/cardTvTime"
+                                    app:layout_constraintEnd_toEndOf="@+id/cardTvLocation"
                                     app:layout_constraintHorizontal_bias="0.0"
-                                    app:layout_constraintStart_toStartOf="@+id/tvCardLocation"
-                                    app:layout_constraintTop_toBottomOf="@+id/tvCardLocation" />
+                                    app:layout_constraintStart_toStartOf="@+id/cardTvLocation"
+                                    app:layout_constraintTop_toBottomOf="@+id/cardTvLocation" />
 
                                 <TextView
-                                    android:id="@+id/tvCardTime"
+                                    android:id="@+id/cardTvTime"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:autoSizeMaxTextSize="20sp"
@@ -152,10 +152,10 @@
                                     android:maxLines="1"
                                     android:text="16:00 - 18:00"
                                     app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toEndOf="@+id/tvCardLocation"
+                                    app:layout_constraintEnd_toEndOf="@+id/cardTvLocation"
                                     app:layout_constraintHorizontal_bias="0.0"
-                                    app:layout_constraintStart_toStartOf="@+id/tvCardLocation"
-                                    app:layout_constraintTop_toBottomOf="@+id/tvCardDate" />
+                                    app:layout_constraintStart_toStartOf="@+id/cardTvLocation"
+                                    app:layout_constraintTop_toBottomOf="@+id/cardTvDate" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>

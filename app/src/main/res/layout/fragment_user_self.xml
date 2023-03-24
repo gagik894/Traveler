@@ -27,7 +27,7 @@
                 android:layout_height="match_parent">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/ivUserProfileImage"
+                    android:id="@+id/userIvProfileImage"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginStart="15dp"
@@ -45,7 +45,7 @@
                     tools:visibility="visible" />
 
                 <TextView
-                    android:id="@+id/tvUserUsername"
+                    android:id="@+id/userTvUsername"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
@@ -55,12 +55,12 @@
                     app:autoSizeMaxTextSize="100sp"
                     app:autoSizeMinTextSize="8sp"
                     app:autoSizeTextType="uniform"
-                    app:layout_constraintEnd_toStartOf="@+id/btnUserSettings"
-                    app:layout_constraintStart_toEndOf="@+id/ivUserProfileImage"
-                    app:layout_constraintTop_toTopOf="@+id/ivUserProfileImage" />
+                    app:layout_constraintEnd_toStartOf="@+id/userBtnSettings"
+                    app:layout_constraintStart_toEndOf="@+id/userIvProfileImage"
+                    app:layout_constraintTop_toTopOf="@+id/userIvProfileImage" />
 
                 <TextView
-                    android:id="@+id/tvUserRating"
+                    android:id="@+id/userTvRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5.0"
@@ -77,7 +77,7 @@
                     android:contentDescription="@string/star_icon"
                     android:src="@drawable/grade"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/tvUserUsername"
+                    app:layout_constraintStart_toStartOf="@+id/userTvUsername"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
@@ -86,8 +86,8 @@
                     android:layout_height="25dp"
                     android:contentDescription="@string/location_icon"
                     android:src="@drawable/location"
-                    app:layout_constraintBottom_toBottomOf="@+id/ivUserProfileImage"
-                    app:layout_constraintStart_toStartOf="@+id/tvUserUsername" />
+                    app:layout_constraintBottom_toBottomOf="@+id/userIvProfileImage"
+                    app:layout_constraintStart_toStartOf="@+id/userTvUsername" />
 
                 <TextView
                     android:id="@+id/textView"
@@ -100,7 +100,7 @@
                     app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
                 <ImageButton
-                    android:id="@+id/btnUserSettings"
+                    android:id="@+id/userBtnSettings"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginEnd="15dp"
@@ -149,7 +149,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <Button
-                        android:id="@+id/btnUserUpcoming"
+                        android:id="@+id/userBtnUpcoming"
                         style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
@@ -162,7 +162,7 @@
                         android:textSize="14sp" />
 
                     <Button
-                        android:id="@+id/btnUserSaved"
+                        android:id="@+id/userBtnSaved"
                         style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
@@ -174,7 +174,7 @@
                         android:textSize="14sp" />
 
                     <Button
-                        android:id="@+id/btnUserMyEvents"
+                        android:id="@+id/userBtnMyEvents"
                         style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"

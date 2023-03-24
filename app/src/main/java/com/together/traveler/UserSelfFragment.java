@@ -15,7 +15,6 @@ import com.together.traveler.adapter.CardsAdapter;
 import com.together.traveler.model.Card;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,9 +74,9 @@ public class UserSelfFragment extends Fragment {
 
         View RootView = inflater.inflate(R.layout.fragment_user_self, container, false);
         rvCards = RootView.findViewById(R.id.rvUser);
-        upcomingButton = RootView.findViewById(R.id.btnUserUpcoming);
-        savedButton = RootView.findViewById(R.id.btnUserSaved);
-        myEventsButton = RootView.findViewById(R.id.btnUserMyEvents);
+        upcomingButton = RootView.findViewById(R.id.userBtnUpcoming);
+        savedButton = RootView.findViewById(R.id.userBtnSaved);
+        myEventsButton = RootView.findViewById(R.id.userBtnMyEvents);
         int textColor = savedButton.getCurrentTextColor();
         showCard(100);
         upcomingButton.setOnClickListener(v -> {

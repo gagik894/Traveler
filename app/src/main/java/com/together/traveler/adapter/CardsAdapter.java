@@ -62,10 +62,10 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            tvName = itemView.findViewById(R.id.tvCardEventName);
-            tvLocation = itemView.findViewById(R.id.tvCardLocation);
-            tvDate =  itemView.findViewById(R.id.tvCardDate);
-            tvTime =  itemView.findViewById(R.id.tvCardTime);
+            tvName = itemView.findViewById(R.id.cardTvEventName);
+            tvLocation = itemView.findViewById(R.id.cardTvLocation);
+            tvDate =  itemView.findViewById(R.id.cardTvDate);
+            tvTime =  itemView.findViewById(R.id.cardTvTime);
 
         }
     }

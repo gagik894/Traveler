@@ -35,4 +35,5 @@
     <string name="user_saved">SAVED</string>
     <string name="user_upcoming">UPCOMING</string>
     <string name="star_icon">Star</string>
+    <string name="map_center_on_location">CenterOnLocation</string>
 </resources>

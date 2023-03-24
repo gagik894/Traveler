@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.Objects;
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link EventFragment#newInstance} factory method to
@@ -70,8 +68,8 @@ public class EventFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextView textView = requireView().findViewById(R.id.tvEventDescription);
-        TextView buttonMore = requireView().findViewById(R.id.tvEventMore);
+        TextView textView = requireView().findViewById(R.id.eventTvDescription);
+        TextView buttonMore = requireView().findViewById(R.id.eventTvMore);
         int maxLines = textView.getMaxLines();
 
         buttonMore.setOnClickListener(v -> {
