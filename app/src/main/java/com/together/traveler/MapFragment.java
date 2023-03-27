@@ -4,6 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,20 +17,16 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
+import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
@@ -44,10 +46,11 @@ public class MapFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private MapView map;
     private MyLocationNewOverlay mLocationOverlay;
     private IMapController mapController;
     private ImageButton btnOnCenter;
-    private MapView map;
+    ArrayList<OverlayItem> items = new ArrayList<>();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -99,6 +102,7 @@ public class MapFragment extends Fragment {
         btnOnCenter = requireActivity().findViewById(R.id.mapBtnCenterOnLocation);
         map = requireView().findViewById(R.id.map);
         mapController = map.getController();
+        assert ctx != null;
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx), map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setBuiltInZoomControls(true);
@@ -108,15 +112,13 @@ public class MapFragment extends Fragment {
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.enableFollowLocation();
         mLocationOverlay.setDrawAccuracyEnabled(true);
-        map.getOverlays().add(mLocationOverlay);
-        btnOnCenter.setOnClickListener(v -> {
-            centerOnLocation(18);
-        });
 
-        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+        btnOnCenter.setOnClickListener(v -> centerOnLocation(18));
+
         items.add(new OverlayItem("Dilijan", "", new GeoPoint(40.740295, 44.865835)));
         items.add(new OverlayItem("UWCD", "UWC Dilijan", new GeoPoint(40.739109, 44.832480)));
-        ItemizedOverlayWithFocus<OverlayItem> mOverlay = mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
+
+        ItemizedOverlayWithFocus<OverlayItem> mPointsOverlay = new ItemizedOverlayWithFocus<>(items,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
                     public boolean onItemSingleTapUp(final int position, final OverlayItem item) {
@@ -128,12 +130,34 @@ public class MapFragment extends Fragment {
                         return false;
                     }
                 }, ctx);
-        mOverlay.setFocusItemsOnTap(true);
-        map.getOverlays().add(mOverlay);
-//        Marker startMarker = new Marker(map);
-//        startMarker.setPosition(startPoint);
-//        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-//        map.getOverlays().add(startMarker);
+        mPointsOverlay.setFocusItemsOnTap(true);
+
+        MapEventsReceiver mReceive = new MapEventsReceiver() {
+            @Override
+            public boolean singleTapConfirmedHelper(GeoPoint p) {
+                Log.d("debug", "Single tap helper");
+                mPointsOverlay.unSetFocusedItem();
+                return false;
+
+            }
+
+            @Override
+            public boolean longPressHelper(GeoPoint p) {
+                Log.d("debug", "LongPressHelper");
+                items.add(new OverlayItem("Dilijan", "", new GeoPoint(p.getLatitude(), p.getLongitude())));
+                mPointsOverlay.addItem(items.get(items.size()-1));
+                mapController.scrollBy(0, 0);
+                Log.d("debug", String.valueOf(items));
+                return false;
+            }
+
+        };
+
+        MapEventsOverlay mEventOverlay = new MapEventsOverlay(ctx, mReceive);
+        map.getOverlays().add(mLocationOverlay);
+        map.getOverlays().add(mPointsOverlay);
+        map.getOverlays().add(mEventOverlay);
+        map.invalidate();
 
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
         requestPermissionsIfNecessary(perms);
@@ -169,6 +193,8 @@ public class MapFragment extends Fragment {
 
     public void centerOnLocation(float zoom) {
         mLocationOverlay.runOnFirstFix(new Thread(() -> requireActivity().runOnUiThread(() -> {
+            GeoPoint newPoint = new GeoPoint((mLocationOverlay.getMyLocation().getLatitude()+0.001),(mLocationOverlay.getMyLocation().getLongitude()+0.001));
+            mapController.setCenter(newPoint);
             mapController.animateTo(mLocationOverlay.getMyLocation());
             mapController.setZoom(zoom);
         })));
