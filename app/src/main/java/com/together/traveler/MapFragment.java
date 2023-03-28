@@ -105,7 +105,7 @@ public class MapFragment extends Fragment {
         assert ctx != null;
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx), map);
         map.setTileSource(TileSourceFactory.MAPNIK);
-        map.setBuiltInZoomControls(true);
+        map.setBuiltInZoomControls(false);
         map.setMultiTouchControls(true);
         mapController.setZoom(18);
         mapController.setCenter(startPoint);

@@ -31,7 +31,9 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
             android:fillViewport="true"
+            android:paddingBottom="85dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -206,7 +208,7 @@
                             android:id="@+id/eventBtnEnroll"
                             android:layout_width="0dp"
                             android:layout_height="60dp"
-                            android:layout_marginTop="40dp"
+                            android:layout_marginTop="30dp"
                             android:backgroundTint="@color/orange"
                             android:maxWidth="100dp"
                             android:text="@string/event_enroll_button"

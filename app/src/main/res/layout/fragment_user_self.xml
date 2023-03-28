@@ -126,7 +126,11 @@
             android:nestedScrollingEnabled="true"
             android:visibility="visible"
             app:cardElevation="8dp"
-            app:cardPreventCornerOverlap="true"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="false"
+            app:contentPaddingLeft="10dp"
+            app:contentPaddingRight="10dp"
+            app:contentPaddingTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -135,7 +139,9 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:padding="0dp">
 
                 <LinearLayout
                     android:id="@+id/linearLayout"
@@ -191,6 +197,8 @@
                     android:id="@+id/rvUser"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:clipToPadding="false"
+                    android:paddingBottom="65dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

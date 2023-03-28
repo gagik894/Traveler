@@ -4,8 +4,8 @@
     <string name="btn_like">Like</string>
     <string name="btn_dislike">Dislike</string>
     <string name="btn_more">More</string>
-    <string name="btn_camera">btnCamera</string>
-    <string name="btn_send">btnSend</string>
+    <string name="btn_add">Add button</string>
+    <string name="btn_send">Send button</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
