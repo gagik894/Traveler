@@ -36,4 +36,9 @@
     <string name="user_upcoming">UPCOMING</string>
     <string name="star_icon">Star</string>
     <string name="map_center_on_location">CenterOnLocation</string>
+    <string name="nav_user">user</string>
+    <string name="nav_map">map</string>
+    <string name="nav_add">add</string>
+    <string name="nav_search">search</string>
+    <string name="nav_home">home</string>
 </resources>

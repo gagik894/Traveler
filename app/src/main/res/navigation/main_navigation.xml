@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.together.traveler.HomeFragment"
+        android:label="HomeFragment" >
+
+        <action
+            android:id="@+id/action_homeFragment_to_eventFragment"
+            app:destination="@id/eventFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.together.traveler.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/userSelfFragment"
+        android:name="com.together.traveler.UserSelfFragment"
+        android:label="fragment_user_self"
+        tools:layout="@layout/fragment_user_self" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/blankFragment"
+        android:name="com.together.traveler.BlankFragment"
+        android:label="BlankFragment" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="com.together.traveler.EventFragment"
+        android:label="fragment_event"
+        tools:layout="@layout/fragment_event" >
+
+    </fragment>
+</navigation>
