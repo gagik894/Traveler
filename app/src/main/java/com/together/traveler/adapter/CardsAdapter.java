@@ -16,10 +16,16 @@ import java.util.List;
 
 
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
-    private final List<Card> cards;
 
-    public CardsAdapter(List<Card> cards) {
+    public interface OnItemClickListener {
+        void onItemClick(Card item);
+    }
+    private final List<Card> cards;
+    private final OnItemClickListener listener;
+
+    public CardsAdapter(List<Card> cards, OnItemClickListener listener) {
         this.cards = cards;
+        this.listener = listener;
     }
     @NonNull
     @Override
@@ -34,6 +40,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.bind(cards.get(position), listener);
         Card card = cards.get(position);
 
         TextView tvName = holder.tvName;
@@ -67,6 +74,14 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
             tvDate =  itemView.findViewById(R.id.cardTvDate);
             tvTime =  itemView.findViewById(R.id.cardTvTime);
 
+        }
+
+        public void bind(final Card item, OnItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
         }
     }
 }

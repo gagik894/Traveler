@@ -1,11 +1,15 @@
 package com.together.traveler;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -68,7 +72,11 @@ public class HomeFragment extends Fragment {
         RecyclerView rvCards = RootView.findViewById(R.id.rvHome);
 
         cards = Card.createCardList(100);
-        CardsAdapter adapter = new CardsAdapter(cards);
+        CardsAdapter adapter = new CardsAdapter(cards, item ->{
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("cardData", item);
+            NavHostFragment.findNavController(this).navigate(R.id.action_homeFragment_to_eventFragment, bundle);
+        });
         rvCards.setAdapter(adapter);
         rvCards.setLayoutManager(new LinearLayoutManager(getContext()));
         return RootView;

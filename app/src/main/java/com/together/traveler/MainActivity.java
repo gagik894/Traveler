@@ -9,8 +9,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.Objects;
-
 public class MainActivity extends AppCompatActivity
 {
 
@@ -21,11 +19,15 @@ public class MainActivity extends AppCompatActivity
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
         BottomNavigationView bottomNav = findViewById(R.id.nvMain);
-        NavigationUI.setupWithNavController(bottomNav, navController);
+        NavController navController;
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
+            NavigationUI.setupWithNavController(bottomNav, navController);
+        }
+
+
 
     }
 

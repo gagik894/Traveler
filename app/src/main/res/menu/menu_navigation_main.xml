@@ -4,7 +4,7 @@
         android:title="@string/nav_home"
         android:icon="@drawable/home"
        />
-    <item android:id="@+id/eventFragment"
+    <item android:id="@+id/blankFragment"
         android:title="@string/nav_search"
         android:icon="@drawable/search"
     />

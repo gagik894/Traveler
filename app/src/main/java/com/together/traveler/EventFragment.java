@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.together.traveler.model.Card;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,16 +71,28 @@ public class EventFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextView textView = requireView().findViewById(R.id.eventTvDescription);
+        TextView description = requireView().findViewById(R.id.eventTvDescription);
+        TextView name = requireView().findViewById(R.id.eventTvName);
+        TextView location = requireView().findViewById(R.id.eventTvLocation);
+        TextView date = requireView().findViewById(R.id.eventTvDate);
+        TextView time = requireView().findViewById(R.id.eventTvTime);
         TextView buttonMore = requireView().findViewById(R.id.eventTvMore);
-        int maxLines = textView.getMaxLines();
+        int maxLines = description.getMaxLines();
+        Card data = getArguments().getParcelable("cardData");
 
+        name.setText(data.getName());
+        location.setText(String.valueOf(data.getLocation()));
+        date.setText(String.valueOf(data.getDate()));
+        time.setText(String.valueOf(data.getTime()));
+
+
+        Toast.makeText(requireContext(), data.getName(), Toast.LENGTH_SHORT).show();
         buttonMore.setOnClickListener(v -> {
-            if (textView.getMaxLines() == maxLines) {
-                textView.setMaxLines(Integer.MAX_VALUE);
+            if (description.getMaxLines() == maxLines) {
+                description.setMaxLines(Integer.MAX_VALUE);
                 buttonMore.setText(R.string.read_less);
             } else {
-                textView.setMaxLines(maxLines);
+                description.setMaxLines(maxLines);
                 buttonMore.setText(R.string.event_read_more);
             }
         });
