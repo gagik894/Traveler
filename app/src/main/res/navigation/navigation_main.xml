@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.together.traveler.HomeFragment"
+        android:name="com.together.traveler.ui.home.HomeFragment"
         android:label="HomeFragment" >
 
         <action
@@ -20,16 +20,15 @@
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.together.traveler.MapFragment"
+        android:name="com.together.traveler.ui.map.MapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" >
 
     </fragment>
     <fragment
-        android:id="@+id/userSelfFragment"
-        android:name="com.together.traveler.UserSelfFragment"
-        android:label="fragment_user_self"
-        tools:layout="@layout/fragment_user_self" >
+        android:id="@+id/userFragment"
+        android:name="com.together.traveler.ui.user.UserFragment"
+        android:label="fragment_user">
 
     </fragment>
     <fragment
@@ -40,16 +39,11 @@
     </fragment>
     <fragment
         android:id="@+id/eventFragment"
-        android:name="com.together.traveler.EventFragment"
-        android:label="fragment_event"
-        tools:layout="@layout/fragment_event" >
+        android:name="com.together.traveler.ui.event.EventFragment"
+        android:label="fragment_event">
         <action
             android:id="@+id/action_eventFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
+            app:destination="@id/homeFragment" />
         <argument
             android:name="cardData"
             app:argType="com.together.traveler.model.Card" />

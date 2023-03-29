@@ -33,7 +33,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View cardFragment = inflater.inflate(R.layout.fragment_card, parent, false);
+        View cardFragment = inflater.inflate(R.layout.fragment_event_card, parent, false);
 
         return new ViewHolder(cardFragment);
     }

@@ -1,4 +1,4 @@
-package com.together.traveler;
+package com.together.traveler.ui.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,13 +6,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.together.traveler.R;
+import com.together.traveler.adapter.CardsAdapter;
+import com.together.traveler.model.Card;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CardFragment#newInstance} factory method to
+ * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CardFragment extends Fragment {
+public class HomeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,7 +32,7 @@ public class CardFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public CardFragment() {
+    public HomeFragment() {
         // Required empty public constructor
     }
 
@@ -33,11 +42,11 @@ public class CardFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Card.
+     * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CardFragment newInstance(String param1, String param2) {
-        CardFragment fragment = new CardFragment();
+    public static HomeFragment newInstance(String param1, String param2) {
+        HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -53,11 +62,21 @@ public class CardFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    ArrayList<Card> cards = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_card, container, false);
+        View RootView = inflater.inflate(R.layout.fragment_home, container, false);
+        RecyclerView rvCards = RootView.findViewById(R.id.rvHome);
+
+        cards = Card.createCardList(100);
+        CardsAdapter adapter = new CardsAdapter(cards, item ->{
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("cardData", item);
+            NavHostFragment.findNavController(this).navigate(R.id.action_homeFragment_to_eventFragment, bundle);
+        });
+        rvCards.setAdapter(adapter);
+        rvCards.setLayoutManager(new LinearLayoutManager(getContext()));
+        return RootView;
     }
 }

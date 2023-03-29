@@ -26,10 +26,12 @@
         android:layout_gravity="bottom"
         app:contentInsetStart="0dp"
         app:fabAlignmentMode="center"
-        app:fabAnimationMode="slide"
-        app:fabCradleMargin="10dp"
-        app:fabCradleRoundedCornerRadius="15dp"
-        app:fabCradleVerticalOffset="0dp">
+        app:fabAnchorMode="cradle"
+        app:fabAnimationMode="scale"
+        app:fabCradleMargin="8dp"
+        app:fabCradleRoundedCornerRadius="10dp"
+        app:fabCradleVerticalOffset="0dp"
+        app:removeEmbeddedFabElevation="true">
 
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -42,8 +44,8 @@
             android:hapticFeedbackEnabled="true"
             android:visibility="visible"
             app:compatShadowEnabled="true"
-            app:itemIconSize="30dp"
-            app:labelVisibilityMode="unlabeled"
+            app:itemIconSize="25dp"
+            app:labelVisibilityMode="selected"
             app:menu="@menu/menu_navigation_main" />
     </com.google.android.material.bottomappbar.BottomAppBar>
 
@@ -53,6 +55,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:contentDescription="@string/btn_add"
+        app:elevation="2dp"
         app:layout_anchor="@id/bottomAppBar"
         app:srcCompat="@drawable/add" />
 

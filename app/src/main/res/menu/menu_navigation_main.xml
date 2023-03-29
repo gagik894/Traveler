@@ -15,7 +15,7 @@
         android:title="@string/nav_map"
         android:icon="@drawable/map"
     />
-    <item android:id="@+id/userSelfFragment"
+    <item android:id="@+id/userFragment"
         android:title="@string/nav_user"
         android:icon="@drawable/user"
         />
