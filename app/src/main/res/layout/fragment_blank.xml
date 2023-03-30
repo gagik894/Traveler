@@ -7,7 +7,7 @@
 
     <!-- ImageView at the top -->
     <ImageView
-        android:id="@+id/cardIvEventImage"
+        android:id="@+id/eventCardIvImage"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
@@ -211,7 +211,7 @@
 
 <!--                <androidx.fragment.app.FragmentContainerView-->
 <!--                    android:id="@+id/fragmentContainerView4"-->
-<!--                    android:name="com.together.traveler.ui.card.user.UserCard"-->
+<!--                    android:name="com.together.traveler.ui.cards.UserCard"-->
 <!--                    android:layout_width="0dp"-->
 <!--                    android:layout_height="wrap_content"-->
 <!--                    android:layout_marginTop="10dp"-->
@@ -414,7 +414,7 @@
 
 <!--                    <androidx.fragment.app.FragmentContainerView-->
 <!--                        android:id="@+id/fragmentContainerView4"-->
-<!--                        android:name="com.together.traveler.ui.card.user.UserCard"-->
+<!--                        android:name="com.together.traveler.ui.cards.UserCard"-->
 <!--                        android:layout_width="0dp"-->
 <!--                        android:layout_height="wrap_content"-->
 <!--                        android:layout_marginTop="10dp"-->

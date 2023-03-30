@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ui.card.event.EventCard">
+    tools:context=".ui.cards.EventCard">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -22,18 +22,28 @@
                     android:layout_height="match_parent">
 
 
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/cardIvEventImage"
+                        <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="3.5"
-                            android:adjustViewBounds="true"
-                            android:background="#FFFFFF"
-                            android:contentDescription="@string/card_event_image"
-                            android:padding="5dp"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/event_small"
-                            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize15dp" />
+                            android:layout_weight="3.5">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/eventCardIvImage"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:adjustViewBounds="true"
+                                    android:background="#FFFFFF"
+                                    android:contentDescription="@string/event_card_image"
+                                    android:padding="5dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/event"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintDimensionRatio="1:1"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize15dp" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
@@ -42,7 +52,7 @@
                             android:paddingHorizontal="5dp">
 
                                 <TextView
-                                    android:id="@+id/cardTvEventName"
+                                    android:id="@+id/eventCardTvName"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:autoSizeMaxTextSize="100sp"
@@ -51,12 +61,12 @@
                                     android:maxLines="3"
                                     android:text="some event"
                                     android:textStyle="bold"
-                                    app:layout_constraintBottom_toTopOf="@+id/cardIvUserImage"
+                                    app:layout_constraintBottom_toTopOf="@+id/eventCardIvUserImage"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
 
                                 <com.google.android.material.imageview.ShapeableImageView
-                                    android:id="@+id/cardIvUserImage"
+                                    android:id="@+id/eventCardIvUserImage"
                                     android:layout_width="30dp"
                                     android:layout_height="30dp"
                                     android:adjustViewBounds="true"
@@ -65,12 +75,12 @@
                                     android:scaleType="fitCenter"
                                     android:src="@drawable/default_user"
                                     app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintStart_toStartOf="@+id/cardTvEventName"
-                                    app:layout_constraintTop_toBottomOf="@+id/cardTvEventName"
+                                    app:layout_constraintStart_toStartOf="@+id/eventCardTvName"
+                                    app:layout_constraintTop_toBottomOf="@+id/eventCardTvName"
                                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize15dp" />
 
                                 <TextView
-                                    android:id="@+id/cardTvUsername"
+                                    android:id="@+id/eventCardTvUsername"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
@@ -78,9 +88,9 @@
                                     android:autoSizeMinTextSize="8sp"
                                     android:autoSizeTextType="uniform"
                                     android:text="username"
-                                    app:layout_constraintBottom_toBottomOf="@+id/cardIvUserImage"
-                                    app:layout_constraintStart_toEndOf="@+id/cardIvUserImage"
-                                    app:layout_constraintTop_toTopOf="@+id/cardIvUserImage" />
+                                    app:layout_constraintBottom_toBottomOf="@+id/eventCardIvUserImage"
+                                    app:layout_constraintStart_toEndOf="@+id/eventCardIvUserImage"
+                                    app:layout_constraintTop_toTopOf="@+id/eventCardIvUserImage" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -112,7 +122,7 @@
                                     app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
                                 <TextView
-                                    android:id="@+id/cardTvLocation"
+                                    android:id="@+id/eventCardTvLocation"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="5dp"
@@ -128,7 +138,7 @@
                                     app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
                                 <TextView
-                                    android:id="@+id/cardTvDate"
+                                    android:id="@+id/eventCardTvDate"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:autoSizeMaxTextSize="20sp"
@@ -136,13 +146,13 @@
                                     android:autoSizeTextType="uniform"
                                     android:maxLines="1"
                                     android:text="2023-07-25"
-                                    app:layout_constraintBottom_toTopOf="@+id/cardTvTime"
-                                    app:layout_constraintEnd_toEndOf="@+id/cardTvLocation"
-                                    app:layout_constraintStart_toStartOf="@+id/cardTvLocation"
+                                    app:layout_constraintBottom_toTopOf="@+id/eventCardTvTime"
+                                    app:layout_constraintEnd_toEndOf="@+id/eventCardTvLocation"
+                                    app:layout_constraintStart_toStartOf="@+id/eventCardTvLocation"
                                     app:layout_constraintTop_toTopOf="@+id/imageView6" />
 
                                 <TextView
-                                    android:id="@+id/cardTvTime"
+                                    android:id="@+id/eventCardTvTime"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:autoSizeMaxTextSize="20sp"
@@ -151,9 +161,9 @@
                                     android:maxLines="1"
                                     android:text="21:00-23:00"
                                     app:layout_constraintBottom_toBottomOf="@+id/imageView6"
-                                    app:layout_constraintEnd_toEndOf="@+id/cardTvLocation"
-                                    app:layout_constraintStart_toStartOf="@+id/cardTvLocation"
-                                    app:layout_constraintTop_toBottomOf="@+id/cardTvDate" />
+                                    app:layout_constraintEnd_toEndOf="@+id/eventCardTvLocation"
+                                    app:layout_constraintStart_toStartOf="@+id/eventCardTvLocation"
+                                    app:layout_constraintTop_toBottomOf="@+id/eventCardTvDate" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>

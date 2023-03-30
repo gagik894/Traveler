@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="app_color">#DC3535</color>
+    <color name="primary_color">#DC3535</color>
+    <color name="secondary_color">#F49D1A</color>
     <color name="purple">#B01E68</color>
     <color name="orange">#F49D1A</color>
     <color name="yellow">#FFE15D</color>

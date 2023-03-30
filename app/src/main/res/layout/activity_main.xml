@@ -57,7 +57,7 @@
         android:contentDescription="@string/btn_add"
         app:elevation="2dp"
         app:layout_anchor="@id/bottomAppBar"
-        app:srcCompat="@drawable/add" />
+        app:srcCompat="@drawable/nav_add" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

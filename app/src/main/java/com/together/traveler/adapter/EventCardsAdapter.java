@@ -1,30 +1,32 @@
 package com.together.traveler.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.together.traveler.R;
-import com.together.traveler.model.Card;
+import com.together.traveler.model.Event;
 
 import java.util.List;
 
 
-public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
+public class EventCardsAdapter extends RecyclerView.Adapter<EventCardsAdapter.ViewHolder> {
 
     public interface OnItemClickListener {
-        void onItemClick(Card item);
+        void onItemClick(Event item);
     }
-    private final List<Card> cards;
+    private List<Event> events;
     private final OnItemClickListener listener;
 
-    public CardsAdapter(List<Card> cards, OnItemClickListener listener) {
-        this.cards = cards;
+    public EventCardsAdapter(List<Event> events, OnItemClickListener listener) {
+        this.events = events;
         this.listener = listener;
     }
     @NonNull
@@ -38,26 +40,38 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         return new ViewHolder(cardFragment);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateData(List<Event> events) {
+        this.events = events;
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(cards.get(position), listener);
-        Card card = cards.get(position);
+        holder.bind(events.get(position), listener);
+        Event card = events.get(position);
 
         TextView tvName = holder.tvName;
         TextView tvLocation = holder.tvLocation;
         TextView tvDate = holder.tvDate;
         TextView tvTime = holder.tvTime;
+        ImageView eventImage = holder.ivImage;
+        ImageView ivUserImage = holder.ivUserImage;
+        TextView tvUserUsername = holder.tvUserUsername;
 
         tvName.setText(card.getName());
-        tvLocation.setText((CharSequence) card.getLocation());
+        tvLocation.setText(card.getLocation());
         tvDate.setText(String.valueOf(card.getDate()));
         tvTime.setText(String.valueOf(card.getTime()));
+        eventImage.setImageResource(card.getImage());
+        tvUserUsername.setText(card.getUser().getUsername());
+        ivUserImage.setImageResource(card.getUser().getProfileImage());
 
     }
 
     @Override
     public int getItemCount() {
-        return cards.size();
+        return events.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -65,18 +79,22 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         public TextView tvLocation;
         public TextView tvDate;
         public TextView tvTime;
-
+        public ImageView ivImage;
+        public ImageView ivUserImage;
+        public TextView tvUserUsername;
         public ViewHolder(View itemView) {
             super(itemView);
 
-            tvName = itemView.findViewById(R.id.cardTvEventName);
-            tvLocation = itemView.findViewById(R.id.cardTvLocation);
-            tvDate =  itemView.findViewById(R.id.cardTvDate);
-            tvTime =  itemView.findViewById(R.id.cardTvTime);
-
+            tvName = itemView.findViewById(R.id.eventCardTvName);
+            tvLocation = itemView.findViewById(R.id.eventCardTvLocation);
+            tvDate =  itemView.findViewById(R.id.eventCardTvDate);
+            tvTime =  itemView.findViewById(R.id.eventCardTvTime);
+            ivImage = itemView.findViewById(R.id.eventCardIvImage);
+            ivUserImage = itemView.findViewById(R.id.eventCardIvUserImage);
+            tvUserUsername = itemView.findViewById(R.id.eventCardTvUsername);
         }
 
-        public void bind(final Card item, OnItemClickListener listener) {
+        public void bind(final Event item, OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     listener.onItemClick(item);

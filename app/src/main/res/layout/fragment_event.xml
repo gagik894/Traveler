@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/eventTvImage"
+            android:id="@+id/eventIvImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
@@ -45,7 +45,7 @@
                 android:layout_height="match_parent">
 
                 <View
-                    android:id="@+id/view3"
+                    android:id="@+id/eventPlaceholder"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="w,3:4"
@@ -54,17 +54,17 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/viewBottom"
+                    android:id="@+id/eventViewBottom"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-30dp"
                     android:nestedScrollingEnabled="true"
                     android:visibility="visible"
-                    app:cardElevation="8dp"
+                    app:cardElevation="0dp"
                     app:cardPreventCornerOverlap="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view3"
+                    app:layout_constraintTop_toBottomOf="@id/eventPlaceholder"
                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerTopSize35dp">
 
                     <!--            <ScrollView-->
@@ -193,8 +193,8 @@
                             app:layout_constraintTop_toBottomOf="@+id/eventTvDescription" />
 
                         <androidx.fragment.app.FragmentContainerView
-                            android:id="@+id/fragmentContainerView4"
-                            android:name="com.together.traveler.ui.card.user.UserCard"
+                            android:id="@+id/eventUser"
+                            android:name="com.together.traveler.ui.cards.UserCard"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
@@ -209,12 +209,12 @@
                             android:layout_width="0dp"
                             android:layout_height="60dp"
                             android:layout_marginTop="30dp"
-                            android:backgroundTint="@color/orange"
+                            android:backgroundTint="@color/secondary_color"
                             android:maxWidth="100dp"
                             android:text="@string/event_enroll_button"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/fragmentContainerView4" />
+                            app:layout_constraintTop_toBottomOf="@+id/eventUser" />
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

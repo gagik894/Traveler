@@ -192,11 +192,22 @@ public class MapFragment extends Fragment {
     }
 
     public void centerOnLocation(float zoom) {
-        mLocationOverlay.runOnFirstFix(new Thread(() -> requireActivity().runOnUiThread(() -> {
-            GeoPoint newPoint = new GeoPoint((mLocationOverlay.getMyLocation().getLatitude()+0.001),(mLocationOverlay.getMyLocation().getLongitude()+0.001));
-            mapController.setCenter(newPoint);
-            mapController.animateTo(mLocationOverlay.getMyLocation());
-            mapController.setZoom(zoom);
-        })));
+        mLocationOverlay.enableMyLocation();
+        mLocationOverlay.enableFollowLocation();
+        mapController.setZoom(zoom);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Configuration.getInstance().load(getContext(), PreferenceManager.getDefaultSharedPreferences(getContext()));
+        mLocationOverlay.enableMyLocation();
+        mLocationOverlay.enableFollowLocation();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mLocationOverlay.disableMyLocation();
+        mLocationOverlay.disableFollowLocation();
     }
 }
