@@ -72,13 +72,19 @@
 
             <Button
                 android:id="@+id/userCardBtnFollow"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="28dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:autoSizeMaxTextSize="20dp"
+                android:autoSizeMinTextSize="5dp"
+                android:autoSizeTextType="uniform"
                 android:text="Follow"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintHorizontal_bias="0.8"
+                app:layout_constraintStart_toEndOf="@+id/imageView7"
+                app:layout_constraintTop_toBottomOf="@+id/userCardTvUsername"
+                app:layout_constraintWidth_max="wrap" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

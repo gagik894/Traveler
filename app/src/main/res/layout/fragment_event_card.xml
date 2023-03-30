@@ -129,7 +129,7 @@
                                     android:autoSizeMaxTextSize="20sp"
                                     android:autoSizeMinTextSize="6sp"
                                     android:autoSizeTextType="uniform"
-                                    android:maxLines="2"
+                                    android:maxLines="1"
                                     android:text="somewhere"
                                     app:layout_constraintBottom_toBottomOf="@+id/imageView3"
                                     app:layout_constraintEnd_toEndOf="parent"

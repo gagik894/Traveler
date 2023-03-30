@@ -33,22 +33,23 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     CardView BottomView;
     RelativeLayout BottomRelativeLayout;
-    String Tag = "ASH5";
+    String Tag = "asd";
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
-            if ( v instanceof EditText) {
+            if (v instanceof EditText) {
                 Rect outRect = new Rect();
                 v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
         }
-        return super.dispatchTouchEvent( event );
+        return super.dispatchTouchEvent(event);
     }
 
     @Override
@@ -143,34 +144,32 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
-
-    void changeView(boolean b){
+    void changeView(boolean b) {
         assert BottomView != null;
         assert BottomRelativeLayout != null;
-        for (float i = 1; i > 0; i-=0.01) {
-            LinearLayout.LayoutParams param0 = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    i);
-            LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    1-i);
 
-            if(b){
-                BottomView.setLayoutParams(param0);
-                BottomRelativeLayout.setLayoutParams(param1);
+        LoginActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                LinearLayout.LayoutParams param0 = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        0);
+                LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        1);
+
+                if (b) {
+                    BottomView.setLayoutParams(param0);
+                    BottomRelativeLayout.setLayoutParams(param1);
+                } else {
+                    BottomView.setLayoutParams(param1);
+                    BottomRelativeLayout.setLayoutParams(param0);
+                }
             }
-            else{
-                BottomView.setLayoutParams(param1);
-                BottomRelativeLayout.setLayoutParams(param0);
-            }
-            Log.i(Tag, "changeView: "+ i);
-
-        }
-
+        });
     }
+
     private void updateUiWithUser(LoggedInUserView model) {
         try {
             String welcome = getString(R.string.welcome) + model.getDisplayName();
@@ -179,7 +178,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent switchActivityIntent = new Intent(this, MainActivity.class);
             startActivity(switchActivityIntent);
             Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.e(Tag, "updateUiWithUser: ", e);
         }
 
