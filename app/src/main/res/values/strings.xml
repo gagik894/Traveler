@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Traveler</string>
 
-<!--    icons, buttons-->
+    <!--    icons, buttons-->
     <string name="logo">Logo</string>
     <string name="calendar_icon">Calendar</string>
     <string name="location_icon">Location</string>
@@ -10,7 +10,7 @@
     <string name="btn_add">Add button</string>
     <string name="btn_center_on_location">CenterOnLocation</string>
 
-<!--    login-->
+    <!--    login-->
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -24,9 +24,14 @@
     <string name="dont_have_account">Don\'t have an account?</string>
     <string name="sign_up">Sign Up.</string>
 
+    <!--    signup-->
+    <string name="have_account">Have an account?</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="sign_in">Sign In.</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-<!--    event-->
+    <!--    event-->
     <string name="event_read_more">more</string>
     <string name="event_read_less">less</string>
     <string name="event_image">Event image</string>
@@ -36,20 +41,21 @@
     <string name="event_about">About</string>
 
 
-<!--    event card-->
+    <!--    event card-->
     <string name="event_card_image">Card event image</string>
 
-<!--    user-->
+    <!--    user-->
     <string name="user_profile_image">Profile image</string>
     <string name="user_my_events">MY EVENTS</string>
     <string name="user_saved">SAVED</string>
     <string name="user_upcoming">UPCOMING</string>
 
-<!--    navigation-->
+    <!--    navigation-->
     <string name="nav_user">user</string>
     <string name="nav_map">map</string>
     <string name="nav_add">add</string>
     <string name="nav_search">search</string>
     <string name="nav_home">home</string>
+    <string name="title_activity_signup">SignupActivity</string>
 
 </resources>

@@ -31,14 +31,39 @@ public class LoginViewModel extends ViewModel {
 
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Result<LoggedInUser> result = loginRepository.login(username, password);
 
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
+                if (result instanceof Result.Success) {
+                    LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+                    loginResult.postValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+                } else {
+                    loginResult.postValue(new LoginResult(R.string.login_failed));
+                }
+            }
+        });
+        thread.start();
+
+    }
+
+    public void signup(String username, String password) {
+        // can be launched in a separate asynchronous job
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Result<LoggedInUser> result = loginRepository.signup(username, password);
+
+                if (result instanceof Result.Success) {
+                    LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+                    loginResult.postValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+                } else {
+                    loginResult.postValue(new LoginResult(R.string.login_failed));
+                }
+            }
+        });
+        thread.start();
     }
 
     public void loginDataChanged(String username, String password) {

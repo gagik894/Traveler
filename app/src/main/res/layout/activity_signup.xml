@@ -8,10 +8,10 @@
     android:background="@color/primary_color"
     android:maxWidth="448dp"
     android:orientation="vertical"
-    tools:context=".ui.login.LoginActivity">
+    tools:context=".ui.login.SignupActivity">
 
     <ImageView
-        android:id="@+id/loginIvLogo"
+        android:id="@+id/signupIvLogo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2.5"
@@ -20,7 +20,7 @@
         app:srcCompat="@drawable/logo" />
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/loginViewBottom"
+        android:id="@+id/signupViewBottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -58,19 +58,15 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <RelativeLayout
-                android:id="@+id/loginRlBottom"
+                android:id="@+id/signupRlBottom"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
                 android:layout_weight="0"
-                android:paddingHorizontal="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:paddingHorizontal="10dp">
 
 
                 <EditText
-                    android:id="@+id/loginTvUsername"
+                    android:id="@+id/signupTvUsername"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:layout_alignParentTop="true"
@@ -89,10 +85,10 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/loginTvPassword"
+                    android:id="@+id/signupTvPassword"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
-                    android:layout_below="@+id/loginTvUsername"
+                    android:layout_below="@+id/signupTvUsername"
                     android:layout_marginTop="25dp"
                     android:autofillHints="@string/prompt_password"
                     android:background="@drawable/edit_text_background"
@@ -107,48 +103,38 @@
                     android:textColorHint="@color/hint"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/loginTvUsername" />
+                    app:layout_constraintTop_toBottomOf="@+id/signupTvUsername" />
 
                 <Button
-                    android:id="@+id/loginBtnlogin"
+                    android:id="@+id/signupBtnSignup"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:layout_below="@+id/loginTvPassword"
+                    android:layout_below="@+id/signupTvPassword"
                     android:layout_gravity="start"
                     android:layout_marginTop="25dp"
-                    android:elevation="0dp"
                     android:enabled="false"
                     android:maxWidth="488dp"
-                    android:text="@string/action_sign_in"
-                    android:translationZ="0dp"
+                    android:text="@string/action_sign_up"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.437"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/loginTvPassword"
+                    app:layout_constraintTop_toBottomOf="@+id/signupTvPassword"
                     app:layout_constraintVertical_bias="0.134" />
 
                 <ProgressBar
-                    android:id="@+id/loginPbLoading"
+                    android:id="@+id/signupPbLoading"
                     style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Inverse"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/loginBtnlogin"
+                    android:layout_alignTop="@+id/signupBtnSignup"
+                    android:layout_alignBottom="@+id/signupBtnSignup"
                     android:layout_alignParentEnd="true"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
                     android:scrollbarSize="0dp"
-                    android:translationZ="10dp"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/loginBtnlogin"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/forgot_password" />
+                    android:visibility="gone"
+                    tools:visibility="gone" />
 
                 <View
                     android:id="@+id/view"
@@ -163,13 +149,13 @@
                     android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/loginTvSignup"
+                    android:layout_above="@+id/signupTvLogin"
                     android:layout_alignParentStart="false"
                     android:layout_centerHorizontal="true"
-                    android:text="@string/dont_have_account" />
+                    android:text="@string/have_account" />
 
                 <TextView
-                    android:id="@+id/loginTvSignup"
+                    android:id="@+id/signupTvLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="false"
@@ -177,7 +163,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginEnd="136dp"
                     android:layout_marginBottom="20dp"
-                    android:text="@string/sign_up"
+                    android:text="@string/sign_in"
                     android:textColor="@color/purple_700"
                     android:textSize="15sp"
                     android:textStyle="bold" />

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
@@ -31,9 +32,9 @@ import com.together.traveler.databinding.ActivityLoginBinding;
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
-    CardView BottomView;
-    RelativeLayout BottomRelativeLayout;
-    String Tag = "asd";
+    private CardView BottomView;
+    private RelativeLayout BottomRelativeLayout;
+    private String Tag = "asd";
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -59,18 +60,19 @@ public class LoginActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
 
-        com.together.traveler.databinding.ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final EditText usernameEditText = binding.username;
-        final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.login;
-        final ProgressBar loadingProgressBar = binding.loading;
+        final EditText usernameEditText = binding.loginTvUsername;
+        final EditText passwordEditText = binding.loginTvPassword;
+        final Button loginButton = binding.loginBtnlogin;
+        final ProgressBar loadingProgressBar = binding.loginPbLoading;
+        final TextView toSignupButton = binding.loginTvSignup;
         BottomView = binding.loginViewBottom;
-        BottomRelativeLayout = binding.rlBottom;
+        BottomRelativeLayout = binding.loginRlBottom;
 
 
         loginViewModel.getLoginFormState().observe(this, loginFormState -> {
@@ -93,6 +95,7 @@ public class LoginActivity extends AppCompatActivity {
             loadingProgressBar.setVisibility(View.GONE);
             if (loginResult.getError() != null) {
                 showLoginFailed(loginResult.getError());
+                return;
             }
             if (loginResult.getSuccess() != null) {
                 updateUiWithUser(loginResult.getSuccess());
@@ -101,6 +104,11 @@ public class LoginActivity extends AppCompatActivity {
 
             //Complete and destroy login activity once successful
             finish();
+        });
+
+        toSignupButton.setOnClickListener(v->{
+            Intent switchActivityIntent = new Intent(this, SignupActivity.class);
+            startActivity(switchActivityIntent);
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -132,40 +140,38 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            loginViewModel.login(usernameEditText.getText().toString(),
+             loginViewModel.login(usernameEditText.getText().toString(),
                     passwordEditText.getText().toString());
+
         });
 
 
         usernameEditText.setOnFocusChangeListener((view, b) -> changeView(b));
-
         passwordEditText.setOnFocusChangeListener((view, b) -> changeView(b));
 
     }
 
 
-    void changeView(boolean b) {
+    private void changeView(boolean b) {
         assert BottomView != null;
         assert BottomRelativeLayout != null;
 
-        LoginActivity.this.runOnUiThread(new Runnable() {
-            public void run() {
-                LinearLayout.LayoutParams param0 = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        0);
-                LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        1);
+        LoginActivity.this.runOnUiThread(() -> {
+            LinearLayout.LayoutParams param0 = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    0);
+            LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    1);
 
-                if (b) {
-                    BottomView.setLayoutParams(param0);
-                    BottomRelativeLayout.setLayoutParams(param1);
-                } else {
-                    BottomView.setLayoutParams(param1);
-                    BottomRelativeLayout.setLayoutParams(param0);
-                }
+            if (b) {
+                BottomView.setLayoutParams(param0);
+                BottomRelativeLayout.setLayoutParams(param1);
+            } else {
+                BottomView.setLayoutParams(param1);
+                BottomRelativeLayout.setLayoutParams(param0);
             }
         });
     }

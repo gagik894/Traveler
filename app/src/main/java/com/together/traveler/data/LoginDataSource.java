@@ -50,7 +50,36 @@ public class LoginDataSource {
             return new Result.Error(new IOException("Error logging in", e));
         }
     }
-
+    public Result<LoggedInUser> login(String email, String password) {
+        final Result[] result = new Result[1];
+        try {
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            Task<AuthResult> task = mAuth.signInWithEmailAndPassword(email, password);
+            Thread thread = new Thread(() -> {
+                try {
+                    AuthResult authResult = Tasks.await(task);
+                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                    Log.i(TAG, "run: " + Objects.requireNonNull(firebaseUser).getEmail());
+                    LoggedInUser user = new LoggedInUser(
+                            firebaseUser.getUid(),
+                            firebaseUser.getEmail());
+                    result[0] = new Result.Success<>(user);
+                } catch (Exception e) {
+                    Log.e(TAG, "run: ", e);
+                    result[0] = new Result.Error(new IOException("Error logging in", e));
+                }
+            });
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return result[0];
+        }catch (Exception e){
+            return new Result.Error(new IOException("Error logging in", e));
+        }
+    }
     public void logout() {
         // TODO: revoke authentication
     }
