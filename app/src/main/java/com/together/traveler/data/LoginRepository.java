@@ -1,5 +1,7 @@
 package com.together.traveler.data;
 
+import android.util.Log;
+
 import com.together.traveler.data.model.LoggedInUser;
 
 /**
@@ -45,8 +47,10 @@ public class LoginRepository {
 
     public Result<LoggedInUser> login(String username, String password) {
         // handle login
-        Result<LoggedInUser> result = dataSource.login(username, password);
+        Result<LoggedInUser> result = dataSource.signup(username, password);
+
         if (result instanceof Result.Success) {
+            Log.i("asd", "login: " + result);
             setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
         }
         return result;
