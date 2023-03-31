@@ -66,8 +66,8 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final EditText usernameEditText = binding.loginTvUsername;
-        final EditText passwordEditText = binding.loginTvPassword;
+        final EditText emailEditText = binding.loginEtEmail;
+        final EditText passwordEditText = binding.loginEtPassword;
         final Button loginButton = binding.loginBtnlogin;
         final ProgressBar loadingProgressBar = binding.loginPbLoading;
         final TextView toSignupButton = binding.loginTvSignup;
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             loginButton.setEnabled(loginFormState.isDataValid());
             if (loginFormState.getUsernameError() != null) {
-                usernameEditText.setError(getString(loginFormState.getUsernameError()));
+                emailEditText.setError(getString(loginFormState.getUsernameError()));
             }
             if (loginFormState.getPasswordError() != null) {
                 passwordEditText.setError(getString(loginFormState.getPasswordError()));
@@ -124,15 +124,15 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
+                loginViewModel.loginDataChanged(emailEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
+        emailEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(usernameEditText.getText().toString(),
+                loginViewModel.login(emailEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
             return false;
@@ -140,13 +140,13 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-             loginViewModel.login(usernameEditText.getText().toString(),
+             loginViewModel.login(emailEditText.getText().toString(),
                     passwordEditText.getText().toString());
 
         });
 
 
-        usernameEditText.setOnFocusChangeListener((view, b) -> changeView(b));
+        emailEditText.setOnFocusChangeListener((view, b) -> changeView(b));
         passwordEditText.setOnFocusChangeListener((view, b) -> changeView(b));
 
     }

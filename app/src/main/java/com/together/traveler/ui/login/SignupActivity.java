@@ -74,8 +74,9 @@ public class SignupActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final EditText usernameEditText = binding.signupTvUsername;
-        final EditText passwordEditText = binding.signupTvPassword;
+        final EditText emailEditText = binding.signupEtEmail;
+        final EditText passwordEditText = binding.signupEtPassword;
+        final EditText usernameEditText = binding.signupEtUsername;
         final Button loginButton = binding.signupBtnSignup;
         final ProgressBar loadingProgressBar = binding.signupPbLoading;
         final TextView toLoginButton = binding.signupTvLogin;
@@ -90,7 +91,7 @@ public class SignupActivity extends AppCompatActivity {
                 }
                 loginButton.setEnabled(loginFormState.isDataValid());
                 if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
+                    emailEditText.setError(getString(loginFormState.getUsernameError()));
                 }
                 if (loginFormState.getPasswordError() != null) {
                     passwordEditText.setError(getString(loginFormState.getPasswordError()));
@@ -137,18 +138,19 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
+                loginViewModel.loginDataChanged(emailEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
+        emailEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.signup(usernameEditText.getText().toString(),
+                    loginViewModel.signup(usernameEditText.getText().toString(),emailEditText.getText().toString(),
                             passwordEditText.getText().toString());
                 }
                 return false;
@@ -157,11 +159,12 @@ public class SignupActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            loginViewModel.signup(usernameEditText.getText().toString(),
+            loginViewModel.signup(usernameEditText.getText().toString(), emailEditText.getText().toString(),
                     passwordEditText.getText().toString());
         });
 
         usernameEditText.setOnFocusChangeListener((view, b) -> changeView(b));
+        emailEditText.setOnFocusChangeListener((view, b) -> changeView(b));
         passwordEditText.setOnFocusChangeListener((view, b) -> changeView(b));
     }
 
@@ -169,24 +172,20 @@ public class SignupActivity extends AppCompatActivity {
         assert BottomView != null;
         assert BottomRelativeLayout != null;
 
-        SignupActivity.this.runOnUiThread(new Runnable() {
-            public void run() {
-                LinearLayout.LayoutParams param0 = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        0);
-                LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        1);
+        SignupActivity.this.runOnUiThread(() -> {
+            LinearLayout.LayoutParams param0 = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    0.5f);
+            LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    1);
 
-                if (b) {
-                    BottomView.setLayoutParams(param0);
-                    BottomRelativeLayout.setLayoutParams(param1);
-                } else {
-                    BottomView.setLayoutParams(param1);
-                    BottomRelativeLayout.setLayoutParams(param0);
-                }
+            if (b) {
+                BottomView.setLayoutParams(param0);
+            } else {
+                BottomView.setLayoutParams(param1);
             }
         });
     }

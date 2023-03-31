@@ -5,9 +5,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class User implements Parcelable {
+    private String email;
     private String username;
+    private String userId;
     private String location;
     private float rating;
     private int profileImage;
@@ -30,6 +33,24 @@ public class User implements Parcelable {
         this.location = location;
         this.rating = rating;
         this.profileImage = profileImage;
+    }
+
+    public User(String userId, String email, String username) {
+        this.email = email;
+        this.username = username;
+        this.userId = userId;
+    }
+
+    public User(String userId, String email) {
+        this.email = email;
+        this.userId = userId;
+    }
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getUsername() {
@@ -68,7 +89,9 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.email);
         dest.writeString(this.username);
+        dest.writeString(this.userId);
         dest.writeString(this.location);
         dest.writeFloat(this.rating);
         dest.writeInt(this.profileImage);
@@ -78,7 +101,9 @@ public class User implements Parcelable {
     }
 
     public void readFromParcel(Parcel source) {
+        this.email = source.readString();
         this.username = source.readString();
+        this.userId = source.readString();
         this.location = source.readString();
         this.rating = source.readFloat();
         this.profileImage = source.readInt();
@@ -88,7 +113,9 @@ public class User implements Parcelable {
     }
 
     protected User(Parcel in) {
+        this.email = in.readString();
         this.username = in.readString();
+        this.userId = in.readString();
         this.location = in.readString();
         this.rating = in.readFloat();
         this.profileImage = in.readInt();

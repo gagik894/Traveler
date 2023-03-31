@@ -8,8 +8,8 @@ import android.util.Patterns;
 
 import com.together.traveler.data.LoginRepository;
 import com.together.traveler.data.Result;
-import com.together.traveler.data.model.LoggedInUser;
 import com.together.traveler.R;
+import com.together.traveler.model.User;
 
 public class LoginViewModel extends ViewModel {
 
@@ -29,16 +29,16 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void login(String username, String password) {
+    public void login(String email, String password) {
         // can be launched in a separate asynchronous job
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Result<LoggedInUser> result = loginRepository.login(username, password);
+                Result<User> result = loginRepository.login(email, password);
 
                 if (result instanceof Result.Success) {
-                    LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-                    loginResult.postValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+                    User data = ((Result.Success<User>) result).getData();
+                    loginResult.postValue(new LoginResult(new LoggedInUserView(data.getUsername())));
                 } else {
                     loginResult.postValue(new LoginResult(R.string.login_failed));
                 }
@@ -48,16 +48,16 @@ public class LoginViewModel extends ViewModel {
 
     }
 
-    public void signup(String username, String password) {
+    public void signup(String username, String email, String password) {
         // can be launched in a separate asynchronous job
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Result<LoggedInUser> result = loginRepository.signup(username, password);
+                Result<User> result = loginRepository.signup(username, email, password);
 
                 if (result instanceof Result.Success) {
-                    LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-                    loginResult.postValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+                    User data = ((Result.Success<User>) result).getData();
+                    loginResult.postValue(new LoginResult(new LoggedInUserView(data.getUsername())));
                 } else {
                     loginResult.postValue(new LoginResult(R.string.login_failed));
                 }
@@ -66,8 +66,8 @@ public class LoginViewModel extends ViewModel {
         thread.start();
     }
 
-    public void loginDataChanged(String username, String password) {
-        if (!isUserNameValid(username)) {
+    public void loginDataChanged(String email, String password) {
+        if (!isUserNameValid(email)) {
             loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
         } else if (!isPasswordValid(password)) {
             loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
@@ -77,14 +77,14 @@ public class LoginViewModel extends ViewModel {
     }
 
     // A placeholder username validation check
-    private boolean isUserNameValid(String username) {
-        if (username == null) {
+    private boolean isUserNameValid(String email) {
+        if (email == null) {
             return false;
         }
-        if (username.contains("@")) {
-            return Patterns.EMAIL_ADDRESS.matcher(username).matches();
+        if (email.contains("@")) {
+            return Patterns.EMAIL_ADDRESS.matcher(email).matches();
         } else {
-            return !username.trim().isEmpty();
+            return !email.trim().isEmpty();
         }
     }
 

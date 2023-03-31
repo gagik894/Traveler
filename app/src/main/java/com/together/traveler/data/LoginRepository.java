@@ -2,7 +2,7 @@ package com.together.traveler.data;
 
 import android.util.Log;
 
-import com.together.traveler.data.model.LoggedInUser;
+import com.together.traveler.model.User;
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -16,7 +16,7 @@ public class LoginRepository {
 
     // If user credentials will be cached in local storage, it is recommended it be encrypted
     // @see https://developer.android.com/training/articles/keystore
-    private LoggedInUser user = null;
+    private User user = null;
 
     // private constructor : singleton access
     private LoginRepository(LoginDataSource dataSource) {
@@ -39,30 +39,30 @@ public class LoginRepository {
         dataSource.logout();
     }
 
-    private void setLoggedInUser(LoggedInUser user) {
+    private void setLoggedInUser(User user) {
         this.user = user;
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }
 
-    public Result<LoggedInUser> signup(String username, String password) {
+    public Result<User> signup(String username, String email, String password) {
         // handle login
-        Result<LoggedInUser> result = dataSource.signup(username, password);
+        Result<User> result = dataSource.signup(username, email, password);
 
         if (result instanceof Result.Success) {
             Log.i("asd", "login: " + result);
-            setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
+            setLoggedInUser(((Result.Success<User>) result).getData());
         }
         return result;
     }
 
-    public Result<LoggedInUser> login(String username, String password) {
+    public Result<User> login(String username, String password) {
         // handle login
-        Result<LoggedInUser> result = dataSource.login(username, password);
+        Result<User> result = dataSource.login(username, password);
 
         if (result instanceof Result.Success) {
             Log.i("asd", "login: " + result);
-            setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
+            setLoggedInUser(((Result.Success<User>) result).getData());
         }
         return result;
     }

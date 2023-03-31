@@ -70,7 +70,7 @@
 
 
                 <EditText
-                    android:id="@+id/loginTvUsername"
+                    android:id="@+id/loginEtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:layout_alignParentTop="true"
@@ -89,10 +89,10 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/loginTvPassword"
+                    android:id="@+id/loginEtPassword"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
-                    android:layout_below="@+id/loginTvUsername"
+                    android:layout_below="@+id/loginEtEmail"
                     android:layout_marginTop="25dp"
                     android:autofillHints="@string/prompt_password"
                     android:background="@drawable/edit_text_background"
@@ -107,13 +107,13 @@
                     android:textColorHint="@color/hint"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/loginTvUsername" />
+                    app:layout_constraintTop_toBottomOf="@+id/loginEtEmail" />
 
                 <Button
                     android:id="@+id/loginBtnlogin"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:layout_below="@+id/loginTvPassword"
+                    android:layout_below="@+id/loginEtPassword"
                     android:layout_gravity="start"
                     android:layout_marginTop="25dp"
                     android:elevation="0dp"
@@ -125,7 +125,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.437"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/loginTvPassword"
+                    app:layout_constraintTop_toBottomOf="@+id/loginEtPassword"
                     app:layout_constraintVertical_bias="0.134" />
 
                 <ProgressBar
