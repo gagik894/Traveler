@@ -10,7 +10,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.together.traveler.model.User;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -23,10 +31,93 @@ public class LoginDataSource {
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final String TAG = "asd";
 
-    public Result<User> signup(String username, String email, String password) {
+
+    public Result<String> signup(String username, String email, String password){
+        String url = "https://traveler-ynga.onrender.com/auth/signupwithoutverification";
+
+        URL obj = null;
+        try {
+            obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            // Set request method to POST
+            con.setRequestMethod("POST");
+
+            // Set request headers
+            con.setRequestProperty("Content-Type", "application/json");
+
+            // Set request body
+            String requestBody = String.format("{\"username\": \"%s\",\"email\":\"%s\",\"password\":\"%s\"}", username, email, password);
+            con.setDoOutput(true);
+            DataOutputStream outputStream = new DataOutputStream(con.getOutputStream());
+            outputStream.writeBytes(requestBody);
+            outputStream.flush();
+            outputStream.close();
+
+            // Read response
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            JSONObject jsonObj = new JSONObject(response.toString());
+            Log.i(TAG, "fetch: " + jsonObj.getString("auth_token"));
+            String auth_token = jsonObj.getString("auth_token");
+            return  new Result.Success(auth_token);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result.Error(new IOException("Error creating user"));
+        }
+    }
+
+
+    public Result<String> login(String email, String password){
+        String url = "https://traveler-ynga.onrender.com/auth/signin";
+
+        URL obj = null;
+        try {
+            obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            // Set request method to POST
+            con.setRequestMethod("POST");
+
+            // Set request headers
+            con.setRequestProperty("Content-Type", "application/json");
+
+            // Set request body
+            String requestBody = String.format("{\"email\":\"%s\",\"password\":\"%s\"}", email, password);
+            con.setDoOutput(true);
+            DataOutputStream outputStream = new DataOutputStream(con.getOutputStream());
+            outputStream.writeBytes(requestBody);
+            outputStream.flush();
+            outputStream.close();
+
+            // Read response
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            JSONObject jsonObj = new JSONObject(response.toString());
+            Log.i(TAG, "fetch: " + jsonObj.getString("auth_token"));
+            String auth_token = jsonObj.getString("auth_token");
+            return  new Result.Success(auth_token);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result.Error(new IOException("Error creating user"));
+        }
+    }
+
+    public Result<User> signupWithFirebase(String username, String email, String password){
         final CompletableFuture<Result<User>> future = new CompletableFuture<>();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         Task<AuthResult> task = mAuth.createUserWithEmailAndPassword(email, password);
+
         task.addOnCompleteListener(authTask -> {
             if (authTask.isSuccessful()) {
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -60,7 +151,7 @@ public class LoginDataSource {
     }
 
 
-    public Result<User> login(String email, String password) {
+    public Result<User> loginWithFirebase(String email, String password) {
         final Result[] result = new Result[1];
         try {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();

@@ -4,14 +4,14 @@ package com.together.traveler.ui.login;
  * Class exposing authenticated user details to the UI.
  */
 class LoggedInUserView {
-    private String displayName;
+    private String auth_token;
     //... other data fields that may be accessible to the UI
 
-    LoggedInUserView(String displayName) {
-        this.displayName = displayName;
+    LoggedInUserView(String auth_token) {
+        this.auth_token = auth_token;
     }
 
-    String getDisplayName() {
-        return displayName;
+    public String getAuth_token() {
+        return auth_token;
     }
 }

@@ -34,18 +34,17 @@ public class LoginViewModel extends ViewModel {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Result<User> result = loginRepository.login(email, password);
+                Result<String> result = loginRepository.login(email, password);
 
                 if (result instanceof Result.Success) {
-                    User data = ((Result.Success<User>) result).getData();
-                    loginResult.postValue(new LoginResult(new LoggedInUserView(data.getUsername())));
+                    String data = ((Result.Success<String>) result).getData();
+                    loginResult.postValue(new LoginResult(new LoggedInUserView(data)));
                 } else {
                     loginResult.postValue(new LoginResult(R.string.login_failed));
                 }
             }
         });
         thread.start();
-
     }
 
     public void signup(String username, String email, String password) {
@@ -53,11 +52,11 @@ public class LoginViewModel extends ViewModel {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Result<User> result = loginRepository.signup(username, email, password);
+                Result<String> result = loginRepository.signup(username, email, password);
 
                 if (result instanceof Result.Success) {
-                    User data = ((Result.Success<User>) result).getData();
-                    loginResult.postValue(new LoginResult(new LoggedInUserView(data.getUsername())));
+                    String data = ((Result.Success<String>) result).getData();
+                    loginResult.postValue(new LoginResult(new LoggedInUserView(data)));
                 } else {
                     loginResult.postValue(new LoginResult(R.string.login_failed));
                 }

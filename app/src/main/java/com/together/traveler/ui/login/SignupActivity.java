@@ -190,7 +190,7 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
     private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
+        String welcome = getString(R.string.welcome) + model.getAuth_token();
         // TODO : initiate successful logged in experience
         Intent switchActivityIntent = new Intent(this, MainActivity.class);
         startActivity(switchActivityIntent);

@@ -93,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
             loadingProgressBar.setVisibility(View.GONE);
+            loginButton.setEnabled(true);
             if (loginResult.getError() != null) {
                 showLoginFailed(loginResult.getError());
                 return;
@@ -140,7 +141,8 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-             loginViewModel.login(emailEditText.getText().toString(),
+            loginButton.setEnabled(false);
+            loginViewModel.login(emailEditText.getText().toString(),
                     passwordEditText.getText().toString());
 
         });
@@ -178,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUiWithUser(LoggedInUserView model) {
         try {
-            String welcome = getString(R.string.welcome) + model.getDisplayName();
+            String welcome = getString(R.string.welcome) + model.getAuth_token();
             // TODO : initiate successful logged in experience
             Log.d(Tag, "updateUiWithUser: ");
             Intent switchActivityIntent = new Intent(this, MainActivity.class);

@@ -16,7 +16,7 @@ public class LoginRepository {
 
     // If user credentials will be cached in local storage, it is recommended it be encrypted
     // @see https://developer.android.com/training/articles/keystore
-    private User user = null;
+    private String auth_token = null;
 
     // private constructor : singleton access
     private LoginRepository(LoginDataSource dataSource) {
@@ -31,38 +31,38 @@ public class LoginRepository {
     }
 
     public boolean isLoggedIn() {
-        return user != null;
+        return auth_token != null;
     }
 
     public void logout() {
-        user = null;
+        auth_token = null;
         dataSource.logout();
     }
 
-    private void setLoggedInUser(User user) {
-        this.user = user;
+    private void setLoggedInUser(String auth_token) {
+        this.auth_token = auth_token;
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }
 
-    public Result<User> signup(String username, String email, String password) {
+    public Result<String> signup(String username, String email, String password) {
         // handle login
-        Result<User> result = dataSource.signup(username, email, password);
+        Result<String> result = dataSource.signup(username, email, password);
 
         if (result instanceof Result.Success) {
             Log.i("asd", "login: " + result);
-            setLoggedInUser(((Result.Success<User>) result).getData());
+            setLoggedInUser(((Result.Success<String>) result).getData());
         }
         return result;
     }
 
-    public Result<User> login(String username, String password) {
+    public Result<String> login(String username, String password) {
         // handle login
-        Result<User> result = dataSource.login(username, password);
+        Result<String> result = dataSource.login(username, password);
 
         if (result instanceof Result.Success) {
             Log.i("asd", "login: " + result);
-            setLoggedInUser(((Result.Success<User>) result).getData());
+            setLoggedInUser(((Result.Success<String>) result).getData());
         }
         return result;
     }
