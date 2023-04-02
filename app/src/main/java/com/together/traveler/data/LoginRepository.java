@@ -1,8 +1,13 @@
 package com.together.traveler.data;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.together.traveler.model.User;
+import com.together.traveler.ui.login.AppContext;
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -12,8 +17,11 @@ public class LoginRepository {
 
     private static volatile LoginRepository instance;
 
-    private LoginDataSource dataSource;
-
+    private final LoginDataSource dataSource;
+    private final String TAG = "asd";
+    Context context = AppContext.getContext();
+    private final SharedPreferences sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+    private final SharedPreferences.Editor editor = sharedPreferences.edit();
     // If user credentials will be cached in local storage, it is recommended it be encrypted
     // @see https://developer.android.com/training/articles/keystore
     private String auth_token = null;
@@ -21,6 +29,7 @@ public class LoginRepository {
     // private constructor : singleton access
     private LoginRepository(LoginDataSource dataSource) {
         this.dataSource = dataSource;
+
     }
 
     public static LoginRepository getInstance(LoginDataSource dataSource) {
@@ -31,16 +40,24 @@ public class LoginRepository {
     }
 
     public boolean isLoggedIn() {
+        auth_token = sharedPreferences.getString("auth_token", null);
         return auth_token != null;
     }
 
     public void logout() {
         auth_token = null;
         dataSource.logout();
+
+        editor.clear();
+        editor.apply();
     }
 
     private void setLoggedInUser(String auth_token) {
         this.auth_token = auth_token;
+        editor.putString("auth_token", auth_token);
+        editor.apply();
+
+        Log.i(TAG, "setLoggedInUser: " + sharedPreferences.getString("auth_token", null));
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }

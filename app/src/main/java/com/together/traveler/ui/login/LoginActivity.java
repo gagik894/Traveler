@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         super.onCreate(savedInstanceState);
-
+        AppContext.init(this);
         ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -195,4 +195,6 @@ public class LoginActivity extends AppCompatActivity {
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
+
 }
+

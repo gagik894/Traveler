@@ -106,6 +106,7 @@ public class SignupActivity extends AppCompatActivity {
                     return;
                 }
                 loadingProgressBar.setVisibility(View.GONE);
+                loginButton.setEnabled(true);
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
                     return;
@@ -159,6 +160,7 @@ public class SignupActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
+            loginButton.setEnabled(false);
             loginViewModel.signup(usernameEditText.getText().toString(), emailEditText.getText().toString(),
                     passwordEditText.getText().toString());
         });
