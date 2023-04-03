@@ -33,7 +33,6 @@ public class Event implements Parcelable {
 
     }
 
-
     public String getName() {
         return name;
     }
@@ -79,10 +78,11 @@ public class Event implements Parcelable {
 
 
     public static ArrayList<Event> createCardList(int quantity) {
+        String longDesc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida dictum fusce. Vel eros donec ac odio tempor orci dapibus ultrices in. Urna nec tincidunt praesent semper feugiat. Quis eleifend quam adipiscing vitae. Mi tempus imperdiet nulla malesuada pellentesque. Vitae auctor eu augue ut. Eu volutpat odio facilisis mauris sit amet massa vitae tortor. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque dignissim. Fermentum iaculis eu non diam phasellus vestibulum lorem sed risus. Sed id semper risus in hendrerit gravida. In vitae turpis massa sed. Tortor dignissim convallis aenean et tortor at. Turpis egestas maecenas pharetra convallis. A cras semper auctor neque vitae. Aliquam ut porttitor leo a. Lacinia quis vel eros donec ac odio tempor orci dapibus.";
         int lastId = 0;
         ArrayList<Event> events = new ArrayList<>();
         for (int i = 1; i <= quantity; i++) {
-            events.add(new Event("Event " + ++lastId, "somewhere", LocalDate.now(), LocalTime.now(),R.drawable.event, "description", new User("username", "somewhere", 4.8f, R.drawable.default_user), false, false));
+            events.add(new Event("Event " + ++lastId, "somewhere", LocalDate.now(), LocalTime.now(),R.drawable.event, i%2 == 0?"description": longDesc, new User("username", "somewhere", 4.8f, R.drawable.default_user), false, false));
         }
         return events;
     }

@@ -2,9 +2,11 @@ package com.together.traveler.ui.event;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -67,12 +69,27 @@ public class EventFragment extends Fragment {
             }else{
                 saveButton.setImageResource(R.drawable.favorite_border);
             }
+            ViewTreeObserver vto = description.getViewTreeObserver();
+            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int lineCount = description.getLineCount();
+                    Log.d("asd", "Line count: " + lineCount + description.getMaxLines());
+                    if (description.getMaxLines()==lineCount){
+                        buttonMore.setVisibility(View.VISIBLE);
+                    }else{
+                        buttonMore.setVisibility(View.GONE);
+                    }
+                    ViewTreeObserver vto = description.getViewTreeObserver();
+                    vto.removeOnGlobalLayoutListener(this);
+                }
+            });
         });
 
         saveButton.setOnClickListener(v -> eventViewModel.save());
         enrollButton.setOnClickListener(v -> eventViewModel.enroll());
         backButton.setOnClickListener(v-> NavHostFragment.findNavController(this).navigateUp());
-        buttonMore.setVisibility(description.getMaxLines()>description.getLineCount()? View.GONE : View.VISIBLE);
+
         buttonMore.setOnClickListener(v -> {
             if (description.getMaxLines() == maxLines) {
                 description.setMaxLines(Integer.MAX_VALUE);
