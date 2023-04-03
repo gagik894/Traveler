@@ -44,14 +44,57 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <View
+                <androidx.cardview.widget.CardView
                     android:id="@+id/eventPlaceholder"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardElevation="0dp"
                     app:layout_constraintDimensionRatio="w,3:4"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageButton
+                            android:id="@+id/eventIBtnBack"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="20dp"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/rounded_background"
+                            android:contentDescription="@string/btn_add"
+                            android:cropToPadding="true"
+                            android:padding="10dp"
+                            android:paddingEnd="12dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/arrow_back"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageButton
+                            android:id="@+id/eventIBtnSave"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/rounded_background"
+                            android:contentDescription="@string/btn_save"
+                            android:cropToPadding="true"
+                            android:padding="8dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/favorite_border"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/primary_color" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/eventViewBottom"
@@ -221,6 +264,7 @@
                     <!--            </ScrollView>-->
 
                 </com.google.android.material.card.MaterialCardView>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 

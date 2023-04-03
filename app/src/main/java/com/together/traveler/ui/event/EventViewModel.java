@@ -1,8 +1,6 @@
 package com.together.traveler.ui.event;
 
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -24,7 +22,12 @@ public class EventViewModel extends ViewModel {
     }
 
     public void enroll() {
-        data.getValue().enroll();
+        Objects.requireNonNull(data.getValue()).enroll();
+        this.data.setValue(data.getValue());
+    }
+
+    public void save() {
+        Objects.requireNonNull(data.getValue()).save();
         this.data.setValue(data.getValue());
     }
 

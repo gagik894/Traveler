@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentEventBinding;
@@ -34,6 +36,8 @@ public class EventFragment extends Fragment {
         final TextView description = binding.eventTvDescription;
         final TextView buttonMore = binding.eventTvMore;
         final Button enrollButton = binding.eventBtnEnroll;
+        final ImageButton backButton = binding.eventIBtnBack;
+        final ImageButton saveButton = binding.eventIBtnSave;
         int maxLines = description.getMaxLines();
 
         if (getArguments() != null) {
@@ -58,11 +62,16 @@ public class EventFragment extends Fragment {
                 enrollButton.setText(R.string.event_enroll_button);
                 enrollButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.secondary_color));
             }
-
+            if(data.isSaved()){
+                saveButton.setImageResource(R.drawable.favorite);
+            }else{
+                saveButton.setImageResource(R.drawable.favorite_border);
+            }
         });
 
+        saveButton.setOnClickListener(v -> eventViewModel.save());
         enrollButton.setOnClickListener(v -> eventViewModel.enroll());
-
+        backButton.setOnClickListener(v-> NavHostFragment.findNavController(this).navigateUp());
         buttonMore.setVisibility(description.getMaxLines()>description.getLineCount()? View.GONE : View.VISIBLE);
         buttonMore.setOnClickListener(v -> {
             if (description.getMaxLines() == maxLines) {

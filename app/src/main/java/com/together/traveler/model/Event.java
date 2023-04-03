@@ -17,9 +17,10 @@ public class Event implements Parcelable {
     private int image;
     private String description;
     private boolean enrolled;
+    private boolean saved;
     private User by;
 
-    public Event(String name, String location, LocalDate date, LocalTime time, int image, String description, User by, boolean enrolled) {
+    public Event(String name, String location, LocalDate date, LocalTime time, int image, String description, User by, boolean enrolled, boolean saved) {
         this.name = name;
         this.location = location;
         this.date = date;
@@ -27,7 +28,9 @@ public class Event implements Parcelable {
         this.image = image;
         this.description = description;
         this.enrolled = enrolled;
+        this.saved = saved;
         this.by = by;
+
     }
 
 
@@ -63,6 +66,13 @@ public class Event implements Parcelable {
         enrolled = true;
     }
 
+    public boolean isSaved() {
+        return saved;
+    }
+
+    public void save(){
+        this.saved = !this.saved;
+    }
     public User getUser() {
         return by;
     }
@@ -72,7 +82,7 @@ public class Event implements Parcelable {
         int lastId = 0;
         ArrayList<Event> events = new ArrayList<>();
         for (int i = 1; i <= quantity; i++) {
-            events.add(new Event("Event " + ++lastId, "somewhere", LocalDate.now(), LocalTime.now(),R.drawable.event, "description", new User("username", "somewhere", 4.8f, R.drawable.default_user), false));
+            events.add(new Event("Event " + ++lastId, "somewhere", LocalDate.now(), LocalTime.now(),R.drawable.event, "description", new User("username", "somewhere", 4.8f, R.drawable.default_user), false, false));
         }
         return events;
     }
@@ -92,6 +102,7 @@ public class Event implements Parcelable {
         dest.writeInt(this.image);
         dest.writeString(this.description);
         dest.writeByte(this.enrolled ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.saved ? (byte) 1 : (byte) 0);
         dest.writeParcelable(this.by, flags);
     }
 
@@ -103,6 +114,7 @@ public class Event implements Parcelable {
         this.image = source.readInt();
         this.description = source.readString();
         this.enrolled = source.readByte() != 0;
+        this.saved = source.readByte() != 0;
         this.by = source.readParcelable(User.class.getClassLoader());
     }
 
@@ -114,6 +126,7 @@ public class Event implements Parcelable {
         this.image = in.readInt();
         this.description = in.readString();
         this.enrolled = in.readByte() != 0;
+        this.saved = in.readByte() != 0;
         this.by = in.readParcelable(User.class.getClassLoader());
     }
 

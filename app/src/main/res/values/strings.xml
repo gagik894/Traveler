@@ -9,6 +9,9 @@
     <string name="star_icon">Star</string>
     <string name="btn_add">Add button</string>
     <string name="btn_center_on_location">CenterOnLocation</string>
+    <string name="btn_back">Back</string>
+    <string name="btn_save">Save</string>
+
 
     <!--    login-->
     <string name="title_activity_login">LoginActivity</string>
