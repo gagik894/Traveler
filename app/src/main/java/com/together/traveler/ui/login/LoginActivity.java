@@ -185,7 +185,6 @@ public class LoginActivity extends AppCompatActivity {
             Log.d(Tag, "updateUiWithUser: ");
             Intent switchActivityIntent = new Intent(this, MainActivity.class);
             startActivity(switchActivityIntent);
-            Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Log.e(Tag, "updateUiWithUser: ", e);
         }

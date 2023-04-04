@@ -1,5 +1,6 @@
 package com.together.traveler;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +9,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.together.traveler.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -22,11 +25,15 @@ public class MainActivity extends AppCompatActivity
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         BottomNavigationView bottomNav = findViewById(R.id.nvMain);
         NavController navController;
+        FloatingActionButton addButton = findViewById(R.id.floatingActionButton2);
         if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
             NavigationUI.setupWithNavController(bottomNav, navController);
         }
-
+        addButton.setOnClickListener(v -> {
+            Intent switchActivityIntent = new Intent(this, AddActivity.class);
+            startActivity(switchActivityIntent);
+        });
 
 
     }

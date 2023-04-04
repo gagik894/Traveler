@@ -61,9 +61,9 @@
 
                         <ImageButton
                             android:id="@+id/eventIBtnBack"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginStart="20dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginStart="15dp"
                             android:layout_marginTop="20dp"
                             android:adjustViewBounds="true"
                             android:background="@drawable/rounded_background"
@@ -78,10 +78,10 @@
 
                         <ImageButton
                             android:id="@+id/eventIBtnSave"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:layout_marginTop="20dp"
-                            android:layout_marginEnd="20dp"
+                            android:layout_marginEnd="15dp"
                             android:adjustViewBounds="true"
                             android:background="@drawable/rounded_background"
                             android:contentDescription="@string/btn_save"
@@ -103,6 +103,7 @@
                     android:layout_marginTop="-30dp"
                     android:nestedScrollingEnabled="true"
                     android:visibility="visible"
+                    app:cardBackgroundColor="#FAFFFFFF"
                     app:cardElevation="0dp"
                     app:cardPreventCornerOverlap="true"
                     app:layout_constraintEnd_toEndOf="parent"

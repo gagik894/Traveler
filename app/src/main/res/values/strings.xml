@@ -7,7 +7,7 @@
     <string name="location_icon">Location</string>
     <string name="settings_icon">Settings</string>
     <string name="star_icon">Star</string>
-    <string name="btn_add">Add button</string>
+    <string name="btn_add">Add</string>
     <string name="btn_center_on_location">CenterOnLocation</string>
     <string name="btn_back">Back</string>
     <string name="btn_save">Save</string>
@@ -61,5 +61,18 @@
     <string name="nav_search">search</string>
     <string name="nav_home">home</string>
     <string name="title_activity_signup">SignupActivity</string>
+    <string name="add_title">Title</string>
+    <string name="add_location">Location</string>
+    <string name="add_start_date_and_time">Start Date and Time</string>
+    <string name="add_end_date_and_time">End Date and Time</string>
+    <string name="add_select_end_date_and_time">Select end date and time</string>
+    <string name="add_description">Description</string>
+    <string name="add_number_of_tickets">Number of Tickets</string>
+    <string name="add_select_start_date_and_time">Select start date and time</string>
+    <string name="add_enter_number_of_tickets">Enter number of tickets</string>
+    <string name="add_enter_description">Enter description</string>
+    <string name="add_enter_location">Enter location</string>
+    <string name="add_enter_title">Enter title</string>
+    <string name="add_create_event">Create Event</string>
 
 </resources>
