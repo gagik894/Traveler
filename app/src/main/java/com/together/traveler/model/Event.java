@@ -5,48 +5,102 @@ import android.os.Parcelable;
 
 import com.together.traveler.R;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Event implements Parcelable {
-    private String name;
+    private String title;
     private String location;
-    private LocalDate date;
-    private LocalTime time;
+    private String startDate;
+    private String startTime;
+    private String endDate;
+    private String endTime;
     private int image;
+    private int ticketsCount;
     private String description;
     private boolean enrolled;
     private boolean saved;
     private User by;
 
-    public Event(String name, String location, LocalDate date, LocalTime time, int image, String description, User by, boolean enrolled, boolean saved) {
-        this.name = name;
+    public Event(String title, String location, String startDate, String startTime, String endDate, String endTime, int image, String description, User by, int ticketsCount) {
+        this.title = title;
         this.location = location;
-        this.date = date;
-        this.time = time;
+        this.startDate = startDate;
+        this.startTime = startTime;
+        this.endDate = endDate;
+        this.endTime = endTime;
         this.image = image;
         this.description = description;
-        this.enrolled = enrolled;
-        this.saved = saved;
         this.by = by;
-
+        this.ticketsCount = ticketsCount;
     }
 
-    public String getName() {
-        return name;
+    public Event(){
+        this.title = "";
+        this.location = "";
+        this.startDate = "";
+        this.startTime = "";
+        this.endDate = "";
+        this.endTime = "";
+        this.description = "";
+        this.ticketsCount = 0;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setBy(User by) {
+        this.by = by;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setTicketsCount(int ticketsCount) {
+        this.ticketsCount = ticketsCount;
+    }
+
+    public void enroll(){
+        enrolled = true;
+    }
+
+    public void save(){
+        this.saved = !this.saved;
+    }
+
+
+
+    public String getTitle() {
+        return title;
     }
 
     public String getLocation() {
         return location;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
     }
 
     public int getImage() {
@@ -57,36 +111,47 @@ public class Event implements Parcelable {
         return description;
     }
 
-    public boolean isEnrolled() {
-        return enrolled;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void enroll(){
-        enrolled = true;
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public User getUser() {
+        return by;
+    }
+
+    public int getTicketsCount() {
+        return ticketsCount;
+    }
+
+    public boolean isEnrolled() {
+        return enrolled;
     }
 
     public boolean isSaved() {
         return saved;
     }
 
-    public void save(){
-        this.saved = !this.saved;
-    }
-    public User getUser() {
-        return by;
-    }
-
-
     public static ArrayList<Event> createCardList(int quantity) {
         String longDesc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida dictum fusce. Vel eros donec ac odio tempor orci dapibus ultrices in. Urna nec tincidunt praesent semper feugiat. Quis eleifend quam adipiscing vitae. Mi tempus imperdiet nulla malesuada pellentesque. Vitae auctor eu augue ut. Eu volutpat odio facilisis mauris sit amet massa vitae tortor. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque dignissim. Fermentum iaculis eu non diam phasellus vestibulum lorem sed risus. Sed id semper risus in hendrerit gravida. In vitae turpis massa sed. Tortor dignissim convallis aenean et tortor at. Turpis egestas maecenas pharetra convallis. A cras semper auctor neque vitae. Aliquam ut porttitor leo a. Lacinia quis vel eros donec ac odio tempor orci dapibus.";
         int lastId = 0;
         ArrayList<Event> events = new ArrayList<>();
         for (int i = 1; i <= quantity; i++) {
-            events.add(new Event("Event " + ++lastId, "somewhere", LocalDate.now(), LocalTime.now(),R.drawable.event, i%2 == 0?"description": longDesc, new User("username", "somewhere", 4.8f, R.drawable.default_user), false, false));
+            events.add(new Event("Event " + ++lastId, "somewhere", "Mon, 5 April", "18:00", "Mon, 5 Apr", "20:00",R.drawable.event, i%2 == 0?"description": longDesc, new User("username", "somewhere", 4.8f, R.drawable.default_user), 25));
         }
         return events;
     }
-
 
     @Override
     public int describeContents() {
@@ -95,11 +160,14 @@ public class Event implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.name);
+        dest.writeString(this.title);
         dest.writeString(this.location);
-        dest.writeSerializable(this.date);
-        dest.writeSerializable(this.time);
+        dest.writeString(this.startDate);
+        dest.writeString(this.startTime);
+        dest.writeString(this.endDate);
+        dest.writeString(this.endTime);
         dest.writeInt(this.image);
+        dest.writeInt(this.ticketsCount);
         dest.writeString(this.description);
         dest.writeByte(this.enrolled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.saved ? (byte) 1 : (byte) 0);
@@ -107,11 +175,14 @@ public class Event implements Parcelable {
     }
 
     public void readFromParcel(Parcel source) {
-        this.name = source.readString();
+        this.title = source.readString();
         this.location = source.readString();
-        this.date = (LocalDate) source.readSerializable();
-        this.time = (LocalTime) source.readSerializable();
+        this.startDate = source.readString();
+        this.startTime = source.readString();
+        this.endDate = source.readString();
+        this.endTime = source.readString();
         this.image = source.readInt();
+        this.ticketsCount = source.readInt();
         this.description = source.readString();
         this.enrolled = source.readByte() != 0;
         this.saved = source.readByte() != 0;
@@ -119,18 +190,21 @@ public class Event implements Parcelable {
     }
 
     protected Event(Parcel in) {
-        this.name = in.readString();
+        this.title = in.readString();
         this.location = in.readString();
-        this.date = (LocalDate) in.readSerializable();
-        this.time = (LocalTime) in.readSerializable();
+        this.startDate = in.readString();
+        this.startTime = in.readString();
+        this.endDate = in.readString();
+        this.endTime = in.readString();
         this.image = in.readInt();
+        this.ticketsCount = in.readInt();
         this.description = in.readString();
         this.enrolled = in.readByte() != 0;
         this.saved = in.readByte() != 0;
         this.by = in.readParcelable(User.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
+    public static final Creator<Event> CREATOR = new Creator<Event>() {
         @Override
         public Event createFromParcel(Parcel source) {
             return new Event(source);

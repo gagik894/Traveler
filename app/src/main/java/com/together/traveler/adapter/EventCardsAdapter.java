@@ -59,10 +59,10 @@ public class EventCardsAdapter extends RecyclerView.Adapter<EventCardsAdapter.Vi
         ImageView ivUserImage = holder.ivUserImage;
         TextView tvUserUsername = holder.tvUserUsername;
 
-        tvName.setText(card.getName());
+        tvName.setText(card.getTitle());
         tvLocation.setText(card.getLocation());
-        tvDate.setText(String.valueOf(card.getDate()));
-        tvTime.setText(String.valueOf(card.getTime()));
+        tvDate.setText(String.valueOf(card.getStartDate()));
+        tvTime.setText(String.format("%s - %s", card.getStartTime(), card.getEndTime()));
         eventImage.setImageResource(card.getImage());
         tvUserUsername.setText(card.getUser().getUsername());
         ivUserImage.setImageResource(card.getUser().getProfileImage());

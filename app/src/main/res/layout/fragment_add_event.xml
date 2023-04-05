@@ -22,7 +22,7 @@
             android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/titleEditText"
+            android:id="@+id/addEtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
@@ -41,7 +41,7 @@
             android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/locationEditText"
+            android:id="@+id/addEtLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
@@ -60,7 +60,7 @@
             android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/startDateEditText"
+            android:id="@+id/addEtStartDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
@@ -68,7 +68,7 @@
             android:backgroundTint="@color/secondary_color"
             android:clickable="true"
             android:drawableEnd="@drawable/calendar"
-            android:focusable="true"
+            android:focusable="false"
             android:hint="@string/add_select_start_date_and_time"
             android:inputType="datetime"
             android:textSize="16sp" />
@@ -81,7 +81,7 @@
             android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/endDateEditText"
+            android:id="@+id/addEtEndDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
@@ -89,7 +89,7 @@
             android:backgroundTint="@color/secondary_color"
             android:clickable="true"
             android:drawableEnd="@drawable/calendar"
-            android:focusable="true"
+            android:focusable="false"
             android:hint="@string/add_select_end_date_and_time"
             android:inputType="datetime"
             android:textSize="16sp" />
@@ -102,7 +102,7 @@
             android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/descriptionEditText"
+            android:id="@+id/addEtDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
@@ -121,7 +121,7 @@
             android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/ticketsEditText"
+            android:id="@+id/addEtTicketsCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
@@ -130,9 +130,11 @@
             android:hint="@string/add_enter_number_of_tickets"
             android:inputType="number"
             android:minHeight="48dp"
+            android:text="0"
             android:textSize="16sp" />
 
         <Button
+            android:id="@+id/addBtnCreate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="48dp"

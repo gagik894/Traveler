@@ -181,7 +181,6 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUiWithUser(LoggedInUserView model) {
         try {
             String welcome = getString(R.string.welcome) + model.getAuth_token();
-            // TODO : initiate successful logged in experience
             Log.d(Tag, "updateUiWithUser: ");
             Intent switchActivityIntent = new Intent(this, MainActivity.class);
             startActivity(switchActivityIntent);

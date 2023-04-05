@@ -1,6 +1,5 @@
 package com.together.traveler.ui.event;
 
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,10 +46,10 @@ public class EventFragment extends Fragment {
         }
         eventViewModel.getData().observe(getViewLifecycleOwner(), data -> {
             image.setImageResource(data.getImage());
-            name.setText(data.getName());
+            name.setText(data.getTitle());
             location.setText(data.getLocation());
-            date.setText(String.valueOf(data.getDate()));
-            time.setText(String.valueOf(data.getTime()));
+            date.setText(data.getStartDate());
+            time.setText(String.format("%s %s", data.getStartTime(), data.getEndTime()));
             description.setText(data.getDescription());
 
             if (data.isEnrolled()){
