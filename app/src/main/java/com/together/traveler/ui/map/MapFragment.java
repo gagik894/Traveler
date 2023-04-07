@@ -1,25 +1,40 @@
 package com.together.traveler.ui.map;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.together.traveler.R;
+import com.together.traveler.databinding.FragmentMapBinding;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.location.GeocoderNominatim;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -29,77 +44,41 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MapFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MapFragment extends Fragment {
+
+
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private final ArrayList<OverlayItem> items = new ArrayList<>();
+    private FragmentMapBinding binding;
     private MapView map;
     private MyLocationNewOverlay mLocationOverlay;
     private IMapController mapController;
     private ImageButton btnOnCenter;
-    ArrayList<OverlayItem> items = new ArrayList<>();
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public MapFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MapFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MapFragment newInstance(String param1, String param2) {
-        MapFragment fragment = new MapFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private EditText locationSearch;
+    private MapViewModel mapViewModel;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentMapBinding.inflate(inflater, container, false);
+        mapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Context ctx = getContext();
-        GeoPoint startPoint = new GeoPoint(40.740295, 44.865835);
+        final Context ctx = getContext();
+        final GeoPoint startPoint = new GeoPoint(40.740295, 44.865835);
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-        btnOnCenter = requireActivity().findViewById(R.id.mapBtnCenterOnLocation);
+        btnOnCenter = binding.mapBtnCenterOnLocation;
+        locationSearch = binding.mapEtLocation;
         map = requireView().findViewById(R.id.map);
         mapController = map.getController();
         assert ctx != null;
@@ -113,10 +92,7 @@ public class MapFragment extends Fragment {
         mLocationOverlay.enableFollowLocation();
         mLocationOverlay.setDrawAccuracyEnabled(true);
 
-        btnOnCenter.setOnClickListener(v -> centerOnLocation(18));
 
-        items.add(new OverlayItem("Dilijan", "", new GeoPoint(40.740295, 44.865835)));
-        items.add(new OverlayItem("UWCD", "UWC Dilijan", new GeoPoint(40.739109, 44.832480)));
 
         ItemizedOverlayWithFocus<OverlayItem> mPointsOverlay = new ItemizedOverlayWithFocus<>(items,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
@@ -125,12 +101,14 @@ public class MapFragment extends Fragment {
                         //do something
                         return true;
                     }
+
                     @Override
                     public boolean onItemLongPress(final int position, final OverlayItem item) {
                         return false;
                     }
                 }, ctx);
         mPointsOverlay.setFocusItemsOnTap(true);
+
 
         MapEventsReceiver mReceive = new MapEventsReceiver() {
             @Override
@@ -144,23 +122,83 @@ public class MapFragment extends Fragment {
             @Override
             public boolean longPressHelper(GeoPoint p) {
                 Log.d("debug", "LongPressHelper");
-                items.add(new OverlayItem("Dilijan", "", new GeoPoint(p.getLatitude(), p.getLongitude())));
-                mPointsOverlay.addItem(items.get(items.size()-1));
-                mapController.scrollBy(0, 0);
-                Log.d("debug", String.valueOf(items));
+                mapViewModel.setItem(p);
                 return false;
             }
 
         };
 
+        startRoadManagerTask(ctx, startPoint);
         MapEventsOverlay mEventOverlay = new MapEventsOverlay(ctx, mReceive);
         map.getOverlays().add(mLocationOverlay);
         map.getOverlays().add(mPointsOverlay);
         map.getOverlays().add(mEventOverlay);
         map.invalidate();
 
+
+
+        btnOnCenter.setOnClickListener(v -> centerOnLocation(18));
+        locationSearch.addTextChangedListener(afterTextChangedListener);
+
+        mapViewModel.getData().observe(getViewLifecycleOwner(), data -> {
+            Log.i("asd", "onViewCreated: " + data);
+            mPointsOverlay.removeAllItems();
+            mPointsOverlay.addItems(data);
+
+            map.invalidate();
+        });
+
+        mapViewModel.getCenter().observe(getViewLifecycleOwner(), data->{
+            mLocationOverlay.disableFollowLocation();
+            mapController.setCenter(data);
+        });
+
+        mapViewModel.getLocationName().observe(getViewLifecycleOwner(), data->{
+            Toast.makeText(ctx, data, Toast.LENGTH_SHORT).show();
+        });
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
         requestPermissionsIfNecessary(perms);
+    }
+
+    private final TextWatcher afterTextChangedListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // ignore
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // ignore
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (!locationSearch.getText().toString().equals("")) {
+                Log.i("asd", "afterTextChanged: " + locationSearch.getText().toString());
+                mapViewModel.setSearch(locationSearch.getText().toString());
+            }
+
+        }
+    };
+    @Override
+    public void onResume() {
+        super.onResume();
+        Configuration.getInstance().load(getContext(), PreferenceManager.getDefaultSharedPreferences(getContext()));
+        mLocationOverlay.enableMyLocation();
+        mLocationOverlay.enableFollowLocation();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mLocationOverlay.disableMyLocation();
+        mLocationOverlay.disableFollowLocation();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     @Override
@@ -180,7 +218,6 @@ public class MapFragment extends Fragment {
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(requireActivity(), permission)
                     != PackageManager.PERMISSION_GRANTED) {
-                // Permission is not granted
                 permissionsToRequest.add(permission);
             }
         }
@@ -196,18 +233,57 @@ public class MapFragment extends Fragment {
         mLocationOverlay.enableFollowLocation();
         mapController.setZoom(zoom);
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        Configuration.getInstance().load(getContext(), PreferenceManager.getDefaultSharedPreferences(getContext()));
-        mLocationOverlay.enableMyLocation();
-        mLocationOverlay.enableFollowLocation();
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mLocationOverlay.disableMyLocation();
-        mLocationOverlay.disableFollowLocation();
+
+    private void startRoadManagerTask(Context ctx , GeoPoint startPoint) {
+        // Create a HandlerThread
+        HandlerThread handlerThread = new HandlerThread("LocationThread");
+        handlerThread.start();
+
+        // Get a handler associated with the HandlerThread
+        Handler locationHandler = new Handler(handlerThread.getLooper());
+
+        // Post a runnable to the handler that will wait until getMyLocation is not null
+        locationHandler.post(() -> {
+            while (mLocationOverlay.getMyLocation() == null) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Call RoadManagerTask once getMyLocation is not null
+            new RoadManagerTask(ctx, startPoint, mLocationOverlay.getMyLocation()).execute();
+        });
+
+    }
+    @SuppressLint("StaticFieldLeak")
+    private class RoadManagerTask extends AsyncTask<Void, Void, Road> {
+
+        private final Context mContext;
+        private final GeoPoint mStartPoint;
+        private final GeoPoint mEndPoint;
+
+        public RoadManagerTask(Context context, GeoPoint startPoint, GeoPoint endPoint) {
+            mContext = context;
+            mStartPoint = startPoint;
+            mEndPoint = endPoint;
+        }
+
+        @Override
+        protected Road doInBackground(Void... params) {
+            RoadManager roadManager = new OSRMRoadManager(mContext, MapViewModel.MY_USER_AGENT);
+            ArrayList<GeoPoint> waypoints = new ArrayList<>(Arrays.asList(mStartPoint, mEndPoint));
+            return roadManager.getRoad(waypoints);
+        }
+
+        @Override
+        protected void onPostExecute(Road road) {
+            Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+            map.getOverlays().add(roadOverlay);
+            map.invalidate();
+        }
     }
 }
+
