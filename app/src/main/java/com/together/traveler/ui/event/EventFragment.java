@@ -49,7 +49,7 @@ public class EventFragment extends Fragment {
             name.setText(data.getTitle());
             location.setText(data.getLocation());
             date.setText(data.getStartDate());
-            time.setText(String.format("%s %s", data.getStartTime(), data.getEndTime()));
+            time.setText(String.format("%s - %s", data.getStartTime(), data.getEndTime()));
             description.setText(data.getDescription());
 
             if (data.isEnrolled()){

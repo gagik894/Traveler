@@ -1,7 +1,5 @@
 package com.together.traveler.ui.add.event;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -19,7 +17,6 @@ public class AddEventViewModel extends ViewModel {
     }
 
     public void dataChanged(String tittle, String location, String description, int count){
-            Event old = data.getValue();
             Objects.requireNonNull(data.getValue()).setTitle(tittle);
             Objects.requireNonNull(data.getValue()).setLocation(location);
             Objects.requireNonNull(data.getValue()).setDescription(description);
@@ -39,7 +36,6 @@ public class AddEventViewModel extends ViewModel {
     }
 
     public void create(){
-
     }
 
     public LiveData<Event> getData() {

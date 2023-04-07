@@ -30,6 +30,10 @@ import java.util.Date;
 public class AddEvent extends Fragment{
 
     private AddEventViewModel mViewModel;
+    private EditText startDateAndTime;
+    private EditText endDateAndTime;
+
+
     public static AddEvent newInstance() {
         return new AddEvent();
     }
@@ -48,16 +52,10 @@ public class AddEvent extends Fragment{
         final Button btnCreate = binding.addBtnCreate;
         final EditText title = binding.addEtTitle;
         final EditText location = binding.addEtLocation;
-        final EditText startDateAndTime = binding.addEtStartDate;
-        final EditText endDateAndTime = binding.addEtEndDate;
+        startDateAndTime = binding.addEtStartDate;
+        endDateAndTime = binding.addEtEndDate;
         final EditText description = binding.addEtDescription;
         final EditText ticketsCount = binding.addEtTicketsCount;
-
-        mViewModel.getData().observe(getViewLifecycleOwner(), data ->{
-            startDateAndTime.setText(String.format("%s %s", data.getStartDate(), data.getStartTime()));
-            endDateAndTime.setText(String.format("%s %s", data.getEndDate(), data.getEndTime()));
-        });
-
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
@@ -72,7 +70,7 @@ public class AddEvent extends Fragment{
 
             @Override
             public void afterTextChanged(Editable s) {
-                mViewModel.dataChanged(title.getText().toString(), location.getText().toString(), description.getText().toString(), Integer.parseInt(String.valueOf(ticketsCount.getText())));
+                mViewModel.dataChanged(title.getText().toString(), location.getText().toString(), description.getText().toString(), Integer.parseInt(String.valueOf(ticketsCount.getText()).equals("") ? String.valueOf(0) : String.valueOf(ticketsCount.getText())));
             }
         };
 
@@ -105,8 +103,10 @@ public class AddEvent extends Fragment{
                 String time = hour24 + ":" + min;
                 if(start){
                     mViewModel.setStartDateAndTime(date, time);
+                    startDateAndTime.setText(String.format("%s %s", date, time));
                 }else{
                     mViewModel.setEndDateAndTime(date, time);
+                    endDateAndTime.setText(String.format("%s %s", date, time));
                 }
                 Log.i("asd", "onSet: "  + date + " " + time);
             }

@@ -67,10 +67,10 @@
             android:autofillHints=""
             android:backgroundTint="@color/secondary_color"
             android:clickable="true"
-            android:drawableEnd="@drawable/calendar"
             android:focusable="false"
             android:hint="@string/add_select_start_date_and_time"
             android:inputType="datetime"
+            android:minHeight="48dp"
             android:textSize="16sp" />
 
         <TextView
@@ -88,10 +88,10 @@
             android:autofillHints=""
             android:backgroundTint="@color/secondary_color"
             android:clickable="true"
-            android:drawableEnd="@drawable/calendar"
             android:focusable="false"
             android:hint="@string/add_select_end_date_and_time"
             android:inputType="datetime"
+            android:minHeight="48dp"
             android:textSize="16sp" />
 
         <TextView
@@ -130,7 +130,6 @@
             android:hint="@string/add_enter_number_of_tickets"
             android:inputType="number"
             android:minHeight="48dp"
-            android:text="0"
             android:textSize="16sp" />
 
         <Button
