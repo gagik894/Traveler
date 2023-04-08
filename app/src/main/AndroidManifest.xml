@@ -44,9 +44,14 @@
         <activity
             android:name=".MainActivity"
             android:exported="false">
+            <intent-filter>
+                <action android:name="com.samsung.android.support.REMOTE_ACTION" />
+            </intent-filter>
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+            <meta-data android:name="com.samsung.android.support.REMOTE_ACTION"
+                android:resource="@xml/remote_action_sample"/>
         </activity>
     </application>
 

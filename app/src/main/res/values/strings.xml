@@ -75,4 +75,11 @@
     <string name="add_enter_title">Enter title</string>
     <string name="add_create_event">Create Event</string>
 
+    <!--    sPen-->
+    <string name="move_car">Move Car</string>
+    <string name="scroll_down">Scroll down</string>
+    <string name="scroll_up">Scroll up</string>
+    <string name="pause_or_resume">Pause or Resume</string>
+    <string name="restart">Restart</string>
+
 </resources>

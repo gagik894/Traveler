@@ -8,9 +8,8 @@
         android:title="@string/nav_search"
         android:icon="@drawable/nav_search"
     />
-    <item android:id="@+id/placeholder"
-        android:title="@string/nav_add"
-    />
+    <item android:id="@+id/addEvent"
+        android:title="@string/nav_add"/>
     <item android:id="@+id/mapFragment"
         android:title="@string/nav_map"
         android:icon="@drawable/nav_map"

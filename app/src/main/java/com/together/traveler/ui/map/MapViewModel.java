@@ -95,7 +95,7 @@ public class MapViewModel extends ViewModel {
                 List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 if (addresses != null && addresses.size() > 0) {
                     Address address = addresses.get(0);
-                    final String locationName =  address.getLocality() + ", " + address.getThoroughfare();
+                    final String locationName =  address.getLocality() + ", " + address.getThoroughfare() + ", " +address.getSubThoroughfare();
                     this.locationName.postValue(locationName);
                     Log.d("asd", "getNameFromLocation: " + locationName);
                 }

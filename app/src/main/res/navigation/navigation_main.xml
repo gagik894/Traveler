@@ -50,4 +50,9 @@
             android:name="cardData"
             app:argType="com.together.traveler.model.Event" />
     </fragment>
+    <fragment
+        android:id="@+id/addEvent"
+        android:name="com.together.traveler.ui.add.event.AddEvent"
+        android:label="fragment_add_event"
+        tools:layout="@layout/fragment_add_event" />
 </navigation>

@@ -1,6 +1,7 @@
 package com.together.traveler.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import com.together.traveler.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
-
+    private RecyclerView rvCards;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -26,7 +27,7 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        RecyclerView rvCards = binding.rvHome;
+        rvCards = binding.rvHome;
 
         homeViewModel.getData().observe(getViewLifecycleOwner(), events ->{
             EventCardsAdapter adapter = new EventCardsAdapter(events, item ->{
@@ -44,5 +45,15 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public void scrollUp(){
+        Log.i("asd", "scrollUp: " + rvCards);
+        rvCards.smoothScrollBy(0, -1000);
+        rvCards.post(() -> rvCards.smoothScrollBy(0, -1000));
+    }
+    public void scrollDown(){
+        Log.i("asd", "scrollDown: " + rvCards);
+        rvCards.post(() -> rvCards.smoothScrollBy(0, 1000));
     }
 }
