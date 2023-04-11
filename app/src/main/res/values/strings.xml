@@ -61,18 +61,20 @@
     <string name="nav_search">search</string>
     <string name="nav_home">home</string>
     <string name="title_activity_signup">SignupActivity</string>
+
+<!--    add event-->
     <string name="add_title">Title</string>
     <string name="add_location">Location</string>
     <string name="add_start_date_and_time">Start Date and Time</string>
     <string name="add_end_date_and_time">End Date and Time</string>
-    <string name="add_select_end_date_and_time">Select end date and time</string>
     <string name="add_description">Description</string>
     <string name="add_number_of_tickets">Number of Tickets</string>
-    <string name="add_select_start_date_and_time">Select start date and time</string>
-    <string name="add_enter_number_of_tickets">Enter number of tickets</string>
-    <string name="add_enter_description">Enter description</string>
-    <string name="add_enter_location">Enter location</string>
     <string name="add_enter_title">Enter title</string>
+    <string name="add_enter_location">Select location</string>
+    <string name="add_select_start_date_and_time">Select start date and time</string>
+    <string name="add_select_end_date_and_time">Select end date and time</string>
+    <string name="add_enter_description">Enter description</string>
+    <string name="add_enter_number_of_tickets">Enter number of tickets</string>
     <string name="add_create_event">Create Event</string>
 
     <!--    sPen-->
@@ -81,5 +83,6 @@
     <string name="scroll_up">Scroll up</string>
     <string name="pause_or_resume">Pause or Resume</string>
     <string name="restart">Restart</string>
+    <string name="map_search_for_location">Search for location</string>
 
 </resources>

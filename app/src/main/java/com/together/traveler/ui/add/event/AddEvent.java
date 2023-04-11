@@ -15,28 +15,31 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.noowenz.customdatetimepicker.CustomDateTimePicker;
 import com.together.traveler.MainActivity;
 import com.together.traveler.databinding.FragmentAddEventBinding;
+import com.together.traveler.ui.map.MapDialog;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.Date;
 
-public class AddEvent extends Fragment{
+public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
 
     private AddEventViewModel mViewModel;
+    private EditText title;
+    private EditText location;
     private EditText startDateAndTime;
     private EditText endDateAndTime;
+    private EditText description;
+    private EditText ticketsCount;
 
-
-    public static AddEvent newInstance() {
-        return new AddEvent();
-    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,32 +50,20 @@ public class AddEvent extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.show();
+        }
         FragmentAddEventBinding binding = FragmentAddEventBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        final Button btnCreate = binding.addBtnCreate;
-        final EditText title = binding.addEtTitle;
-        final EditText location = binding.addEtLocation;
+
+        Button btnCreate = binding.addBtnCreate;
+        title = binding.addEtTitle;
+        location = binding.addEtLocation;
         startDateAndTime = binding.addEtStartDate;
         endDateAndTime = binding.addEtEndDate;
-        final EditText description = binding.addEtDescription;
-        final EditText ticketsCount = binding.addEtTicketsCount;
-
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mViewModel.dataChanged(title.getText().toString(), location.getText().toString(), description.getText().toString(), Integer.parseInt(String.valueOf(ticketsCount.getText()).equals("") ? String.valueOf(0) : String.valueOf(ticketsCount.getText())));
-            }
-        };
+        description = binding.addEtDescription;
+        ticketsCount = binding.addEtTicketsCount;
 
         title.addTextChangedListener(afterTextChangedListener);
         location.addTextChangedListener(afterTextChangedListener);
@@ -80,6 +71,8 @@ public class AddEvent extends Fragment{
         endDateAndTime.addTextChangedListener(afterTextChangedListener);
         description.addTextChangedListener(afterTextChangedListener);
         ticketsCount.addTextChangedListener(afterTextChangedListener);
+
+        location.setOnClickListener(this::showPopupView);
         startDateAndTime.setOnClickListener(v -> showDateTimePicker(true));
         endDateAndTime.setOnClickListener(v -> showDateTimePicker(false));
         btnCreate.setOnClickListener(v->{
@@ -87,8 +80,32 @@ public class AddEvent extends Fragment{
             Intent switchActivityIntent = new Intent(requireActivity(), MainActivity.class);
             startActivity(switchActivityIntent);
         });
+
         return root;
     }
+
+    private void showPopupView(View anchorView) {
+        MapDialog popupFragment = new MapDialog();
+        popupFragment.setListener(this);
+        popupFragment.show(getChildFragmentManager(), "popup_map");
+    }
+
+    private final TextWatcher afterTextChangedListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // ignore
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // ignore
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            mViewModel.dataChanged(title.getText().toString(), location.getText().toString(), description.getText().toString(), Integer.parseInt(String.valueOf(ticketsCount.getText()).equals("") ? String.valueOf(0) : String.valueOf(ticketsCount.getText())));
+        }
+    };
 
     private void showDateTimePicker(boolean start) {
         new CustomDateTimePicker(requireActivity(), new CustomDateTimePicker.ICustomDateTimeListener() {
@@ -117,6 +134,10 @@ public class AddEvent extends Fragment{
             }
         }).showDialog();
 
+    }
 
+    @Override
+    public void onDialogResult(String result) {
+        location.setText(result);
     }
 }

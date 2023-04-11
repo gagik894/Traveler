@@ -1,16 +1,13 @@
 package com.together.traveler.ui.map;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,24 +16,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentMapBinding;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -46,17 +36,16 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MapFragment extends Fragment {
-
+public class MapDialog extends DialogFragment {
 
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private final ArrayList<OverlayItem> items = new ArrayList<>();
@@ -67,6 +56,7 @@ public class MapFragment extends Fragment {
     private EditText locationSearch;
     private MapViewModel mapViewModel;
     private Timer timer = new Timer();
+    private MyDialogListener listener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,20 +64,33 @@ public class MapFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+        int screenHeight = displayMetrics.heightPixels;
+        int paddingHorizontal = getResources().getDimensionPixelSize(R.dimen.popup_horizontal_padding);
+        int paddingVertical = getResources().getDimensionPixelSize(R.dimen.popup_vertical_padding);
+        int popupWidth = screenWidth - 2 * paddingHorizontal;
+        int popupHeight = screenHeight - 2 * paddingVertical;
+        if (getDialog() != null) {
+            getDialog().getWindow().setLayout(popupWidth , popupHeight);
+        }
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMapBinding.inflate(inflater, container, false);
         mapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
+        Objects.requireNonNull(getDialog()).setTitle("popup_map");
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
 
         final Context ctx = getContext();
         final GeoPoint startPoint = new GeoPoint(40.740295, 44.865835);
@@ -152,26 +155,23 @@ public class MapFragment extends Fragment {
 
         locationSearch.addTextChangedListener(afterTextChangedListener);
 
-//        if (getArguments() != null && getArguments().getBoolean("fromAdd")){
-//            mapViewModel.setFromAdd(true);
-//            backButton.setOnClickListener(v-> returnToAddFragment());
-//        }else{
-            startRoadManagerTask(ctx, startPoint);
-//        }
-
-
+        mapViewModel.setFromAdd(true);
         mapViewModel.getOverlayItems().observe(getViewLifecycleOwner(), data -> {
             Log.i("asd", "onViewCreated: " + data);
             mPointsOverlay.removeAllItems();
             mPointsOverlay.addItems(data);
             map.invalidate();
         });
-
         mapViewModel.getCenter().observe(getViewLifecycleOwner(), data->{
             mLocationOverlay.disableFollowLocation();
             mapController.setCenter(data);
         });
-        mapViewModel.getLocationName().observe(getViewLifecycleOwner(), data-> Toast.makeText(ctx, data, Toast.LENGTH_SHORT).show());
+        mapViewModel.getLocationName().observe(getViewLifecycleOwner(), data-> {
+            Toast.makeText(ctx, data, Toast.LENGTH_SHORT).show();
+            if (listener != null) {
+                listener.onDialogResult(data);
+            }
+        });
 
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
         requestPermissionsIfNecessary(perms);
@@ -184,13 +184,6 @@ public class MapFragment extends Fragment {
         Configuration.getInstance().load(getContext(), PreferenceManager.getDefaultSharedPreferences(getContext()));
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.enableFollowLocation();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mLocationOverlay.disableMyLocation();
-        mLocationOverlay.disableFollowLocation();
     }
 
     @Override
@@ -209,6 +202,14 @@ public class MapFragment extends Fragment {
                     permissionsToRequest.toArray(new String[0]),
                     REQUEST_PERMISSIONS_REQUEST_CODE);
         }
+    }
+
+    public interface MyDialogListener {
+        void onDialogResult(String result);
+    }
+
+    public void setListener(MyDialogListener listener) {
+        this.listener = listener;
     }
 
     private final TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -260,56 +261,4 @@ public class MapFragment extends Fragment {
         mLocationOverlay.enableFollowLocation();
         mapController.setZoom(zoom);
     }
-
-    private void startRoadManagerTask(Context ctx , GeoPoint startPoint) {
-        // Create a HandlerThread
-        HandlerThread handlerThread = new HandlerThread("LocationThread");
-        handlerThread.start();
-
-        // Get a handler associated with the HandlerThread
-        Handler locationHandler = new Handler(handlerThread.getLooper());
-
-        // Post a runnable to the handler that will wait until getMyLocation is not null
-        locationHandler.post(() -> {
-            while (mLocationOverlay.getMyLocation() == null) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // Call RoadManagerTask once getMyLocation is not null
-            new RoadManagerTask(ctx, startPoint, mLocationOverlay.getMyLocation()).execute();
-        });
-
-    }
-    @SuppressLint("StaticFieldLeak")
-    private class RoadManagerTask extends AsyncTask<Void, Void, Road> {
-
-        private final Context mContext;
-        private final GeoPoint mStartPoint;
-        private final GeoPoint mEndPoint;
-
-        public RoadManagerTask(Context context, GeoPoint startPoint, GeoPoint endPoint) {
-            mContext = context;
-            mStartPoint = startPoint;
-            mEndPoint = endPoint;
-        }
-
-        @Override
-        protected Road doInBackground(Void... params) {
-            RoadManager roadManager = new OSRMRoadManager(mContext, MapViewModel.MY_USER_AGENT);
-            ArrayList<GeoPoint> waypoints = new ArrayList<>(Arrays.asList(mStartPoint, mEndPoint));
-            return roadManager.getRoad(waypoints);
-        }
-
-        @Override
-        protected void onPostExecute(Road road) {
-            Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-            map.getOverlays().add(roadOverlay);
-            map.invalidate();
-        }
-    }
 }
-

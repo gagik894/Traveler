@@ -20,43 +20,40 @@ import java.util.concurrent.Executors;
 
 public class MapViewModel extends ViewModel {
     public static final String MY_USER_AGENT = "Traveler";
-    private final MutableLiveData<ArrayList<OverlayItem>> data;
+    private final MutableLiveData<ArrayList<OverlayItem>> overlayItems;
     private final MutableLiveData<String> search;
     private final MutableLiveData<GeoPoint> center;
     private final MutableLiveData<String> locationName;
-    private final ArrayList<OverlayItem> defaultItems = new ArrayList<>();
-    {
-        defaultItems.add(new OverlayItem("Dilijan", "", new GeoPoint(40.740295, 44.865835)));
-        defaultItems.add(new OverlayItem("UWCD", "UWC Dilijan", new GeoPoint(40.739109, 44.832480)));
-    }
+    private boolean fromAdd = false;
 
     public MapViewModel() {
-        data = new MutableLiveData<>(new ArrayList<>(defaultItems));
+        overlayItems = new MutableLiveData<>(new ArrayList<>());
         search = new MutableLiveData<>();
         center = new MutableLiveData<>();
         locationName = new MutableLiveData<>();
     }
 
     public void setSearch(String data) {
-        this.search.setValue(data);
+        this.search.postValue(data);
         getLocationFromName(data);
     }
 
     public void addItem(GeoPoint p) {
-        Objects.requireNonNull(this.data.getValue()).add(new OverlayItem("Dilijan", "", new GeoPoint(p.getLatitude(), p.getLongitude())));
-        this.data.setValue(this.data.getValue());
+        Objects.requireNonNull(this.overlayItems.getValue()).add(new OverlayItem("Dilijan", "", new GeoPoint(p.getLatitude(), p.getLongitude())));
+        this.overlayItems.setValue(this.overlayItems.getValue());
     }
 
     public void setItem(GeoPoint p){
         OverlayItem overlayItem = new OverlayItem(" ", "", new GeoPoint(p.getLatitude(), p.getLongitude()));
-        Objects.requireNonNull(data.getValue()).clear();
+        Objects.requireNonNull(overlayItems.getValue()).clear();
         getNameFromLocation(p);
-        data.getValue().add(overlayItem);
-        data.setValue(data.getValue());
+        overlayItems.getValue().add(overlayItem);
+        overlayItems.setValue(overlayItems.getValue());
     }
 
-    public LiveData<ArrayList<OverlayItem>> getData() {
-        return data;
+    public LiveData<ArrayList<OverlayItem>> getOverlayItems() {
+        Log.i("asd", "getOverlayItems: " + fromAdd);
+        return overlayItems;
     }
 
     public LiveData<GeoPoint> getCenter() {
@@ -95,7 +92,10 @@ public class MapViewModel extends ViewModel {
                 List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 if (addresses != null && addresses.size() > 0) {
                     Address address = addresses.get(0);
-                    final String locationName =  address.getLocality() + ", " + address.getThoroughfare() + ", " +address.getSubThoroughfare();
+                    String locationName =
+                            address.getLocality()+
+                                    (address.getThoroughfare() != null ? ", " + address.getThoroughfare() : "") +
+                                    (address.getSubThoroughfare() != null ? ", " +address.getSubThoroughfare() : "");
                     this.locationName.postValue(locationName);
                     Log.d("asd", "getNameFromLocation: " + locationName);
                 }
@@ -105,4 +105,7 @@ public class MapViewModel extends ViewModel {
         });
     }
 
+    public void setFromAdd(boolean fromAdd) {
+        this.fromAdd = fromAdd;
+    }
 }
