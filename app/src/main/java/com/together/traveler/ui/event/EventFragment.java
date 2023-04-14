@@ -46,7 +46,9 @@ public class EventFragment extends Fragment {
             eventViewModel.setData(getArguments().getParcelable("cardData"));
         }
         eventViewModel.getData().observe(getViewLifecycleOwner(), data -> {
-            Glide.with(requireContext()).load(data.getImageUrl()).into(image);
+            String imageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", data.getImgId());
+            Log.i("asd", "onCreateView: " + imageUrl);
+            Glide.with(requireContext()).load(imageUrl).into(image);
             name.setText(data.getTitle());
             location.setText(data.getLocation());
             date.setText(data.getStartDate());

@@ -16,7 +16,6 @@ public class EventViewModel extends ViewModel {
     public EventViewModel() {
         data = new MutableLiveData<>();
     }
-
     public void setData(Event data) {
         this.data.setValue(data);
     }
@@ -34,4 +33,5 @@ public class EventViewModel extends ViewModel {
     public LiveData<Event> getData() {
         return data;
     }
+
 }

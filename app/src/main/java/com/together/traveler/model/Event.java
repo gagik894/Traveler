@@ -1,6 +1,5 @@
 package com.together.traveler.model;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -16,24 +15,24 @@ public class Event implements Parcelable {
     private String startTime;
     private String endDate;
     private String endTime;
-    private String imageUrl;
+    private String imgId;
     private String description;
     private int ticketsCount;
     private Bitmap imageBitmap;
     private boolean enrolled;
     private boolean saved;
-    private User by;
+    private User userId;
 
-    public Event(String title, String location, String startDate, String startTime, String endDate, String endTime, String  imageUrl, String description, User by, int ticketsCount) {
+    public Event(String title, String location, String startDate, String startTime, String endDate, String endTime, String imgId, String description, User userId, int ticketsCount) {
         this.title = title;
         this.location = location;
         this.startDate = startDate;
         this.startTime = startTime;
         this.endDate = endDate;
         this.endTime = endTime;
-        this.imageUrl = imageUrl;
+        this.imgId = imgId;
         this.description = description;
-        this.by = by;
+        this.userId = userId;
         this.ticketsCount = ticketsCount;
     }
 
@@ -47,7 +46,7 @@ public class Event implements Parcelable {
         this.description = "";
         this.imageBitmap = null;
         this.ticketsCount = 0;
-        this.imageUrl = "";
+        this.imgId = "";
     }
 
     public void setTitle(String title) {
@@ -66,8 +65,8 @@ public class Event implements Parcelable {
         this.description = description;
     }
 
-    public void setBy(User by) {
-        this.by = by;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
     public void setStartDate(String startDate) {
@@ -90,8 +89,8 @@ public class Event implements Parcelable {
         this.ticketsCount = ticketsCount;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImgId(String imgId) {
+        this.imgId = imgId;
     }
 
 
@@ -116,8 +115,8 @@ public class Event implements Parcelable {
         return imageBitmap;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImgId() {
+        return imgId;
     }
 
     public String getDescription() {
@@ -141,7 +140,7 @@ public class Event implements Parcelable {
     }
 
     public User getUser() {
-        return by;
+        return userId;
     }
 
     public int getTicketsCount() {
@@ -162,7 +161,7 @@ public class Event implements Parcelable {
         String url;
         ArrayList<Event> events = new ArrayList<>();
         for (int i = 1; i <= quantity; i++) {
-            url = String.format("https://source.unsplash.com/random/400x300/?img=%s", lastId);
+            url = "1JXGfBOuLtEpTollfniq_fWhqfESFdOxl";
             events.add(new Event("Event " + ++lastId, "somewhere", "Mon, 5 April",
                     "18:00", "Mon, 5 Apr", "20:00", url,
                     i%2 == 0?"description": longDesc,
@@ -186,13 +185,13 @@ public class Event implements Parcelable {
         dest.writeString(this.startTime);
         dest.writeString(this.endDate);
         dest.writeString(this.endTime);
-        dest.writeString(this.imageUrl);
+        dest.writeString(this.imgId);
         dest.writeString(this.description);
         dest.writeInt(this.ticketsCount);
         dest.writeParcelable(this.imageBitmap, flags);
         dest.writeByte(this.enrolled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.saved ? (byte) 1 : (byte) 0);
-        dest.writeParcelable(this.by, flags);
+        dest.writeParcelable(this.userId, flags);
     }
 
     public void readFromParcel(Parcel source) {
@@ -202,13 +201,13 @@ public class Event implements Parcelable {
         this.startTime = source.readString();
         this.endDate = source.readString();
         this.endTime = source.readString();
-        this.imageUrl = source.readString();
+        this.imgId = source.readString();
         this.description = source.readString();
         this.ticketsCount = source.readInt();
         this.imageBitmap = source.readParcelable(Bitmap.class.getClassLoader());
         this.enrolled = source.readByte() != 0;
         this.saved = source.readByte() != 0;
-        this.by = source.readParcelable(User.class.getClassLoader());
+        this.userId = source.readParcelable(User.class.getClassLoader());
     }
 
     protected Event(Parcel in) {
@@ -218,13 +217,13 @@ public class Event implements Parcelable {
         this.startTime = in.readString();
         this.endDate = in.readString();
         this.endTime = in.readString();
-        this.imageUrl = in.readString();
+        this.imgId = in.readString();
         this.description = in.readString();
         this.ticketsCount = in.readInt();
         this.imageBitmap = in.readParcelable(Bitmap.class.getClassLoader());
         this.enrolled = in.readByte() != 0;
         this.saved = in.readByte() != 0;
-        this.by = in.readParcelable(User.class.getClassLoader());
+        this.userId = in.readParcelable(User.class.getClassLoader());
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {

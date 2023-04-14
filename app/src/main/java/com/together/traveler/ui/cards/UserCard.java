@@ -42,7 +42,7 @@ public class UserCard extends Fragment {
 
         eventViewModel.getData().observe(getViewLifecycleOwner(), data -> {
             User userData = data.getUser();
-            userImage.setImageResource(userData.getProfileImage());
+//            userImage.setImageResource(userData.getProfileImage());
             username.setText(userData.getUsername());
             rating.setText(String.valueOf(userData.getRating()));
         });
