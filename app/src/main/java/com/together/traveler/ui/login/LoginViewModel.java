@@ -31,17 +31,14 @@ public class LoginViewModel extends ViewModel {
 
     public void login(String email, String password) {
         // can be launched in a separate asynchronous job
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Result<String> result = loginRepository.login(email, password);
+        Thread thread = new Thread(() -> {
+            Result<String> result = loginRepository.login(email, password);
 
-                if (result instanceof Result.Success) {
-                    String data = ((Result.Success<String>) result).getData();
-                    loginResult.postValue(new LoginResult(new LoggedInUserView(data)));
-                } else {
-                    loginResult.postValue(new LoginResult(R.string.login_failed));
-                }
+            if (result instanceof Result.Success) {
+                String data = ((Result.Success<String>) result).getData();
+                loginResult.postValue(new LoginResult(new LoggedInUserView(data)));
+            } else {
+                loginResult.postValue(new LoginResult(R.string.login_failed));
             }
         });
         thread.start();
@@ -49,17 +46,14 @@ public class LoginViewModel extends ViewModel {
 
     public void signup(String username, String email, String password) {
         // can be launched in a separate asynchronous job
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Result<String> result = loginRepository.signup(username, email, password);
+        Thread thread = new Thread(() -> {
+            Result<String> result = loginRepository.signup(username, email, password);
 
-                if (result instanceof Result.Success) {
-                    String data = ((Result.Success<String>) result).getData();
-                    loginResult.postValue(new LoginResult(new LoggedInUserView(data)));
-                } else {
-                    loginResult.postValue(new LoginResult(R.string.login_failed));
-                }
+            if (result instanceof Result.Success) {
+                String data = ((Result.Success<String>) result).getData();
+                loginResult.postValue(new LoginResult(new LoggedInUserView(data)));
+            } else {
+                loginResult.postValue(new LoginResult(R.string.login_failed));
             }
         });
         thread.start();
@@ -90,5 +84,9 @@ public class LoginViewModel extends ViewModel {
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
+    }
+
+    public boolean isLoggedIn() {
+        return loginRepository.isLoggedIn();
     }
 }

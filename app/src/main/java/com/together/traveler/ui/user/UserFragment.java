@@ -1,10 +1,14 @@
 package com.together.traveler.ui.user;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.together.traveler.R;
 import com.together.traveler.adapter.EventCardsAdapter;
 import com.together.traveler.databinding.FragmentUserBinding;
+import com.together.traveler.ui.login.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -39,6 +44,7 @@ public class UserFragment extends Fragment {
         final Button upcomingButton = binding.userBtnUpcoming;
         final Button savedButton = binding.userBtnSaved;
         final Button myEventsButton = binding.userBtnMyEvents;
+        final ImageButton settingsButton = binding.userBtnSettings;
         final RecyclerView rvCards = binding.rvUser;
         final int textColor = savedButton.getCurrentTextColor();
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -83,7 +89,14 @@ public class UserFragment extends Fragment {
         upcomingButton.setOnClickListener(v -> userViewModel.setState(0));
         savedButton.setOnClickListener(v -> userViewModel.setState(1));
         myEventsButton.setOnClickListener(v -> userViewModel.setState(2));
-
+        settingsButton.setOnClickListener(v-> {
+            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.apply();
+            startActivity(new Intent(requireActivity(), LoginActivity.class));
+            requireActivity().finish();
+        });
         return root;
     }
 

@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     private CardView BottomView;
     private RelativeLayout BottomRelativeLayout;
-    private String Tag = "asd";
+    private final String TAG = "asd";
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -67,6 +67,11 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
+        if(loginViewModel.isLoggedIn()){
+            startActivity(new Intent(this, MainActivity.class));
+            Log.i(TAG, "onCreate: change");
+            finish();
+        }
         final EditText emailEditText = binding.loginEtEmail;
         final EditText passwordEditText = binding.loginEtPassword;
         final Button loginButton = binding.loginBtnlogin;
@@ -181,12 +186,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUiWithUser(LoggedInUserView model) {
         try {
-            String welcome = getString(R.string.welcome) + model.getAuth_token();
-            Log.d(Tag, "updateUiWithUser: ");
+            Log.d(TAG, "updateUiWithUser: ");
             Intent switchActivityIntent = new Intent(this, MainActivity.class);
             startActivity(switchActivityIntent);
         } catch (Exception e) {
-            Log.e(Tag, "updateUiWithUser: ", e);
+            Log.e(TAG, "updateUiWithUser: ", e);
         }
 
     }
