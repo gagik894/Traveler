@@ -1,9 +1,13 @@
 package com.together.traveler.ui.home;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.together.traveler.context.AppContext;
 import com.together.traveler.model.Event;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.together.traveler.ui.login;
+package com.together.traveler.context;
 
 import android.content.Context;
 

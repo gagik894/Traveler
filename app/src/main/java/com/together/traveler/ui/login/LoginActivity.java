@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.together.traveler.MainActivity;
 import com.together.traveler.R;
+import com.together.traveler.context.AppContext;
 import com.together.traveler.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {

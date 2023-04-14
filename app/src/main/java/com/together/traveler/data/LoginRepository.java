@@ -1,13 +1,10 @@
 package com.together.traveler.data;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.together.traveler.model.User;
-import com.together.traveler.ui.login.AppContext;
+import com.together.traveler.context.AppContext;
 
 /**
  * Class that requests authentication and user information from the remote data source and

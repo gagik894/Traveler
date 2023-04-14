@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.bumptech.glide.Glide;
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentEventBinding;
 
@@ -45,7 +46,7 @@ public class EventFragment extends Fragment {
             eventViewModel.setData(getArguments().getParcelable("cardData"));
         }
         eventViewModel.getData().observe(getViewLifecycleOwner(), data -> {
-            image.setImageResource(data.getImage());
+            Glide.with(requireContext()).load(data.getImageUrl()).into(image);
             name.setText(data.getTitle());
             location.setText(data.getLocation());
             date.setText(data.getStartDate());
@@ -68,6 +69,7 @@ public class EventFragment extends Fragment {
             }else{
                 saveButton.setImageResource(R.drawable.favorite_border);
             }
+
             ViewTreeObserver vto = description.getViewTreeObserver();
             vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override

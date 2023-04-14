@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.together.traveler.R;
 import com.together.traveler.model.Event;
 
@@ -24,7 +25,7 @@ public class EventCardsAdapter extends RecyclerView.Adapter<EventCardsAdapter.Vi
     }
     private List<Event> events;
     private final OnItemClickListener listener;
-
+    private Context context;
     public EventCardsAdapter(List<Event> events, OnItemClickListener listener) {
         this.events = events;
         this.listener = listener;
@@ -32,7 +33,7 @@ public class EventCardsAdapter extends RecyclerView.Adapter<EventCardsAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View cardFragment = inflater.inflate(R.layout.fragment_event_card, parent, false);
@@ -63,7 +64,7 @@ public class EventCardsAdapter extends RecyclerView.Adapter<EventCardsAdapter.Vi
         tvLocation.setText(card.getLocation());
         tvDate.setText(String.valueOf(card.getStartDate()));
         tvTime.setText(String.format("%s - %s", card.getStartTime(), card.getEndTime()));
-        eventImage.setImageResource(card.getImage());
+        Glide.with(context).load(card.getImageUrl()).into(eventImage);
         tvUserUsername.setText(card.getUser().getUsername());
         ivUserImage.setImageResource(card.getUser().getProfileImage());
 
@@ -95,11 +96,7 @@ public class EventCardsAdapter extends RecyclerView.Adapter<EventCardsAdapter.Vi
         }
 
         public void bind(final Event item, OnItemClickListener listener) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    listener.onItemClick(item);
-                }
-            });
+            itemView.setOnClickListener(v -> listener.onItemClick(item));
         }
     }
 }

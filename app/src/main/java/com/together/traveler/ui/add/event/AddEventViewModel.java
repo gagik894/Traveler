@@ -1,5 +1,8 @@
 package com.together.traveler.ui.add.event;
 
+import android.graphics.Bitmap;
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,17 +13,21 @@ import java.util.Objects;
 
 public class AddEventViewModel extends ViewModel {
     private final MutableLiveData<Event> data;
+    private final MutableLiveData<Boolean> isValid;
 
     public AddEventViewModel() {
         data = new MutableLiveData<>();
+        isValid = new MutableLiveData<>(false);
         this.data.setValue(new Event());
     }
 
     public void dataChanged(String tittle, String location, String description, int count){
-            Objects.requireNonNull(data.getValue()).setTitle(tittle);
-            Objects.requireNonNull(data.getValue()).setLocation(location);
-            Objects.requireNonNull(data.getValue()).setDescription(description);
-            Objects.requireNonNull(data.getValue()).setTicketsCount(count);
+            Event current = data.getValue();
+            Objects.requireNonNull(current).setTitle(tittle);
+            Objects.requireNonNull(current).setLocation(location);
+            Objects.requireNonNull(current).setDescription(description);
+            Objects.requireNonNull(current).setTicketsCount(count);
+            checkValid(current);
     }
 
     public void setStartDateAndTime(String date, String time) {
@@ -35,10 +42,29 @@ public class AddEventViewModel extends ViewModel {
         this.data.setValue(data.getValue());
     }
 
+    public void setEventImage(Bitmap image) {
+        Event current = data.getValue();
+        Objects.requireNonNull(current).setImageBitmap(image);
+        this.data.setValue(current);
+        checkValid(current);
+    }
+
     public void create(){
+        Log.i("asd", "create: " + Objects.requireNonNull(data.getValue()).getLocation() + data.getValue().getStartTime());
     }
 
     public LiveData<Event> getData() {
         return data;
+    }
+
+    public MutableLiveData<Boolean> isValid() {
+        return isValid;
+    }
+
+    private void checkValid(Event current){
+        isValid.setValue(!Objects.equals(current.getTitle(), "") && !Objects.equals(current.getLocation(), "")
+                && !Objects.equals(current.getStartTime(), "") && !Objects.equals(current.getEndTime(), "")
+                && !Objects.equals(current.getDescription(), "") && current.getTicketsCount()>0
+                && current.getImageBitmap()!=null);
     }
 }

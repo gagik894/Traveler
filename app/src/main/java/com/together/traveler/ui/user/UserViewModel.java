@@ -1,19 +1,20 @@
 package com.together.traveler.ui.user;
 
-import android.util.Log;
+import android.annotation.SuppressLint;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.together.traveler.R;
+import com.together.traveler.context.AppContext;
 import com.together.traveler.model.Event;
 import com.together.traveler.model.User;
 
 public class UserViewModel extends ViewModel {
     private final MutableLiveData<User> data;
     private final MutableLiveData<Integer> state;
-
     public UserViewModel() {
         data = new MutableLiveData<>();
         state = new MutableLiveData<>();
