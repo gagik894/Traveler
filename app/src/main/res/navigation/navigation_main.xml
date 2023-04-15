@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.together.traveler.ui.home.HomeFragment"
+        android:name="com.together.traveler.ui.main.home.HomeFragment"
         android:label="HomeFragment">
 
         <action
@@ -20,14 +20,14 @@
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.together.traveler.ui.map.MapFragment"
+        android:name="com.together.traveler.ui.main.map.MapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map">
 
     </fragment>
     <fragment
         android:id="@+id/userFragment"
-        android:name="com.together.traveler.ui.user.UserFragment"
+        android:name="com.together.traveler.ui.main.user.UserFragment"
         android:label="fragment_user">
 
         <action

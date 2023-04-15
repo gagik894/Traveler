@@ -1,4 +1,4 @@
-package com.together.traveler.ui.home;
+package com.together.traveler.ui.main.home;
 
 import android.os.Bundle;
 import android.util.Log;

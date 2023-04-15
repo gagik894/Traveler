@@ -1,4 +1,4 @@
-package com.together.traveler.ui.home;
+package com.together.traveler.ui.main.home;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

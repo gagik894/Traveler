@@ -1,4 +1,4 @@
-package com.together.traveler.ui.map;
+package com.together.traveler.ui.main.map;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

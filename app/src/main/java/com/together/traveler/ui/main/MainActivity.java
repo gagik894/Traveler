@@ -1,4 +1,4 @@
-package com.together.traveler;
+package com.together.traveler.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.together.traveler.ui.home.HomeFragment;
+import com.together.traveler.ui.add.AddActivity;
+import com.together.traveler.R;
+import com.together.traveler.ui.main.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
     NavHostFragment navHostFragment;

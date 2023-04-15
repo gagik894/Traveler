@@ -1,4 +1,4 @@
-package com.together.traveler.ui.user;
+package com.together.traveler.ui.main.user;
 
 import android.content.Context;
 import android.content.Intent;

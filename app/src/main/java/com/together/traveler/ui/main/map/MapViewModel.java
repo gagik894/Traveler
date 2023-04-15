@@ -1,4 +1,4 @@
-package com.together.traveler.ui.map;
+package com.together.traveler.ui.main.map;
 
 import android.location.Address;
 import android.util.Log;

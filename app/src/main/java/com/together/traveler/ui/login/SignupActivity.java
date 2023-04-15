@@ -30,10 +30,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.together.traveler.MainActivity;
+import com.together.traveler.ui.main.MainActivity;
 import com.together.traveler.R;
-import com.together.traveler.ui.login.LoginViewModel;
-import com.together.traveler.ui.login.LoginViewModelFactory;
 import com.together.traveler.databinding.ActivitySignupBinding;
 
 public class SignupActivity extends AppCompatActivity {

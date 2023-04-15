@@ -1,9 +1,10 @@
-package com.together.traveler;
+package com.together.traveler.ui.add;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.together.traveler.R;
 import com.together.traveler.context.AppContext;
 
 public class AddActivity extends AppCompatActivity {

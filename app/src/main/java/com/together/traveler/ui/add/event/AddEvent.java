@@ -33,9 +33,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.noowenz.customdatetimepicker.CustomDateTimePicker;
-import com.together.traveler.MainActivity;
+import com.together.traveler.ui.main.MainActivity;
 import com.together.traveler.databinding.FragmentAddEventBinding;
-import com.together.traveler.ui.map.MapDialog;
+import com.together.traveler.ui.main.map.MapDialog;
 
 import org.jetbrains.annotations.NotNull;
 

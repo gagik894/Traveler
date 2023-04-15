@@ -25,8 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.together.traveler.MainActivity;
-import com.together.traveler.R;
+import com.together.traveler.ui.main.MainActivity;
 import com.together.traveler.context.AppContext;
 import com.together.traveler.databinding.ActivityLoginBinding;
 
