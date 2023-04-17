@@ -21,18 +21,18 @@ public class UserViewModel extends ViewModel {
         data = new MutableLiveData<>();
         state = new MutableLiveData<>();
         webRequests = new WebRequests();
-        state.setValue(0);
         getUser();
 //        createUser();
     }
 
-    private void getUser(){
+    public void getUser(){
         String result = webRequests.makeHttpGetRequest("https://traveler-ynga.onrender.com/events/user");
         if (result == null || result.equals(""))
             return;
         Gson gson = new Gson();
         User user = gson.fromJson(result, User.class);
-        this.data.setValue(user);
+        this.data.postValue(user);
+        this.state.postValue(0);
     }
 
     public void setState(int state){

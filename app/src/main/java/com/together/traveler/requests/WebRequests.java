@@ -36,7 +36,8 @@ public class WebRequests {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public void sendMultipartRequest(String url, String title, String description, String startDate,
-                                     String startTime, String endTime, Bitmap bitmap) {
+                                     String startTime, String endDate, String endTime, Bitmap bitmap,
+                                     String location) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             OkHttpClient client = new OkHttpClient();
@@ -50,7 +51,9 @@ public class WebRequests {
                     .addFormDataPart("description", description)
                     .addFormDataPart("startDate", startDate)
                     .addFormDataPart("startTime", startTime)
+                    .addFormDataPart("endDate", endDate)
                     .addFormDataPart("endTime", endTime)
+                    .addFormDataPart("location", location)
                     .addFormDataPart("image", "image.jpg",
                             RequestBody.create(MediaType.parse("application/octet-stream"), byteArrayOutputStream.toByteArray()))
                     .build();

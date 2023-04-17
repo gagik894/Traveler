@@ -16,6 +16,7 @@ public class Event implements Parcelable {
     private String endDate;
     private String endTime;
     private String imgId;
+    private String _id;
     private String description;
     private int ticketsCount;
     private Bitmap imageBitmap;
@@ -34,6 +35,7 @@ public class Event implements Parcelable {
         this.description = description;
         this.userId = userId;
         this.ticketsCount = ticketsCount;
+        this._id = "";
     }
 
     public Event(){
@@ -47,6 +49,7 @@ public class Event implements Parcelable {
         this.imageBitmap = null;
         this.ticketsCount = 0;
         this.imgId = "";
+        this._id = "";
     }
 
     public void setTitle(String title) {
@@ -93,6 +96,9 @@ public class Event implements Parcelable {
         this.imgId = imgId;
     }
 
+    public void set_id(String _id) {
+        this._id = _id;
+    }
 
     public void enroll(){
         enrolled = true;
@@ -143,6 +149,10 @@ public class Event implements Parcelable {
         return userId;
     }
 
+    public String get_id() {
+        return _id;
+    }
+
     public int getTicketsCount() {
         return ticketsCount;
     }
@@ -171,7 +181,6 @@ public class Event implements Parcelable {
         return events;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -186,6 +195,7 @@ public class Event implements Parcelable {
         dest.writeString(this.endDate);
         dest.writeString(this.endTime);
         dest.writeString(this.imgId);
+        dest.writeString(this._id);
         dest.writeString(this.description);
         dest.writeInt(this.ticketsCount);
         dest.writeParcelable(this.imageBitmap, flags);
@@ -202,6 +212,7 @@ public class Event implements Parcelable {
         this.endDate = source.readString();
         this.endTime = source.readString();
         this.imgId = source.readString();
+        this._id = source.readString();
         this.description = source.readString();
         this.ticketsCount = source.readInt();
         this.imageBitmap = source.readParcelable(Bitmap.class.getClassLoader());
@@ -218,6 +229,7 @@ public class Event implements Parcelable {
         this.endDate = in.readString();
         this.endTime = in.readString();
         this.imgId = in.readString();
+        this._id = in.readString();
         this.description = in.readString();
         this.ticketsCount = in.readInt();
         this.imageBitmap = in.readParcelable(Bitmap.class.getClassLoader());

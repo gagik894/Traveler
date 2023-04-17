@@ -201,7 +201,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
                               @NotNull String weekDayFullName, @NotNull String weekDayShortName,
                               int hour24, int hour12, int min, int sec, @NotNull String AM_PM) {
                 Toast.makeText(requireContext(), "Date and time selected!", Toast.LENGTH_SHORT).show();
-                String date = weekDayShortName + ", " + monthFullName + " " + day;
+                String date = monthShortName + " " + day;
                 String time = hour24 + ":" + min;
                 if(start){
                     mViewModel.setStartDateAndTime(date, time);

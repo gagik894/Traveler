@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.together.traveler.R;
 import com.together.traveler.adapter.EventCardsAdapter;
@@ -46,10 +47,12 @@ public class UserFragment extends Fragment {
         final Button myEventsButton = binding.userBtnMyEvents;
         final ImageButton settingsButton = binding.userBtnSettings;
         final RecyclerView rvCards = binding.rvUser;
+        final SwipeRefreshLayout swipeRefreshLayout = binding.userSwipeRefresh;
         final int textColor = savedButton.getCurrentTextColor();
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         userViewModel.getData().observe(getViewLifecycleOwner(), data ->{
+            swipeRefreshLayout.setRefreshing(false);
             username.setText(data.getUsername());
             rating.setText(String.valueOf(data.getRating()));
             location.setText(data.getLocation());
@@ -96,6 +99,10 @@ public class UserFragment extends Fragment {
             editor.apply();
             startActivity(new Intent(requireActivity(), LoginActivity.class));
             requireActivity().finish();
+        });
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            Thread thread = new Thread(userViewModel::getUser);
+            thread.start();
         });
         return root;
     }

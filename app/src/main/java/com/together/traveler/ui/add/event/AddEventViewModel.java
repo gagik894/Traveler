@@ -55,7 +55,7 @@ public class AddEventViewModel extends ViewModel {
         Event event = data.getValue();
         String url = "https://traveler-ynga.onrender.com/events/add/event";
         webRequests.sendMultipartRequest(url, event.getTitle(),event.getDescription(), event.getStartDate(),
-                event.getStartTime(), event.getEndTime(), event.getImageBitmap());
+                event.getStartTime(), event.getEndDate(), event.getEndTime(), event.getImageBitmap(), event.getLocation());
         Log.i("asd", "create: " + Objects.requireNonNull(data.getValue()).getLocation() + data.getValue().getStartTime());
     }
 
