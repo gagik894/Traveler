@@ -86,7 +86,7 @@ public class WebRequests {
         });
     }
 
-    public ArrayList<Event> makeHttpGetRequest(String getUrl) {
+    public String makeHttpGetRequest(String getUrl) {
         OkHttpClient client = new OkHttpClient();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -101,28 +101,20 @@ public class WebRequests {
                 return response.body().string();
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.e("asd", "makeHttpGetRequest: ", e);
                 return null;
             }
         });
 
         try {
-            String result = future.get();
-            if (result != null) {
-                Log.i("asd", "makeHttpGetRequest: " + result);
-                Gson gson = new Gson();
-                EventsResponse response = gson.fromJson(result, EventsResponse.class);
-                List<Event> events = response.getData();
-                return (ArrayList<Event>) events;
-            }
+            return future.get();
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("asd", "makeHttpGetRequest: ", e);
         } finally {
             executor.shutdown();
         }
-
-        // Return an empty ArrayList if there was an error or no data was found
-        return new ArrayList<>();
+        return "";
     }
 
 }

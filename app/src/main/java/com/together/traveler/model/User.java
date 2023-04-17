@@ -5,48 +5,62 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class User implements Parcelable {
+    private String avatar;
     private String email;
     private String username;
-    private String userId;
+    private String _id;
     private String location;
     private float rating;
-    private int profileImage;
     private ArrayList<Event> upcomingEvents = null;
     private ArrayList<Event> savedEvents = null;
     private ArrayList<Event> userEvents = null;
 
-    public User(String username, String location, float rating, int profileImage, ArrayList<Event> upcomingEvents, ArrayList<Event> savedEvents, ArrayList<Event> userEvents) {
+    public User(String avatar, String username, String location, float rating, ArrayList<Event> upcomingEvents, ArrayList<Event> savedEvents, ArrayList<Event> userEvents) {
+        this.avatar = avatar;
         this.username = username;
         this.location = location;
         this.rating = rating;
-        this.profileImage = profileImage;
         this.upcomingEvents = upcomingEvents;
         this.savedEvents = savedEvents;
         this.userEvents = userEvents;
     }
 
-    public User(String username, String location, float rating, int profileImage) {
+    public User(String avatar, String username, String location, float rating) {
+        this.avatar = avatar;
         this.username = username;
         this.location = location;
         this.rating = rating;
-        this.profileImage = profileImage;
     }
 
-    public User(String userId, String email, String username) {
+    public User(String _id, String email, String username) {
         this.email = email;
         this.username = username;
-        this.userId = userId;
+        this._id = _id;
     }
 
-    public User(String userId, String email) {
+    public User(String _id, String email) {
         this.email = email;
-        this.userId = userId;
+        this._id = _id;
     }
-    public String getUserId() {
-        return userId;
+
+    public String toString() {
+        return "User{" +
+                "avatar='" + avatar + '\'' +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", id='" + _id + '\'' +
+                ", location='" + location + '\'' +
+                ", rating=" + rating +
+                ", upcomingEvents=" + upcomingEvents +
+                ", savedEvents=" + savedEvents +
+                ", userEvents=" + userEvents +
+                '}';
+    }
+
+    public String get_id() {
+        return _id;
     }
 
     public String getEmail() {
@@ -65,8 +79,8 @@ public class User implements Parcelable {
         return rating;
     }
 
-    public int getProfileImage() {
-        return profileImage;
+    public String getAvatar() {
+        return avatar;
     }
 
     public ArrayList<Event> getUpcomingEvents() {
@@ -89,36 +103,36 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.avatar);
         dest.writeString(this.email);
         dest.writeString(this.username);
-        dest.writeString(this.userId);
+        dest.writeString(this._id);
         dest.writeString(this.location);
         dest.writeFloat(this.rating);
-        dest.writeInt(this.profileImage);
         dest.writeTypedList(this.upcomingEvents);
         dest.writeTypedList(this.savedEvents);
         dest.writeTypedList(this.userEvents);
     }
 
     public void readFromParcel(Parcel source) {
+        this.avatar = source.readString();
         this.email = source.readString();
         this.username = source.readString();
-        this.userId = source.readString();
+        this._id = source.readString();
         this.location = source.readString();
         this.rating = source.readFloat();
-        this.profileImage = source.readInt();
         this.upcomingEvents = source.createTypedArrayList(Event.CREATOR);
         this.savedEvents = source.createTypedArrayList(Event.CREATOR);
         this.userEvents = source.createTypedArrayList(Event.CREATOR);
     }
 
     protected User(Parcel in) {
+        this.avatar = in.readString();
         this.email = in.readString();
         this.username = in.readString();
-        this.userId = in.readString();
+        this._id = in.readString();
         this.location = in.readString();
         this.rating = in.readFloat();
-        this.profileImage = in.readInt();
         this.upcomingEvents = in.createTypedArrayList(Event.CREATOR);
         this.savedEvents = in.createTypedArrayList(Event.CREATOR);
         this.userEvents = in.createTypedArrayList(Event.CREATOR);

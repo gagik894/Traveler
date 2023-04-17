@@ -165,7 +165,7 @@ public class Event implements Parcelable {
             events.add(new Event("Event " + ++lastId, "somewhere", "Mon, 5 April",
                     "18:00", "Mon, 5 Apr", "20:00", url,
                     i%2 == 0?"description": longDesc,
-                    new User("username", "somewhere", 4.8f, R.drawable.default_user),
+                    new User("1dMQgruv8yU_MVa3f4BX9idns4kZ8aAJQ" ,"username", "somewhere", 4.8f),
                     25));
         }
         return events;
