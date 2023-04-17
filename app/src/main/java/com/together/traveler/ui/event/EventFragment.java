@@ -51,8 +51,8 @@ public class EventFragment extends Fragment {
             Glide.with(requireContext()).load(imageUrl).into(image);
             name.setText(data.getTitle());
             location.setText(data.getLocation());
-            date.setText(data.getStartDate());
-            time.setText(String.format("%s - %s", data.getStartTime(), data.getEndTime()));
+            date.setText(String.format("From %s, %s", data.getStartDate(), data.getStartTime()));
+            time.setText(String.format("To %s, %s", data.getEndDate(), data.getEndTime()));
             description.setText(data.getDescription());
 
             if (data.isEnrolled()){

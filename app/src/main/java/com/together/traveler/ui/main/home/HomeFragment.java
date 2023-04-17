@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.together.traveler.R;
 import com.together.traveler.adapter.EventCardsAdapter;
@@ -20,6 +21,7 @@ import com.together.traveler.databinding.FragmentHomeBinding;
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private RecyclerView rvCards;
+    private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -28,8 +30,15 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         rvCards = binding.rvHome;
+        swipeRefreshLayout = binding.cardSwipeRefreshLayout;
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            Thread thread = new Thread(homeViewModel::getEvents);
+            thread.start();
+        });
 
         homeViewModel.getData().observe(getViewLifecycleOwner(), events ->{
+            swipeRefreshLayout.setRefreshing(false);
             EventCardsAdapter adapter = new EventCardsAdapter(events, item ->{
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("cardData", item);

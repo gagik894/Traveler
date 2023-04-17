@@ -57,16 +57,18 @@ public class EventCardsAdapter extends RecyclerView.Adapter<EventCardsAdapter.Vi
         TextView tvDate = holder.tvDate;
         TextView tvTime = holder.tvTime;
         ImageView eventImage = holder.ivImage;
-        ImageView ivUserImage = holder.ivUserImage;
+        ImageView userAvatar = holder.ivUserImage;
         TextView tvUserUsername = holder.tvUserUsername;
 
         tvName.setText(card.getTitle());
         tvLocation.setText(card.getLocation());
-        tvDate.setText(String.valueOf(card.getStartDate()));
-        tvTime.setText(String.format("%s - %s", card.getStartTime(), card.getEndTime()));
+        tvDate.setText(String.format("%s, %s -", card.getStartDate(), card.getStartTime()));
+        tvTime.setText(String.format("%s, %s", card.getEndDate(), card.getEndTime()));
         tvUserUsername.setText(card.getUser().getUsername());
         String imageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", card.getImgId());
+        String userImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", card.getUser().getAvatar());
         Glide.with(context).load(imageUrl).into(eventImage);
+        Glide.with(context).load(userImageUrl).into(userAvatar);
     }
 
     @Override

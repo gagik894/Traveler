@@ -33,7 +33,7 @@ public class HomeViewModel extends ViewModel {
         return data;
     }
 
-    private void getEvents(){
+    public void getEvents(){
         String result = webRequests.makeHttpGetRequest("https://traveler-ynga.onrender.com/events");
         Log.i("asd", "getEvents: " + result);
         Gson gson = new Gson();

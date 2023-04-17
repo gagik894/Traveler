@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentUserCardBinding;
 import com.together.traveler.model.User;
@@ -42,7 +43,8 @@ public class UserCard extends Fragment {
 
         eventViewModel.getData().observe(getViewLifecycleOwner(), data -> {
             User userData = data.getUser();
-//            userImage.setImageResource(userData.getProfileImage());
+            String userImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", userData.getAvatar());
+            Glide.with(requireContext()).load(userImageUrl).into(userImage);
             username.setText(userData.getUsername());
             rating.setText(String.valueOf(userData.getRating()));
         });
