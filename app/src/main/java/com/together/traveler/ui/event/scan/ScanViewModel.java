@@ -2,7 +2,6 @@ package com.together.traveler.ui.event.scan;
 
 import android.util.Log;
 
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
@@ -41,7 +40,7 @@ public class ScanViewModel extends ViewModel {
             json.put("userId", userId);
             json.put("eventId", this.get_id());
             requestBody = RequestBody.create(MediaType.get("application/json"), json.toString());
-            result = webRequests.makeHttpPostRequest("http://localhost:3333/events/checkTicket", requestBody);
+            result = webRequests.makeHttpPostRequest("https://traveler-ynga.onrender.com/events/checkTicket", requestBody);
         } catch (JSONException e) {
             e.printStackTrace();
             return new CheckTicketResponse(false);
