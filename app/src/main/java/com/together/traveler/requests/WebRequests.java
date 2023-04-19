@@ -122,4 +122,37 @@ public class WebRequests {
         return "";
     }
 
+    public String makeHttpPostRequest(String postUrl, RequestBody requestBody) {
+        OkHttpClient client = new OkHttpClient();
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<String> future = executor.submit(() -> {
+            try {
+                Request request = new Request.Builder()
+                        .url(postUrl)
+                        .addHeader("auth-token", sharedPreferences.getString("auth_token", null))
+                        .post(requestBody)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                return response.body().string();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("asd", "makeHttpPostRequest: ", e);
+                return null;
+            }
+        });
+
+        try {
+            return future.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("asd", "makeHttpPostRequest: ", e);
+        } finally {
+            executor.shutdown();
+        }
+        return "";
+    }
+
+
 }

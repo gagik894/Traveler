@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -94,7 +93,11 @@ public class EventFragment extends Fragment {
                     TicketDialog dialog = new TicketDialog(requireContext(), eventViewModel.getData().getValue());
                     dialog.show();
                 }else if(buttonText.equals(getString(R.string.event_button_check_tickets))){
-                    Toast.makeText(requireContext(), "scan Qr code", Toast.LENGTH_SHORT).show();
+                    if (eventViewModel.getData().getValue() == null)
+                        return;
+                    Bundle bundle = new Bundle();
+                    bundle.putString("_id", eventViewModel.getData().getValue().get_id());
+                    NavHostFragment.findNavController(this).navigate(R.id.action_eventFragment_to_scanFragment, bundle);
                 }else{
                     eventViewModel.enroll();
                 }

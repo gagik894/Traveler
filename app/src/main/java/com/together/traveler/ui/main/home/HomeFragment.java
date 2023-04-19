@@ -59,7 +59,6 @@ public class HomeFragment extends Fragment {
 
     public void scrollUp(){
         Log.i("asd", "scrollUp: " + rvCards);
-        rvCards.smoothScrollBy(0, -1000);
         rvCards.post(() -> rvCards.smoothScrollBy(0, -1000));
     }
     public void scrollDown(){

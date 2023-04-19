@@ -2,15 +2,19 @@ package com.together.traveler.ui.event;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.together.traveler.R;
 import com.together.traveler.model.Event;
 
@@ -52,6 +56,24 @@ public class TicketDialog extends Dialog {
         start.setText(String.format("From %s, %s", data.getStartDate(), data.getStartTime()));
         end.setText(String.format("To %s, %s", data.getEndDate(), data.getEndTime()));
         Glide.with(getContext()).load(imageUrl).into(imageView);
+
+        int qrCodeSize = 1000;
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        try {
+            BitMatrix bitMatrix = qrCodeWriter.encode(data.getUser().get_id(), BarcodeFormat.QR_CODE, qrCodeSize, qrCodeSize);
+            int bitmapWidth = bitMatrix.getWidth();
+            int bitmapHeight = bitMatrix.getHeight();
+            Bitmap bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+            for (int x = 0; x < bitmapWidth; x++) {
+                for (int y = 0; y < bitmapHeight; y++) {
+                    bitmap.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
+            }
+            qr.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+
 
         backBtn.setOnClickListener(v->dismiss());
     }

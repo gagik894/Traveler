@@ -49,10 +49,22 @@
         <argument
             android:name="cardData"
             app:argType="com.together.traveler.model.Event" />
+        <action
+            android:id="@+id/action_eventFragment_to_scanFragment"
+            app:destination="@id/scanFragment" />
     </fragment>
     <fragment
         android:id="@+id/addEvent"
         android:name="com.together.traveler.ui.add.event.AddEvent"
         android:label="fragment_add_event"
         tools:layout="@layout/fragment_add_event" />
+    <fragment
+        android:id="@+id/scanFragment"
+        android:name="com.together.traveler.ui.event.scan.ScanFragment"
+        android:label="fragment_scan"
+        tools:layout="@layout/fragment_scan" >
+        <argument
+            android:name="_id"
+            app:argType="string" />
+    </fragment>
 </navigation>
