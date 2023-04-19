@@ -1,6 +1,7 @@
 package com.together.traveler.ui.add.event;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -10,12 +11,14 @@ import androidx.lifecycle.ViewModel;
 import com.together.traveler.model.Event;
 import com.together.traveler.requests.WebRequests;
 
+import java.io.File;
 import java.util.Objects;
 
 public class AddEventViewModel extends ViewModel {
     private final MutableLiveData<Event> data;
     private final MutableLiveData<Boolean> isValid;
     private final WebRequests webRequests;
+
     public AddEventViewModel() {
         webRequests = new WebRequests();
         data = new MutableLiveData<>();

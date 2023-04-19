@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="0dp"
+    tools:context=".ui.event.EventFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ticketImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:background="@color/orange"
+            android:contentDescription="@string/event_image"
+            android:translationZ="-8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_scrollFlags="enterAlways|snap"
+            app:srcCompat="@drawable/event" />
+        <ImageButton
+            android:id="@+id/ticketIBtnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/rounded_background"
+            android:contentDescription="@string/btn_add"
+            android:cropToPadding="true"
+            android:padding="10dp"
+            android:paddingEnd="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/arrow_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/ticketViewBottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="-30dp"
+            android:nestedScrollingEnabled="true"
+            android:visibility="visible"
+            app:cardBackgroundColor="#FAFFFFFF"
+            app:cardElevation="0dp"
+            app:cardPreventCornerOverlap="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ticketImage"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerTopSize35dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="20dp">
+
+                <TextView
+                    android:id="@+id/ticketTvName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:autoSizeMaxTextSize="100sp"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeTextType="uniform"
+                    android:maxLines="4"
+                    android:text="Driving dsg fg wrf fdshg krsh khsdhkhskj"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageView13"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:contentDescription="@string/location_icon"
+                    android:src="@drawable/location"
+                    app:layout_constraintBottom_toBottomOf="@+id/ticketTvLocation"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/ticketTvLocation" />
+
+                <ImageView
+                    android:id="@+id/imageView65"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:contentDescription="@string/calendar_icon"
+                    android:src="@drawable/calendar"
+                    app:layout_constraintBottom_toBottomOf="@id/ticketTvTime"
+                    app:layout_constraintStart_toStartOf="@+id/imageView13"
+                    app:layout_constraintTop_toTopOf="@+id/ticketTvDate" />
+
+                <TextView
+                    android:id="@+id/ticketTvLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Megerian Carpet Armenia"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imageView13"
+                    app:layout_constraintTop_toBottomOf="@+id/ticketTvName" />
+
+                <TextView
+                    android:id="@+id/ticketTvDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Wednesday, March 1"
+                    app:layout_constraintEnd_toEndOf="@+id/ticketTvLocation"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@+id/ticketTvLocation"
+                    app:layout_constraintTop_toBottomOf="@+id/ticketTvLocation" />
+
+                <TextView
+                    android:id="@+id/ticketTvTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="16:00 - 18:00"
+                    app:layout_constraintEnd_toEndOf="@+id/ticketTvLocation"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@+id/ticketTvLocation"
+                    app:layout_constraintTop_toBottomOf="@+id/ticketTvDate" />
+
+                <ImageView
+                    android:id="@+id/ticketIvQr"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp"
+                    android:contentDescription="@string/qr"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ticketTvTime"
+                    app:srcCompat="@drawable/ic_launcher_background" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

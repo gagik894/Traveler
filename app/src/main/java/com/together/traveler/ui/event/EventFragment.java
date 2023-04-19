@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -31,13 +31,13 @@ public class EventFragment extends Fragment {
         binding = FragmentEventBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         final ImageView image = binding.eventIvImage;
-        final TextView name = binding.eventTvName;
+        final TextView name = binding.ticketTvName;
         final TextView location = binding.eventTvLocation;
         final TextView date = binding.eventTvDate;
         final TextView time = binding.eventTvTime;
         final TextView description = binding.eventTvDescription;
-        final TextView buttonMore = binding.eventTvMore;
-        final Button enrollButton = binding.eventBtnEnroll;
+        final TextView moreButton = binding.eventTvMore;
+        final Button bottomButton = binding.eventBtnBottom;
         final ImageButton backButton = binding.eventIBtnBack;
         final ImageButton saveButton = binding.eventIBtnSave;
         int maxLines = description.getMaxLines();
@@ -56,16 +56,13 @@ public class EventFragment extends Fragment {
             description.setText(data.getDescription());
 
             if (data.isEnrolled()){
-                enrollButton.setEnabled(false);
-                enrollButton.setText(R.string.event_enroll_button_enrolled);
-                enrollButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.gray));
-                enrollButton.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.white));
-
+                bottomButton.setText(R.string.event_button_ticket);
+            }else if(data.isUserOwned()){
+                bottomButton.setText(R.string.event_button_check_tickets);
             }else{
-                enrollButton.setEnabled(true);
-                enrollButton.setText(R.string.event_enroll_button);
-                enrollButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.secondary_color));
+                bottomButton.setText(R.string.event_button_enroll);
             }
+
             if(data.isSaved()){
                 saveButton.setImageResource(R.drawable.favorite);
             }else{
@@ -77,11 +74,10 @@ public class EventFragment extends Fragment {
                 @Override
                 public void onGlobalLayout() {
                     int lineCount = description.getLineCount();
-                    Log.d("asd", "Line count: " + lineCount + description.getMaxLines());
                     if (description.getMaxLines()==lineCount){
-                        buttonMore.setVisibility(View.VISIBLE);
+                        moreButton.setVisibility(View.VISIBLE);
                     }else{
-                        buttonMore.setVisibility(View.GONE);
+                        moreButton.setVisibility(View.GONE);
                     }
                     ViewTreeObserver vto = description.getViewTreeObserver();
                     vto.removeOnGlobalLayoutListener(this);
@@ -90,16 +86,29 @@ public class EventFragment extends Fragment {
         });
 
         saveButton.setOnClickListener(v -> eventViewModel.save());
-        enrollButton.setOnClickListener(v -> eventViewModel.enroll());
+        bottomButton.setOnClickListener(v -> {
+            if (v instanceof Button) {
+                Button button = (Button) v;
+                String buttonText = button.getText().toString();
+                if (buttonText.equals(getString(R.string.event_button_ticket))) {
+                    TicketDialog dialog = new TicketDialog(requireContext(), eventViewModel.getData().getValue());
+                    dialog.show();
+                }else if(buttonText.equals(getString(R.string.event_button_check_tickets))){
+                    Toast.makeText(requireContext(), "scan Qr code", Toast.LENGTH_SHORT).show();
+                }else{
+                    eventViewModel.enroll();
+                }
+            }
+        });
         backButton.setOnClickListener(v-> NavHostFragment.findNavController(this).navigateUp());
 
-        buttonMore.setOnClickListener(v -> {
+        moreButton.setOnClickListener(v -> {
             if (description.getMaxLines() == maxLines) {
                 description.setMaxLines(Integer.MAX_VALUE);
-                buttonMore.setText(R.string.event_read_less);
+                moreButton.setText(R.string.event_read_less);
             } else {
                 description.setMaxLines(maxLines);
-                buttonMore.setText(R.string.event_read_more);
+                moreButton.setText(R.string.event_read_more);
             }
         });
 

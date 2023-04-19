@@ -123,7 +123,7 @@
                         android:paddingHorizontal="20dp">
 
                         <TextView
-                            android:id="@+id/eventTvName"
+                            android:id="@+id/ticketTvName"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:autoSizeMaxTextSize="100sp"
@@ -138,7 +138,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
-                            android:id="@+id/imageView3"
+                            android:id="@+id/imageView13"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:contentDescription="@string/location_icon"
@@ -148,13 +148,13 @@
                             app:layout_constraintTop_toTopOf="@+id/eventTvLocation" />
 
                         <ImageView
-                            android:id="@+id/imageView6"
+                            android:id="@+id/imageView65"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:contentDescription="@string/calendar_icon"
                             android:src="@drawable/calendar"
                             app:layout_constraintBottom_toBottomOf="@id/eventTvTime"
-                            app:layout_constraintStart_toStartOf="@+id/imageView3"
+                            app:layout_constraintStart_toStartOf="@+id/imageView13"
                             app:layout_constraintTop_toTopOf="@+id/eventTvDate" />
 
                         <TextView
@@ -165,8 +165,8 @@
                             android:layout_marginTop="20dp"
                             android:text="Megerian Carpet Armenia"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/imageView3"
-                            app:layout_constraintTop_toBottomOf="@+id/eventTvName" />
+                            app:layout_constraintStart_toEndOf="@+id/imageView13"
+                            app:layout_constraintTop_toBottomOf="@+id/ticketTvName" />
 
                         <TextView
                             android:id="@+id/eventTvDate"
@@ -249,13 +249,13 @@
                             tools:layout="@layout/fragment_user_card" />
 
                         <Button
-                            android:id="@+id/eventBtnEnroll"
+                            android:id="@+id/eventBtnBottom"
                             android:layout_width="0dp"
                             android:layout_height="60dp"
                             android:layout_marginTop="30dp"
                             android:backgroundTint="@color/secondary_color"
                             android:maxWidth="100dp"
-                            android:text="@string/event_enroll_button"
+                            android:text="@string/event_button_enroll"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/eventUser" />
