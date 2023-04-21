@@ -34,7 +34,7 @@ public class ScanViewModel extends ViewModel {
 
     public CheckTicketResponse checkTicket(String userId){
         JSONObject json = new JSONObject();
-        String result = "";
+        String result;
         RequestBody requestBody;
         try {
             json.put("userId", userId);
@@ -46,7 +46,6 @@ public class ScanViewModel extends ViewModel {
             return new CheckTicketResponse(false);
         }
         Gson gson = new Gson();
-        CheckTicketResponse response = gson.fromJson(result, CheckTicketResponse.class);
-        return response;
+        return gson.fromJson(result, CheckTicketResponse.class);
     }
 }

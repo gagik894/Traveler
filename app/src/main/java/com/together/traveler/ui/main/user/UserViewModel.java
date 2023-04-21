@@ -1,13 +1,10 @@
 package com.together.traveler.ui.main.user;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
-import com.together.traveler.model.Event;
 import com.together.traveler.model.User;
 import com.together.traveler.requests.WebRequests;
 
@@ -15,14 +12,14 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<User> data;
     private final MutableLiveData<Integer> state;
     private final WebRequests webRequests;
-
+    private boolean firstFetch;
 
     public UserViewModel() {
         data = new MutableLiveData<>();
         state = new MutableLiveData<>();
         webRequests = new WebRequests();
+        firstFetch = true;
         getUser();
-//        createUser();
     }
 
     public void getUser(){
@@ -32,7 +29,11 @@ public class UserViewModel extends ViewModel {
         Gson gson = new Gson();
         User user = gson.fromJson(result, User.class);
         this.data.postValue(user);
-        this.state.postValue(0);
+        if (firstFetch){
+            this.state.postValue(0);
+            firstFetch = false;
+        }
+
     }
 
     public void setState(int state){
@@ -45,10 +46,6 @@ public class UserViewModel extends ViewModel {
 
     public void setData(User data) {
         this.data.setValue(data);
-    }
-
-    private void createUser(){
-        this.data.setValue(new User("1dMQgruv8yU_MVa3f4BX9idns4kZ8aAJQ", "username", "somewhere", 4.8f, Event.createCardList(100),Event.createCardList(5), Event.createCardList(1)));
     }
 
     public LiveData<User> getData() {

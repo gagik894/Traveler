@@ -3,16 +3,15 @@ package com.together.traveler.ui.add.event;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,6 +24,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -34,17 +35,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.noowenz.customdatetimepicker.CustomDateTimePicker;
-import com.together.traveler.ui.main.MainActivity;
 import com.together.traveler.databinding.FragmentAddEventBinding;
+import com.together.traveler.ui.main.MainActivity;
 import com.together.traveler.ui.main.map.MapDialog;
+import com.yalantis.ucrop.UCrop;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileDescriptor;
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
 
@@ -59,11 +62,33 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
     private static final int PERMISSION_REQUEST_CODE = 200;
     private static final int REQUEST_CAMERA = 201;
     private static final int SELECT_FILE = 202;
+    private ActivityResultLauncher<Intent> imageCroppingActivityResultLauncher;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(AddEventViewModel.class);
+
+        imageCroppingActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        Uri croppedImageUri = null;
+                        if (data != null) {
+                            croppedImageUri = UCrop.getOutput(data);
+                        }
+                        if (croppedImageUri != null) {
+                            try {
+                                Bitmap croppedImageBitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), croppedImageUri);
+                                mViewModel.setEventImage(croppedImageBitmap);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+        );
     }
 
     @Nullable
@@ -96,14 +121,14 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         location.setOnClickListener(this::showPopupView);
         startDateAndTime.setOnClickListener(v -> showDateTimePicker(true));
         endDateAndTime.setOnClickListener(v -> showDateTimePicker(false));
-        btnCreate.setOnClickListener(v->{
+        btnCreate.setOnClickListener(v -> {
             mViewModel.create();
             Intent switchActivityIntent = new Intent(requireActivity(), MainActivity.class);
             startActivity(switchActivityIntent);
         });
-        eventImage.setOnClickListener(v-> selectImage());
+        eventImage.setOnClickListener(v -> selectImage());
 
-        mViewModel.getData().observe(getViewLifecycleOwner(), data->eventImage.setImageBitmap(data.getImageBitmap()));
+        mViewModel.getData().observe(getViewLifecycleOwner(), data -> eventImage.setImageBitmap(data.getImageBitmap()));
         mViewModel.isValid().observe(getViewLifecycleOwner(), btnCreate::setEnabled);
 
 
@@ -122,64 +147,79 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         }
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Bitmap selectedImageBitmap = null;
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_FILE) {
-                Uri selectedImageUri = data.getData();
-                try {
-                    selectedImageBitmap = getBitmapFromUri(selectedImageUri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else if (requestCode == REQUEST_CAMERA) {
-                selectedImageBitmap = (Bitmap) data.getExtras().get("data");
-            }
-        }
-        if (selectedImageBitmap != null) {
-            mViewModel.setEventImage(selectedImageBitmap);
-        }
-
-    }
-
     @Override
     public void onDialogResult(String result) {
         location.setText(result);
     }
 
+    private void startImageCropping(Uri sourceUri) {
+        String destinationFileName = "CroppedImage";
+        UCrop uCrop = UCrop.of(sourceUri, Uri.fromFile(new File(requireActivity().getCacheDir(), destinationFileName)));
+        uCrop.withAspectRatio(4, 3);
+        uCrop.withMaxResultSize(1000, 1000);
 
-    private void requestPermissionsIfNecessary() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-        } else {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        // Launch the image cropping activity
+        Intent cropIntent = uCrop.getIntent(requireActivity());
+        imageCroppingActivityResultLauncher.launch(cropIntent);
+    }
+
+    private Uri getImageUri(Context context, Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i("asd", "onActivityResult: " + requestCode + resultCode + data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_FILE || requestCode == REQUEST_CAMERA) {
+                Bitmap selectedImageBitmap = null;
+                Uri selectedImageUri = data.getData();
+                try {
+                    selectedImageBitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), selectedImageUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (selectedImageBitmap != null) {
+                    Uri imageUri = getImageUri(requireContext(), selectedImageBitmap);
+                    startImageCropping(imageUri);
+                }
+            } else {
+                Log.d("asd", "onActivityResult: else");
+            }
         }
     }
 
-    private Bitmap getBitmapFromUri(Uri uri) throws IOException {
-        ParcelFileDescriptor parcelFileDescriptor = requireContext().getContentResolver().openFileDescriptor(uri, "r");
-        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-        parcelFileDescriptor.close();
-        return image;
+    private void requestPermissionsIfNecessary(String permission) {
+
+        String[] permissions = new String[1];
+        if (Objects.equals(permission, "camera")) {
+            permissions[0] = Manifest.permission.CAMERA;
+        }else if (Objects.equals(permission, "storage")){
+            permissions[0] = Manifest.permission.READ_EXTERNAL_STORAGE;
+        }
+        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            ActivityCompat.requestPermissions(requireActivity(), permissions , PERMISSION_REQUEST_CODE);
+        } else {
+            ActivityCompat.requestPermissions(requireActivity(), permissions, PERMISSION_REQUEST_CODE);
+        }
     }
 
     private void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Choose from Gallery", "Cancel"};
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Add Photo");
+        final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setTitle("Add Photo!");
         builder.setItems(items, (dialog, item) -> {
-            requestPermissionsIfNecessary();
             if (items[item].equals("Take Photo")) {
+                requestPermissionsIfNecessary("camera");
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, REQUEST_CAMERA);
-            } else if (items[item].equals("Choose from Gallery")) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
+            } else if (items[item].equals("Choose from Library")) {
+                requestPermissionsIfNecessary("storage");
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, SELECT_FILE);
             } else if (items[item].equals("Cancel")) {
                 dialog.dismiss();
@@ -205,14 +245,14 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
                 Toast.makeText(requireContext(), "Date and time selected!", Toast.LENGTH_SHORT).show();
                 String date = monthShortName + " " + day;
                 String time = hour24 + ":" + min;
-                if(start){
+                if (start) {
                     mViewModel.setStartDateAndTime(date, time);
                     startDateAndTime.setText(String.format("%s %s", date, time));
-                }else{
+                } else {
                     mViewModel.setEndDateAndTime(date, time);
                     endDateAndTime.setText(String.format("%s %s", date, time));
                 }
-                Log.i("asd", "onSet: "  + date + " " + time);
+                Log.i("asd", "onSet: " + date + " " + time);
             }
 
             @Override
