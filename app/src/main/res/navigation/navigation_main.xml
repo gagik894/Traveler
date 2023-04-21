@@ -35,6 +35,9 @@
             app:destination="@id/eventFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
+        <argument
+            android:name="userId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/blankFragment"
@@ -52,6 +55,9 @@
         <action
             android:id="@+id/action_eventFragment_to_scanFragment"
             app:destination="@id/scanFragment" />
+        <action
+            android:id="@+id/action_eventFragment_to_userFragment"
+            app:destination="@id/userFragment" />
     </fragment>
     <fragment
         android:id="@+id/addEvent"

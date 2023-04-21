@@ -20,10 +20,12 @@ import com.together.traveler.model.Event;
 
 public class TicketDialog extends Dialog {
     private final Event data;
+    private String userId;
 
-    public TicketDialog(Context context, Event data) {
+    public TicketDialog(Context context, Event data, String userId) {
         super(context);
         this.data = data;
+        this.userId = userId;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class TicketDialog extends Dialog {
         int qrCodeSize = 1000;
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         try {
-            BitMatrix bitMatrix = qrCodeWriter.encode(data.getUser().get_id(), BarcodeFormat.QR_CODE, qrCodeSize, qrCodeSize);
+            BitMatrix bitMatrix = qrCodeWriter.encode(userId, BarcodeFormat.QR_CODE, qrCodeSize, qrCodeSize);
             int bitmapWidth = bitMatrix.getWidth();
             int bitmapHeight = bitMatrix.getHeight();
             Bitmap bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);

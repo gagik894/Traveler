@@ -4,7 +4,7 @@ import java.util.List;
 
 public class EventsResponse {
     private List<Event> data;
-    private String user;
+    private String userId;
 
     public List<Event> getData() {
         return data;
@@ -14,11 +14,11 @@ public class EventsResponse {
         this.data = data;
     }
 
-    public String getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

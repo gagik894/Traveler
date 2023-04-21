@@ -13,12 +13,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentEventBinding;
+import com.together.traveler.ui.cards.EventCard;
+import com.together.traveler.ui.cards.UserCard;
 
 public class EventFragment extends Fragment {
     private FragmentEventBinding binding;
@@ -39,11 +42,16 @@ public class EventFragment extends Fragment {
         final Button bottomButton = binding.eventBtnBottom;
         final ImageButton backButton = binding.eventIBtnBack;
         final ImageButton saveButton = binding.eventIBtnSave;
+        final FragmentContainerView userCard = binding.eventUser;
+
         int maxLines = description.getMaxLines();
 
         if (getArguments() != null) {
+            Log.d("asd", "onCreateView: " + getArguments());
             eventViewModel.setData(getArguments().getParcelable("cardData"));
+            eventViewModel.setUserId(getArguments().getString("userId"));
         }
+
         eventViewModel.getData().observe(getViewLifecycleOwner(), data -> {
             String imageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", data.getImgId());
             Log.i("asd", "onCreateView: " + imageUrl);
@@ -90,7 +98,7 @@ public class EventFragment extends Fragment {
                 Button button = (Button) v;
                 String buttonText = button.getText().toString();
                 if (buttonText.equals(getString(R.string.event_button_ticket))) {
-                    TicketDialog dialog = new TicketDialog(requireContext(), eventViewModel.getData().getValue());
+                    TicketDialog dialog = new TicketDialog(requireContext(), eventViewModel.getData().getValue(), eventViewModel.getUserId());
                     dialog.show();
                 }else if(buttonText.equals(getString(R.string.event_button_check_tickets))){
                     if (eventViewModel.getData().getValue() == null)
@@ -104,7 +112,6 @@ public class EventFragment extends Fragment {
             }
         });
         backButton.setOnClickListener(v-> NavHostFragment.findNavController(this).navigateUp());
-
         moreButton.setOnClickListener(v -> {
             if (description.getMaxLines() == maxLines) {
                 description.setMaxLines(Integer.MAX_VALUE);
@@ -113,6 +120,11 @@ public class EventFragment extends Fragment {
                 description.setMaxLines(maxLines);
                 moreButton.setText(R.string.event_read_more);
             }
+        });
+        userCard.setOnClickListener(v-> {
+            Bundle bundle = new Bundle();
+            bundle.putString("userId", eventViewModel.getUserId());
+            NavHostFragment.findNavController(this).navigate(R.id.action_eventFragment_to_userFragment, bundle);
         });
 
         return root;

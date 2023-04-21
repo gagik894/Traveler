@@ -17,6 +17,7 @@ import java.util.List;
 public class HomeViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<Event>> data;
     private final WebRequests webRequests;
+    private String userId;
 
     public HomeViewModel() {
         data = new MutableLiveData<>();
@@ -40,8 +41,14 @@ public class HomeViewModel extends ViewModel {
         if (result == null || result.equals(""))
             return;
         EventsResponse response = gson.fromJson(result, EventsResponse.class);
+        Log.i("asd", "getEvents: "  + response.getUserId());
         List<Event> events = response.getData();
         this.data.postValue((ArrayList<Event>) events);
+        userId = response.getUserId();
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     @Override

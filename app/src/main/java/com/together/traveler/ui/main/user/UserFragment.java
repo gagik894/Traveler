@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,9 +48,31 @@ public class UserFragment extends Fragment {
         final Button myEventsButton = binding.userBtnMyEvents;
         final ImageButton settingsButton = binding.userBtnSettings;
         final RecyclerView rvCards = binding.rvUser;
+        final LinearLayout eventsLl = binding.userLlEvents;
+        final TextView eventsText = binding.userTvEvents;
         final SwipeRefreshLayout swipeRefreshLayout = binding.userSwipeRefresh;
         final int textColor = savedButton.getCurrentTextColor();
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        if (getArguments() != null) {
+            if (getArguments().getString("userId") != null) {
+                userViewModel.setUserId(getArguments().getString("userId"));
+            }else{
+                userViewModel.setUserId("self");
+            }
+        }
+
+        userViewModel.isSelfPage().observe(getViewLifecycleOwner(), isSelfPage->{
+            if (isSelfPage){
+                settingsButton.setVisibility(View.VISIBLE);
+                eventsLl.setVisibility(View.VISIBLE);
+                eventsText.setVisibility(View.GONE);
+            }else{
+                settingsButton.setVisibility(View.GONE);
+                eventsLl.setVisibility(View.GONE);
+                eventsText.setVisibility(View.VISIBLE);
+            }
+        });
 
         userViewModel.getData().observe(getViewLifecycleOwner(), data ->{
             swipeRefreshLayout.setRefreshing(false);
@@ -57,14 +80,6 @@ public class UserFragment extends Fragment {
             rating.setText(String.valueOf(data.getRating()));
             location.setText(data.getLocation());
         });
-
-        adapter = new EventCardsAdapter(new ArrayList<>(), item -> {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("cardData", item);
-            NavHostFragment.findNavController(this).navigate(R.id.action_userFragment_to_eventFragment, bundle);
-        });
-        rvCards.setAdapter(adapter);
-        rvCards.setLayoutManager(new LinearLayoutManager(getContext()));
 
         userViewModel.getState().observe(getViewLifecycleOwner(), data ->{
             upcomingButton.setTextColor(textColor);
@@ -104,6 +119,15 @@ public class UserFragment extends Fragment {
             Thread thread = new Thread(userViewModel::getUser);
             thread.start();
         });
+
+        adapter = new EventCardsAdapter(new ArrayList<>(), item -> {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("cardData", item);
+            bundle.putString("userId", userViewModel.getUserId());
+            NavHostFragment.findNavController(this).navigate(R.id.action_userFragment_to_eventFragment, bundle);
+        });
+        rvCards.setAdapter(adapter);
+        rvCards.setLayoutManager(new LinearLayoutManager(getContext()));
         return root;
     }
 

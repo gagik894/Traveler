@@ -56,6 +56,7 @@
     <string name="user_my_events">MY EVENTS</string>
     <string name="user_saved">SAVED</string>
     <string name="user_upcoming">UPCOMING</string>
+    <string name="user_events">EVENTS</string>
 
     <!--    navigation-->
     <string name="nav_user">user</string>

@@ -43,6 +43,7 @@ public class HomeFragment extends Fragment {
             EventCardsAdapter adapter = new EventCardsAdapter(events, item ->{
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("cardData", item);
+                bundle.putString("userId", homeViewModel.getUserId());
                 NavHostFragment.findNavController(this).navigate(R.id.action_homeFragment_to_eventFragment, bundle);
             });
             rvCards.setAdapter(adapter);
