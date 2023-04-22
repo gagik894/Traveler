@@ -223,7 +223,6 @@
                             android:textSize="24sp"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.498"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/eventTvMore" />
 
@@ -248,6 +247,18 @@
                             app:layout_constraintTop_toBottomOf="@+id/textView14"
                             tools:layout="@layout/fragment_user_card" />
 
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/event_location"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/eventUser" />
+
                         <Button
                             android:id="@+id/eventBtnBottom"
                             android:layout_width="0dp"
@@ -257,8 +268,21 @@
                             android:maxWidth="100dp"
                             android:text="@string/event_button_enroll"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.609"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/eventUser" />
+                            app:layout_constraintTop_toBottomOf="@+id/eventMap" />
+
+                        <androidx.fragment.app.FragmentContainerView
+                            android:id="@+id/eventMap"
+                            android:name="com.together.traveler.ui.main.map.MapFragment"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginTop="10dp"
+                            app:layout_constraintDimensionRatio="3:2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView"
+                            tools:layout="@layout/fragment_map" />
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

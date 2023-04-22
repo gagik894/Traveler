@@ -101,10 +101,24 @@ public class MapFragment extends Fragment {
         map.setBuiltInZoomControls(false);
         map.setMultiTouchControls(true);
         mapController.setZoom(18);
-        mapController.setCenter(startPoint);
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.enableFollowLocation();
         mLocationOverlay.setDrawAccuracyEnabled(true);
+
+        mapViewModel.setIsEventFragment(requireActivity(),getArguments() == null);
+
+        if (getArguments() != null) {
+           mapViewModel.setEventLocation(getArguments().getString("location"));
+        }
+
+        mapViewModel.setCenter(startPoint);
+
+        if (mapViewModel.isEventFragment()) {
+            map.setMultiTouchControls(false);
+            map.setOnTouchListener((v, event) -> true);
+            locationSearch.setVisibility(View.GONE);
+            onCenterButton.setVisibility(View.GONE);
+        }
 
         ItemizedOverlayWithFocus<OverlayItem> mPointsOverlay = new ItemizedOverlayWithFocus<>(items,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
@@ -128,13 +142,11 @@ public class MapFragment extends Fragment {
                 Log.d("debug", "Single tap helper");
                 mPointsOverlay.unSetFocusedItem();
                 return false;
-
             }
 
             @Override
             public boolean longPressHelper(GeoPoint p) {
                 Log.d("debug", "LongPressHelper");
-                mapViewModel.setItem(p);
                 return false;
             }
 
@@ -150,12 +162,7 @@ public class MapFragment extends Fragment {
 
         locationSearch.addTextChangedListener(afterTextChangedListener);
 
-//        if (getArguments() != null && getArguments().getBoolean("fromAdd")){
-//            mapViewModel.setFromAdd(true);
-//            backButton.setOnClickListener(v-> returnToAddFragment());
-//        }else{
-            startRoadManagerTask(ctx, startPoint);
-//        }
+        startRoadManagerTask(ctx, startPoint);
 
 
         mapViewModel.getOverlayItems().observe(getViewLifecycleOwner(), data -> {

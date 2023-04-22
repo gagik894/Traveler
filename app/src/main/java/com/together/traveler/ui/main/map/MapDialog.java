@@ -155,7 +155,6 @@ public class MapDialog extends DialogFragment {
 
         locationSearch.addTextChangedListener(afterTextChangedListener);
 
-        mapViewModel.setFromAdd(true);
         mapViewModel.getOverlayItems().observe(getViewLifecycleOwner(), data -> {
             Log.i("asd", "onViewCreated: " + data);
             mPointsOverlay.removeAllItems();

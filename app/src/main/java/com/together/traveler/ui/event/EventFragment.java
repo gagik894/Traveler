@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -45,6 +46,7 @@ public class EventFragment extends Fragment {
         final ImageButton backButton = binding.eventIBtnBack;
         final ImageButton saveButton = binding.eventIBtnSave;
         final FragmentContainerView userCard = binding.eventUser;
+        final FragmentContainerView mapCard = binding.eventMap;
 
         int maxLines = description.getMaxLines();
 
@@ -127,6 +129,13 @@ public class EventFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putString("userId", Objects.requireNonNull(eventViewModel.getData().getValue()).getUser().get_id());
             NavHostFragment.findNavController(this).navigate(R.id.action_eventFragment_to_userFragment, bundle);
+        });
+
+        mapCard.setOnClickListener(v-> {
+            Toast.makeText(requireContext(), "map clicked", Toast.LENGTH_SHORT).show();
+            Bundle bundle = new Bundle();
+            bundle.putString("location", Objects.requireNonNull(eventViewModel.getData().getValue()).getLocation());
+            NavHostFragment.findNavController(this).navigate(R.id.action_eventFragment_to_mapFragment, bundle);
         });
 
         return root;

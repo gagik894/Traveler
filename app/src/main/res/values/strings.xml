@@ -47,6 +47,7 @@
     <string name="event_enroll_button_enrolled">Enrolled</string>
     <string name="event_event_by">Event by</string>
     <string name="event_about">About</string>
+    <string name="event_location">Location</string>
 
     <!--    event card-->
     <string name="event_card_image">Card event image</string>

@@ -1,11 +1,16 @@
 package com.together.traveler.ui.main.map;
 
+import android.app.Activity;
 import android.location.Address;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
+
+import com.together.traveler.ui.event.EventViewModel;
 
 import org.osmdroid.bonuspack.location.GeocoderNominatim;
 import org.osmdroid.util.GeoPoint;
@@ -24,7 +29,10 @@ public class MapViewModel extends ViewModel {
     private final MutableLiveData<String> search;
     private final MutableLiveData<GeoPoint> center;
     private final MutableLiveData<String> locationName;
-    private boolean fromAdd = false;
+
+    private String eventLocation;
+
+    private boolean isEventFragment = false;
 
     public MapViewModel() {
         overlayItems = new MutableLiveData<>(new ArrayList<>());
@@ -38,6 +46,14 @@ public class MapViewModel extends ViewModel {
         getLocationFromName(data);
     }
 
+    public void setEventLocation(String eventLocation) {
+        Log.d("asd", "setEventLocation: " + eventLocation);
+        this.eventLocation = eventLocation;
+        if (eventLocation == null)
+            return;
+        getLocationFromName(eventLocation);
+    }
+
     public void addItem(GeoPoint p) {
         Objects.requireNonNull(this.overlayItems.getValue()).add(new OverlayItem("Dilijan", "", new GeoPoint(p.getLatitude(), p.getLongitude())));
         this.overlayItems.setValue(this.overlayItems.getValue());
@@ -48,15 +64,29 @@ public class MapViewModel extends ViewModel {
         Objects.requireNonNull(overlayItems.getValue()).clear();
         getNameFromLocation(p);
         overlayItems.getValue().add(overlayItem);
-        overlayItems.setValue(overlayItems.getValue());
+        overlayItems.postValue(overlayItems.getValue());
+    }
+
+    public void setCenter(GeoPoint center){
+        this.center.setValue(center);
+    }
+
+    public void setIsEventFragment(Activity activity, boolean fromEvent) {
+        if (fromEvent) {
+            EventViewModel eventViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(EventViewModel.class);
+            String locationName = Objects.requireNonNull(eventViewModel.getData().getValue()).getLocation();
+            getLocationFromName(locationName);
+        }
+        this.isEventFragment = fromEvent;
     }
 
     public LiveData<ArrayList<OverlayItem>> getOverlayItems() {
-        Log.i("asd", "getOverlayItems: " + fromAdd);
+        Log.i("asd", "getOverlayItems: " + isEventFragment);
         return overlayItems;
     }
 
     public LiveData<GeoPoint> getCenter() {
+        Log.d("asd", "getCenter: " + center.getValue());
         return center;
     }
 
@@ -64,6 +94,13 @@ public class MapViewModel extends ViewModel {
         return locationName;
     }
 
+    public boolean isEventFragment() {
+        return isEventFragment;
+    }
+
+    public String getEventLocation() {
+        return eventLocation;
+    }
 
     private void getLocationFromName(final String query) {
         Executor executor = Executors.newSingleThreadExecutor();
@@ -76,6 +113,7 @@ public class MapViewModel extends ViewModel {
                     double latitude = address.getLatitude();
                     double longitude = address.getLongitude();
                     center.postValue(new GeoPoint(latitude, longitude));
+                    setItem(new GeoPoint(latitude, longitude));
                 }
 
             } catch (IOException e) {
@@ -105,7 +143,4 @@ public class MapViewModel extends ViewModel {
         });
     }
 
-    public void setFromAdd(boolean fromAdd) {
-        this.fromAdd = fromAdd;
-    }
 }
