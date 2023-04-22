@@ -23,6 +23,8 @@ import com.together.traveler.databinding.FragmentEventBinding;
 import com.together.traveler.ui.cards.EventCard;
 import com.together.traveler.ui.cards.UserCard;
 
+import java.util.Objects;
+
 public class EventFragment extends Fragment {
     private FragmentEventBinding binding;
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -123,7 +125,7 @@ public class EventFragment extends Fragment {
         });
         userCard.setOnClickListener(v-> {
             Bundle bundle = new Bundle();
-            bundle.putString("userId", eventViewModel.getUserId());
+            bundle.putString("userId", Objects.requireNonNull(eventViewModel.getData().getValue()).getUser().get_id());
             NavHostFragment.findNavController(this).navigate(R.id.action_eventFragment_to_userFragment, bundle);
         });
 

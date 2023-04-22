@@ -1,12 +1,16 @@
 package com.together.traveler.ui.event.scan;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -22,23 +26,42 @@ import com.together.traveler.model.CheckTicketResponse;
 import java.util.List;
 
 public class ScanFragment extends Fragment implements DecoratedBarcodeView.TorchListener, TicketCheckResponseDialog.TicketCheckResponseDialogListener {
-    private FragmentScanBinding binding;
     private DecoratedBarcodeView barcodeView;
     private ScanViewModel scanViewModel;
+    private final ActivityResultLauncher<String[]> requestCameraPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
+                if (Boolean.TRUE.equals(permissions.get(Manifest.permission.CAMERA))) {
+                    // Permission granted
+                } else {
+                    // Permission denied
+                }
+            });
+
+    String[] permissions = {Manifest.permission.CAMERA};
+
+
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         scanViewModel = new ViewModelProvider(requireActivity()).get(ScanViewModel.class);
-        binding = FragmentScanBinding.inflate(inflater, container, false);
+        com.together.traveler.databinding.FragmentScanBinding binding = FragmentScanBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        barcodeView = binding.barcodeScanner;
+        final ProgressBar progressBar = binding.scanProgressBar;
+        barcodeView = binding.scanBarcodeScanner;
+        requestCameraPermissionLauncher.launch(permissions);
+
         barcodeView.setTorchListener(this);
 
         if (getArguments() != null) {
             scanViewModel.set_id(getArguments().getString("_id"));
         }
+
+        scanViewModel.getLoading().observe(getViewLifecycleOwner(), isLoading-> {
+            Log.d("asd", "onCreateView: " + isLoading);
+            progressBar.setVisibility(isLoading? View.VISIBLE: View.GONE);
+        });
         return root;
     }
 
@@ -77,14 +100,17 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
         public void barcodeResult(BarcodeResult result) {
             CheckTicketResponse checkTicketResponse = scanViewModel.checkTicket(result.getText());
             barcodeView.pauseAndWait();
-            if (checkTicketResponse.getUser() == null) {
-                Toast.makeText(requireContext(), "Wrong Qr code", Toast.LENGTH_SHORT).show();
-                barcodeView.resume();
-            }else{
-                TicketCheckResponseDialog dialog = new TicketCheckResponseDialog(requireContext(), checkTicketResponse);
-                dialog.setListener(ScanFragment.this);
-                dialog.show();
+            if (checkTicketResponse != null) {
+                if (checkTicketResponse.getUser() == null) {
+                    Toast.makeText(requireContext(), "Wrong Qr code", Toast.LENGTH_SHORT).show();
+                    barcodeView.resume();
+                }else{
+                    TicketCheckResponseDialog dialog = new TicketCheckResponseDialog(requireContext(), checkTicketResponse);
+                    dialog.setListener(ScanFragment.this);
+                    dialog.show();
+                }
             }
+
 
         }
 

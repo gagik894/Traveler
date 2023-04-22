@@ -40,7 +40,7 @@ public class UserViewModel extends ViewModel {
         User user = gson.fromJson(result, User.class);
         this.data.postValue(user);
 
-        if (!Objects.equals(userId, "self")){
+        if (Boolean.FALSE.equals(selfPage.getValue())){
             this.state.postValue(2);
             return;
         }

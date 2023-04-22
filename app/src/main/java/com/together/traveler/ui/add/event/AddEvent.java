@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -47,6 +49,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
@@ -63,7 +66,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
     private static final int REQUEST_CAMERA = 201;
     private static final int SELECT_FILE = 202;
     private ActivityResultLauncher<Intent> imageCroppingActivityResultLauncher;
-
+    private ActivityResultLauncher<String[]> requestPermissionLauncher;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +89,19 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
                                 e.printStackTrace();
                             }
                         }
+                    }
+                }
+        );
+
+        requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(),
+                isGranted -> {
+                    if (isGranted.containsValue(false)) {
+                        // Permission not granted
+                        Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Permission granted, open the camera
+                        openCamera();
                     }
                 }
         );
@@ -135,39 +151,10 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         return root;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(requireContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     @Override
     public void onDialogResult(String result) {
         location.setText(result);
-    }
-
-    private void startImageCropping(Uri sourceUri) {
-        String destinationFileName = "CroppedImage";
-        UCrop uCrop = UCrop.of(sourceUri, Uri.fromFile(new File(requireActivity().getCacheDir(), destinationFileName)));
-        uCrop.withAspectRatio(4, 3);
-        uCrop.withMaxResultSize(1000, 1000);
-
-        // Launch the image cropping activity
-        Intent cropIntent = uCrop.getIntent(requireActivity());
-        imageCroppingActivityResultLauncher.launch(cropIntent);
-    }
-
-    private Uri getImageUri(Context context, Bitmap bitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
-        return Uri.parse(path);
     }
 
     @Override
@@ -193,20 +180,24 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         }
     }
 
-    private void requestPermissionsIfNecessary(String permission) {
+    private void startImageCropping(Uri sourceUri) {
+        String destinationFileName = "CroppedImage";
+        UCrop uCrop = UCrop.of(sourceUri, Uri.fromFile(new File(requireActivity().getCacheDir(), destinationFileName)));
+        uCrop.withAspectRatio(4, 3);
+        uCrop.withMaxResultSize(1000, 1000);
 
-        String[] permissions = new String[1];
-        if (Objects.equals(permission, "camera")) {
-            permissions[0] = Manifest.permission.CAMERA;
-        }else if (Objects.equals(permission, "storage")){
-            permissions[0] = Manifest.permission.READ_EXTERNAL_STORAGE;
-        }
-        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            ActivityCompat.requestPermissions(requireActivity(), permissions , PERMISSION_REQUEST_CODE);
-        } else {
-            ActivityCompat.requestPermissions(requireActivity(), permissions, PERMISSION_REQUEST_CODE);
-        }
+        // Launch the image cropping activity
+        Intent cropIntent = uCrop.getIntent(requireActivity());
+        imageCroppingActivityResultLauncher.launch(cropIntent);
     }
+
+    private Uri getImageUri(Context context, Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
+    }
+
 
     private void selectImage() {
         final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
@@ -214,18 +205,55 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         builder.setTitle("Add Photo!");
         builder.setItems(items, (dialog, item) -> {
             if (items[item].equals("Take Photo")) {
-                requestPermissionsIfNecessary("camera");
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, REQUEST_CAMERA);
+                requestCameraPermissionAndOpenCamera();
             } else if (items[item].equals("Choose from Library")) {
-                requestPermissionsIfNecessary("storage");
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, SELECT_FILE);
+                requestReadExternalStoragePermissionAndOpenGallery();
             } else if (items[item].equals("Cancel")) {
                 dialog.dismiss();
             }
         });
         builder.show();
+    }
+
+    private void requestCameraPermissionAndOpenCamera() {
+        String[] permissions = {Manifest.permission.CAMERA};
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request the permission
+            requestPermissionLauncher.launch(permissions);
+        } else {
+            // Permission is already granted, open the camera
+            openCamera();
+        }
+    }
+
+    private void openCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+
+    private void requestReadExternalStoragePermissionAndOpenGallery() {
+        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+        requestPermissionLauncher.launch(permissions);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, SELECT_FILE);
+    }
+
+    private void requestPermission(String[] permissions, int requestCode) {
+        if (ContextCompat.checkSelfPermission(requireContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED) {
+            // Permission already granted, proceed with the operation
+            if (requestCode == REQUEST_CAMERA) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, REQUEST_CAMERA);
+            } else if (requestCode == SELECT_FILE) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, SELECT_FILE);
+            }
+        } else {
+            // Permission not granted yet, request it
+            requestPermissionLauncher.launch(permissions);
+        }
     }
 
     private void showPopupView(View anchorView) {
