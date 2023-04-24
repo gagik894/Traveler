@@ -37,8 +37,7 @@
             android:id="@+id/action_userFragment_to_eventFragment"
             app:destination="@id/eventFragment"
             app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popUpTo="@id/homeFragment" />
+            app:exitAnim="@android:anim/slide_out_right" />
         <argument
             android:name="userId"
             app:argType="string" />
@@ -61,7 +60,8 @@
             app:destination="@id/scanFragment" />
         <action
             android:id="@+id/action_eventFragment_to_userFragment"
-            app:destination="@id/userFragment" />
+            app:destination="@id/userFragment"
+            app:popUpTo="@id/userFragment" />
         <action
             android:id="@+id/action_eventFragment_to_mapFragment"
             app:destination="@id/mapFragment" />

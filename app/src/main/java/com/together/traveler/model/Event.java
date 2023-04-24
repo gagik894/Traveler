@@ -23,7 +23,6 @@ public class Event implements Parcelable {
     private boolean enrolled;
     private boolean saved;
     private boolean userOwned;
-
     private User userId;
 
     public Event(String title, String location, Double longitude, Double latitude, String startDate, String startTime, String endDate, String endTime, String imgId, String description, User userId, int ticketsCount) {
@@ -290,4 +289,5 @@ public class Event implements Parcelable {
             return new Event[size];
         }
     };
+
 }
