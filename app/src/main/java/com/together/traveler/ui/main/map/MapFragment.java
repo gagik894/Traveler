@@ -105,20 +105,7 @@ public class MapFragment extends Fragment {
         mLocationOverlay.enableFollowLocation();
         mLocationOverlay.setDrawAccuracyEnabled(true);
 
-        mapViewModel.setIsEventFragment(requireActivity(),getArguments() == null);
-
-        if (getArguments() != null) {
-           mapViewModel.setEventLocation(getArguments().getString("location"));
-        }
-
         mapViewModel.setCenter(startPoint);
-
-        if (mapViewModel.isEventFragment()) {
-            map.setMultiTouchControls(false);
-            map.setOnTouchListener((v, event) -> true);
-            locationSearch.setVisibility(View.GONE);
-            onCenterButton.setVisibility(View.GONE);
-        }
 
         ItemizedOverlayWithFocus<OverlayItem> mPointsOverlay = new ItemizedOverlayWithFocus<>(items,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
@@ -162,7 +149,7 @@ public class MapFragment extends Fragment {
 
         locationSearch.addTextChangedListener(afterTextChangedListener);
 
-        startRoadManagerTask(ctx, startPoint);
+//        startRoadManagerTask(ctx, startPoint);
 
 
         mapViewModel.getOverlayItems().observe(getViewLifecycleOwner(), data -> {

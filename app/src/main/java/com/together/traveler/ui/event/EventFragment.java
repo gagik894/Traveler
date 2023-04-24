@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,13 +22,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.bumptech.glide.Glide;
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentEventBinding;
-import com.together.traveler.ui.cards.EventCard;
-import com.together.traveler.ui.cards.UserCard;
 
 import java.util.Objects;
 
 public class EventFragment extends Fragment {
     private FragmentEventBinding binding;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         EventViewModel eventViewModel =
@@ -131,13 +131,6 @@ public class EventFragment extends Fragment {
             NavHostFragment.findNavController(this).navigate(R.id.action_eventFragment_to_userFragment, bundle);
         });
 
-        mapCard.setOnClickListener(v-> {
-            Toast.makeText(requireContext(), "map clicked", Toast.LENGTH_SHORT).show();
-            Bundle bundle = new Bundle();
-            bundle.putString("location", Objects.requireNonNull(eventViewModel.getData().getValue()).getLocation());
-            NavHostFragment.findNavController(this).navigate(R.id.action_eventFragment_to_mapFragment, bundle);
-        });
-
         return root;
     }
 
@@ -146,4 +139,15 @@ public class EventFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Find the child fragment's root view and set clickable to false
+        View childView = view.findViewById(R.id.eventMap);
+        childView.setClickable(false);
+        childView.setOnClickListener(v-> Toast.makeText(requireContext(), "sfb", Toast.LENGTH_SHORT).show());
+    }
+
 }

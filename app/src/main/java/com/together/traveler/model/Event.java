@@ -16,6 +16,8 @@ public class Event implements Parcelable {
     private String imgId;
     private String _id;
     private String description;
+    private Double longitude;
+    private Double latitude;
     private int ticketsCount;
     private Bitmap imageBitmap;
     private boolean enrolled;
@@ -24,9 +26,11 @@ public class Event implements Parcelable {
 
     private User userId;
 
-    public Event(String title, String location, String startDate, String startTime, String endDate, String endTime, String imgId, String description, User userId, int ticketsCount) {
+    public Event(String title, String location, Double longitude, Double latitude, String startDate, String startTime, String endDate, String endTime, String imgId, String description, User userId, int ticketsCount) {
         this.title = title;
         this.location = location;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.startDate = startDate;
         this.startTime = startTime;
         this.endDate = endDate;
@@ -41,6 +45,8 @@ public class Event implements Parcelable {
     public Event(){
         this.title = "";
         this.location = "";
+        this.latitude = null;
+        this.longitude = null;
         this.startDate = "";
         this.startTime = "";
         this.endDate = "";
@@ -58,6 +64,14 @@ public class Event implements Parcelable {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
     public void setImageBitmap(Bitmap imageBitmap) {
@@ -122,6 +136,14 @@ public class Event implements Parcelable {
         return location;
     }
 
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
     public Bitmap getImageBitmap() {
         return imageBitmap;
     }
@@ -181,7 +203,7 @@ public class Event implements Parcelable {
         ArrayList<Event> events = new ArrayList<>();
         for (int i = 1; i <= quantity; i++) {
             url = "1JXGfBOuLtEpTollfniq_fWhqfESFdOxl";
-            events.add(new Event("Event " + ++lastId, "somewhere", "Mon, 5 April",
+            events.add(new Event("Event " + ++lastId, "somewhere", 0.0d, 0.0d, "Mon, 5 April",
                     "18:00", "Mon, 5 Apr", "20:00", url,
                     i%2 == 0?"description": longDesc,
                     new User("1dMQgruv8yU_MVa3f4BX9idns4kZ8aAJQ" ,"username", "somewhere", 4.8f),
@@ -189,6 +211,7 @@ public class Event implements Parcelable {
         }
         return events;
     }
+
 
     @Override
     public int describeContents() {
@@ -206,6 +229,8 @@ public class Event implements Parcelable {
         dest.writeString(this.imgId);
         dest.writeString(this._id);
         dest.writeString(this.description);
+        dest.writeValue(this.longitude);
+        dest.writeValue(this.latitude);
         dest.writeInt(this.ticketsCount);
         dest.writeParcelable(this.imageBitmap, flags);
         dest.writeByte(this.enrolled ? (byte) 1 : (byte) 0);
@@ -224,6 +249,8 @@ public class Event implements Parcelable {
         this.imgId = source.readString();
         this._id = source.readString();
         this.description = source.readString();
+        this.longitude = (Double) source.readValue(Double.class.getClassLoader());
+        this.latitude = (Double) source.readValue(Double.class.getClassLoader());
         this.ticketsCount = source.readInt();
         this.imageBitmap = source.readParcelable(Bitmap.class.getClassLoader());
         this.enrolled = source.readByte() != 0;
@@ -242,6 +269,8 @@ public class Event implements Parcelable {
         this.imgId = in.readString();
         this._id = in.readString();
         this.description = in.readString();
+        this.longitude = (Double) in.readValue(Double.class.getClassLoader());
+        this.latitude = (Double) in.readValue(Double.class.getClassLoader());
         this.ticketsCount = in.readInt();
         this.imageBitmap = in.readParcelable(Bitmap.class.getClassLoader());
         this.enrolled = in.readByte() != 0;

@@ -242,7 +242,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.4"
+                            app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView14"
                             tools:layout="@layout/fragment_user_card" />
@@ -265,16 +265,17 @@
                             android:layout_height="60dp"
                             android:layout_marginTop="30dp"
                             android:backgroundTint="@color/secondary_color"
+                            android:contextClickable="false"
                             android:maxWidth="100dp"
                             android:text="@string/event_button_enroll"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.609"
+                            app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/eventMap" />
 
                         <androidx.fragment.app.FragmentContainerView
                             android:id="@+id/eventMap"
-                            android:name="com.together.traveler.ui.main.map.MapFragment"
+                            android:name="com.together.traveler.ui.event.map.MapFragment"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginTop="10dp"

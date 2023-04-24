@@ -30,10 +30,6 @@ public class MapViewModel extends ViewModel {
     private final MutableLiveData<GeoPoint> center;
     private final MutableLiveData<String> locationName;
 
-    private String eventLocation;
-
-    private boolean isEventFragment = false;
-
     public MapViewModel() {
         overlayItems = new MutableLiveData<>(new ArrayList<>());
         search = new MutableLiveData<>();
@@ -44,14 +40,6 @@ public class MapViewModel extends ViewModel {
     public void setSearch(String data) {
         this.search.postValue(data);
         getLocationFromName(data);
-    }
-
-    public void setEventLocation(String eventLocation) {
-        Log.d("asd", "setEventLocation: " + eventLocation);
-        this.eventLocation = eventLocation;
-        if (eventLocation == null)
-            return;
-        getLocationFromName(eventLocation);
     }
 
     public void addItem(GeoPoint p) {
@@ -71,17 +59,8 @@ public class MapViewModel extends ViewModel {
         this.center.setValue(center);
     }
 
-    public void setIsEventFragment(Activity activity, boolean fromEvent) {
-        if (fromEvent) {
-            EventViewModel eventViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(EventViewModel.class);
-            String locationName = Objects.requireNonNull(eventViewModel.getData().getValue()).getLocation();
-            getLocationFromName(locationName);
-        }
-        this.isEventFragment = fromEvent;
-    }
 
     public LiveData<ArrayList<OverlayItem>> getOverlayItems() {
-        Log.i("asd", "getOverlayItems: " + isEventFragment);
         return overlayItems;
     }
 
@@ -92,14 +71,6 @@ public class MapViewModel extends ViewModel {
 
     public LiveData<String> getLocationName() {
         return locationName;
-    }
-
-    public boolean isEventFragment() {
-        return isEventFragment;
-    }
-
-    public String getEventLocation() {
-        return eventLocation;
     }
 
     private void getLocationFromName(final String query) {
