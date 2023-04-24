@@ -72,16 +72,13 @@ public class MapFragment extends Fragment {
         if (eventViewModel.getData().getValue() != null) {
             double longitude = eventViewModel.getData().getValue().getLongitude();
             double latitude = eventViewModel.getData().getValue().getLatitude();
-            GeoPoint location = new GeoPoint(longitude, latitude);
+            GeoPoint location = new GeoPoint(latitude, longitude);
             Marker marker = new Marker(map);
             marker.setPosition(location);
             map.getOverlays().add(marker);
             mapController.setCenter(location);
             map.invalidate();
         }
-
-
-
 
     }
 

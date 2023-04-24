@@ -32,10 +32,8 @@ import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.MapEventsOverlay;
-import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -48,7 +46,6 @@ import java.util.TimerTask;
 public class MapDialog extends DialogFragment {
 
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
-    private final ArrayList<OverlayItem> items = new ArrayList<>();
     private FragmentMapBinding binding;
     private MapView map;
     private MyLocationNewOverlay mLocationOverlay;
@@ -101,6 +98,7 @@ public class MapDialog extends DialogFragment {
         mapController = map.getController();
         assert ctx != null;
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx), map);
+        final Marker[] marker = {null};
 
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setBuiltInZoomControls(false);
@@ -111,27 +109,10 @@ public class MapDialog extends DialogFragment {
         mLocationOverlay.enableFollowLocation();
         mLocationOverlay.setDrawAccuracyEnabled(true);
 
-        ItemizedOverlayWithFocus<OverlayItem> mPointsOverlay = new ItemizedOverlayWithFocus<>(items,
-                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                    @Override
-                    public boolean onItemSingleTapUp(final int position, final OverlayItem item) {
-                        //do something
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onItemLongPress(final int position, final OverlayItem item) {
-                        return false;
-                    }
-                }, ctx);
-
-        mPointsOverlay.setFocusItemsOnTap(true);
-
         MapEventsReceiver mReceive = new MapEventsReceiver() {
             @Override
             public boolean singleTapConfirmedHelper(GeoPoint p) {
                 Log.d("debug", "Single tap helper");
-                mPointsOverlay.unSetFocusedItem();
                 return false;
 
             }
@@ -147,30 +128,32 @@ public class MapDialog extends DialogFragment {
 
         MapEventsOverlay mEventOverlay = new MapEventsOverlay(ctx, mReceive);
         map.getOverlays().add(mLocationOverlay);
-        map.getOverlays().add(mPointsOverlay);
         map.getOverlays().add(mEventOverlay);
         map.invalidate();
 
         onCenterButton.setOnClickListener(v -> centerOnLocation(18));
-
         locationSearch.addTextChangedListener(afterTextChangedListener);
 
-        mapViewModel.getOverlayItems().observe(getViewLifecycleOwner(), data -> {
-            Log.i("asd", "onViewCreated: " + data);
-            mPointsOverlay.removeAllItems();
-            mPointsOverlay.addItems(data);
-            map.invalidate();
-        });
-        mapViewModel.getCenter().observe(getViewLifecycleOwner(), data->{
+
+
+        mapViewModel.getCenter().observe(getViewLifecycleOwner(), location->{
             mLocationOverlay.disableFollowLocation();
-            mapController.setCenter(data);
-        });
-        mapViewModel.getLocationName().observe(getViewLifecycleOwner(), data-> {
-            Toast.makeText(ctx, data, Toast.LENGTH_SHORT).show();
-            if (listener != null) {
-                listener.onDialogResult(data);
+            if (marker[0] != null) {
+                map.getOverlays().remove(marker[0]);
+            }
+
+            marker[0] = new Marker(map);
+            marker[0].setPosition(location);
+
+            map.getOverlays().add(marker[0]);
+            mapController.setCenter(location);
+            map.invalidate();
+            Toast.makeText(ctx, mapViewModel.getLocationName(), Toast.LENGTH_SHORT).show();
+            if (listener != null && mapViewModel.getOverlayItems().getValue() != null) {
+                listener.onDialogResult(mapViewModel.getLocationName(), location);
             }
         });
+
 
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
         requestPermissionsIfNecessary(perms);
@@ -204,7 +187,7 @@ public class MapDialog extends DialogFragment {
     }
 
     public interface MyDialogListener {
-        void onDialogResult(String result);
+        void onDialogResult(String result, GeoPoint geoPoint);
     }
 
     public void setListener(MyDialogListener listener) {

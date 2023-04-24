@@ -1,16 +1,11 @@
 package com.together.traveler.ui.main.map;
 
-import android.app.Activity;
 import android.location.Address;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
-
-import com.together.traveler.ui.event.EventViewModel;
 
 import org.osmdroid.bonuspack.location.GeocoderNominatim;
 import org.osmdroid.util.GeoPoint;
@@ -28,13 +23,12 @@ public class MapViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<OverlayItem>> overlayItems;
     private final MutableLiveData<String> search;
     private final MutableLiveData<GeoPoint> center;
-    private final MutableLiveData<String> locationName;
+    private String locationName;
 
     public MapViewModel() {
         overlayItems = new MutableLiveData<>(new ArrayList<>());
         search = new MutableLiveData<>();
         center = new MutableLiveData<>();
-        locationName = new MutableLiveData<>();
     }
 
     public void setSearch(String data) {
@@ -69,8 +63,12 @@ public class MapViewModel extends ViewModel {
         return center;
     }
 
-    public LiveData<String> getLocationName() {
+    public String getLocationName() {
         return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
     private void getLocationFromName(final String query) {
@@ -105,7 +103,8 @@ public class MapViewModel extends ViewModel {
                             address.getLocality()+
                                     (address.getThoroughfare() != null ? ", " + address.getThoroughfare() : "") +
                                     (address.getSubThoroughfare() != null ? ", " +address.getSubThoroughfare() : "");
-                    this.locationName.postValue(locationName);
+                    this.center.postValue(new GeoPoint(location));
+                    setLocationName(locationName);
                     Log.d("asd", "getNameFromLocation: " + locationName);
                 }
             } catch (IOException e) {

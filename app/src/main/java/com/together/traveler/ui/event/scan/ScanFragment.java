@@ -21,13 +21,14 @@ import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.together.traveler.databinding.FragmentScanBinding;
-import com.together.traveler.model.CheckTicketResponse;
 
 import java.util.List;
 
 public class ScanFragment extends Fragment implements DecoratedBarcodeView.TorchListener, TicketCheckResponseDialog.TicketCheckResponseDialogListener {
     private DecoratedBarcodeView barcodeView;
     private ScanViewModel scanViewModel;
+    private ProgressBar progressBar;
+
     private final ActivityResultLauncher<String[]> requestCameraPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
                 if (Boolean.TRUE.equals(permissions.get(Manifest.permission.CAMERA))) {
@@ -40,15 +41,13 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
     String[] permissions = {Manifest.permission.CAMERA};
 
 
-
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         scanViewModel = new ViewModelProvider(requireActivity()).get(ScanViewModel.class);
-        com.together.traveler.databinding.FragmentScanBinding binding = FragmentScanBinding.inflate(inflater, container, false);
+        FragmentScanBinding binding = FragmentScanBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        final ProgressBar progressBar = binding.scanProgressBar;
+        progressBar = binding.scanProgressBar;
         barcodeView = binding.scanBarcodeScanner;
         requestCameraPermissionLauncher.launch(permissions);
 
@@ -58,9 +57,20 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
             scanViewModel.set_id(getArguments().getString("_id"));
         }
 
-        scanViewModel.getLoading().observe(getViewLifecycleOwner(), isLoading-> {
-            Log.d("asd", "onCreateView: " + isLoading);
-            progressBar.setVisibility(isLoading? View.VISIBLE: View.GONE);
+        progressBar.setVisibility(View.GONE);
+
+        scanViewModel.getCheckTicketResponse().observe(getViewLifecycleOwner(), data -> {
+            progressBar.setVisibility(View.GONE);
+            if (data != null) {
+                if (data.getUser() == null) {
+                    Toast.makeText(requireContext(), "Wrong Qr code", Toast.LENGTH_SHORT).show();
+                    barcodeView.resume();
+                } else {
+                    TicketCheckResponseDialog dialog = new TicketCheckResponseDialog(requireContext(), data);
+                    dialog.setListener(ScanFragment.this);
+                    dialog.show();
+                }
+            }
         });
         return root;
     }
@@ -98,20 +108,9 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
     private final BarcodeCallback callback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
-            CheckTicketResponse checkTicketResponse = scanViewModel.checkTicket(result.getText());
+            scanViewModel.checkTicket(result.getText());
             barcodeView.pauseAndWait();
-            if (checkTicketResponse != null) {
-                if (checkTicketResponse.getUser() == null) {
-                    Toast.makeText(requireContext(), "Wrong Qr code", Toast.LENGTH_SHORT).show();
-                    barcodeView.resume();
-                }else{
-                    TicketCheckResponseDialog dialog = new TicketCheckResponseDialog(requireContext(), checkTicketResponse);
-                    dialog.setListener(ScanFragment.this);
-                    dialog.show();
-                }
-            }
-
-
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -121,7 +120,7 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
 
     @Override
     public void onTicketCheckResponseDialogDismissed() {
-        Log.d("asd", "onTicketCheckResponseDialogDismissed: " );
+        Log.d("asd", "onTicketCheckResponseDialogDismissed: ");
         barcodeView.resume();
     }
 }

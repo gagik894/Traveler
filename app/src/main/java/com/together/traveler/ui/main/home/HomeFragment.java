@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -22,17 +23,24 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private RecyclerView rvCards;
     private SwipeRefreshLayout swipeRefreshLayout;
-
+    private HomeViewModel homeViewModel;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
+        homeViewModel =
                 new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         rvCards = binding.rvHome;
         swipeRefreshLayout = binding.cardSwipeRefreshLayout;
 
+
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             Thread thread = new Thread(homeViewModel::getEvents);
             thread.start();
@@ -49,7 +57,6 @@ public class HomeFragment extends Fragment {
             rvCards.setAdapter(adapter);
             rvCards.setLayoutManager(new LinearLayoutManager(requireContext()));
         } );
-        return root;
     }
 
     @Override

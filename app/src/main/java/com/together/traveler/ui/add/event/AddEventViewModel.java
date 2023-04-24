@@ -1,38 +1,53 @@
 package com.together.traveler.ui.add.event;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.together.traveler.context.AppContext;
 import com.together.traveler.model.Event;
-import com.together.traveler.requests.WebRequests;
+import com.together.traveler.requests.ApiClient;
+import com.together.traveler.requests.ApiService;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Objects;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AddEventViewModel extends ViewModel {
+    private final String TAG = "AddEventViewModel";
+
     private final MutableLiveData<Event> data;
     private final MutableLiveData<Boolean> isValid;
-    private final WebRequests webRequests;
+    private final ApiService apiService;
 
     public AddEventViewModel() {
-        webRequests = new WebRequests();
         data = new MutableLiveData<>();
         isValid = new MutableLiveData<>(false);
+        apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         this.data.setValue(new Event());
     }
 
-    public void dataChanged(String tittle, String location, String description, int count){
-            Event current = data.getValue();
-            Objects.requireNonNull(current).setTitle(tittle);
-            Objects.requireNonNull(current).setLocation(location);
-            Objects.requireNonNull(current).setDescription(description);
-            Objects.requireNonNull(current).setTicketsCount(count);
-            checkValid(current);
+    public void dataChanged(String tittle, String location, String description, int count) {
+        Event current = data.getValue();
+        Objects.requireNonNull(current).setTitle(tittle);
+        Objects.requireNonNull(current).setLocation(location);
+        Objects.requireNonNull(current).setDescription(description);
+        Objects.requireNonNull(current).setTicketsCount(count);
+        checkValid(current);
     }
 
     public void setStartDateAndTime(String date, String time) {
@@ -53,14 +68,73 @@ public class AddEventViewModel extends ViewModel {
         this.data.setValue(current);
         checkValid(current);
     }
-
-    public void create(){
-        Event event = data.getValue();
-        String url = "https://traveler-ynga.onrender.com/events/add/event";
-        webRequests.sendMultipartRequest(url, event.getTitle(),event.getDescription(), event.getStartDate(),
-                event.getStartTime(), event.getEndDate(), event.getEndTime(), event.getImageBitmap(), event.getLocation());
-        Log.i("asd", "create: " + Objects.requireNonNull(data.getValue()).getLocation() + data.getValue().getStartTime());
+    public void setEventLocation(double latitude, double longitude) {
+        Event current = data.getValue();
+        Objects.requireNonNull(current).setLongitude(longitude);
+        Objects.requireNonNull(current).setLatitude(latitude);
+        this.data.setValue(current);
+        checkValid(current);
     }
+    public void create() {
+        Event event = data.getValue();
+        if (event == null) {
+            // Handle error, event is null
+            return;
+        }
+
+        File file = saveBitmapToFile(event.getImageBitmap());
+        if (!file.exists()) {
+            // Handle error, file does not exist
+            return;
+        }
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        RequestBody requestBodyTitle = RequestBody.create(MediaType.parse("text/plain"), event.getTitle());
+        RequestBody requestBodyDescription = RequestBody.create(MediaType.parse("text/plain"), event.getDescription());
+        RequestBody requestBodyStartDate = RequestBody.create(MediaType.parse("text/plain"), event.getStartDate());
+        RequestBody requestBodyStartTime = RequestBody.create(MediaType.parse("text/plain"), event.getStartTime());
+        RequestBody requestBodyEndDate = RequestBody.create(MediaType.parse("text/plain"), event.getEndDate());
+        RequestBody requestBodyEndTime = RequestBody.create(MediaType.parse("text/plain"), event.getEndTime());
+        RequestBody requestBodyLocation = RequestBody.create(MediaType.parse("text/plain"), event.getLocation());
+        RequestBody requestBodyLatitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getLatitude()));
+        RequestBody requestBodyLongitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getLongitude()));
+
+        if (apiService == null) {
+            // Handle error, ApiService is null
+            return;
+        }
+
+        Call<ResponseBody> call = apiService.uploadFile(
+                body,
+                requestBodyTitle,
+                requestBodyDescription,
+                requestBodyStartDate,
+                requestBodyStartTime,
+                requestBodyEndDate,
+                requestBodyEndTime,
+                requestBodyLocation,
+                requestBodyLatitude,
+                requestBodyLongitude
+        );
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                Log.i(TAG, "onResponse: " + response + response.body());
+                if (response.isSuccessful()) {
+                    // Handle success response
+                } else {
+                    // Handle error response
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+            }
+        });
+    }
+
 
     public LiveData<Event> getData() {
         return data;
@@ -70,10 +144,26 @@ public class AddEventViewModel extends ViewModel {
         return isValid;
     }
 
-    private void checkValid(Event current){
+    private void checkValid(Event current) {
         isValid.setValue(!Objects.equals(current.getTitle(), "") && !Objects.equals(current.getLocation(), "")
                 && !Objects.equals(current.getStartTime(), "") && !Objects.equals(current.getEndTime(), "")
-                && !Objects.equals(current.getDescription(), "") && current.getTicketsCount()>0
-                && current.getImageBitmap()!=null);
+                && !Objects.equals(current.getDescription(), "") && current.getTicketsCount() > 0
+                && current.getImageBitmap() != null);
     }
+
+
+    private File saveBitmapToFile(Bitmap bitmap) {
+        Context context = AppContext.getContext();
+        File file = new File(context.getCacheDir(), "image.jpg");
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
 }

@@ -13,13 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.together.traveler.R;
 import com.together.traveler.adapter.EventCardsAdapter;
@@ -40,6 +41,25 @@ public class UserFragment extends Fragment {
         binding = FragmentUserBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+
+        if (getArguments() != null) {
+            if (getArguments().getString("userId") != null) {
+                userViewModel.setUserId(getArguments().getString("userId"));
+            }else{
+                userViewModel.setUserId("self");
+            }
+        }
+        return root;
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         final TextView username = binding.userTvUsername;
         final TextView rating = binding.userTvRating;
         final TextView location = binding.userTvLocation;
@@ -52,15 +72,6 @@ public class UserFragment extends Fragment {
         final TextView eventsText = binding.userTvEvents;
         final SwipeRefreshLayout swipeRefreshLayout = binding.userSwipeRefresh;
         final int textColor = savedButton.getCurrentTextColor();
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-
-        if (getArguments() != null) {
-            if (getArguments().getString("userId") != null) {
-                userViewModel.setUserId(getArguments().getString("userId"));
-            }else{
-                userViewModel.setUserId("self");
-            }
-        }
 
         userViewModel.isSelfPage().observe(getViewLifecycleOwner(), isSelfPage->{
             if (isSelfPage){
@@ -128,7 +139,7 @@ public class UserFragment extends Fragment {
         });
         rvCards.setAdapter(adapter);
         rvCards.setLayoutManager(new LinearLayoutManager(getContext()));
-        return root;
+
     }
 
     @Override

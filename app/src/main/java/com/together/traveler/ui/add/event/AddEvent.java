@@ -43,6 +43,7 @@ import com.together.traveler.ui.main.map.MapDialog;
 import com.yalantis.ucrop.UCrop;
 
 import org.jetbrains.annotations.NotNull;
+import org.osmdroid.util.GeoPoint;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -53,6 +54,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
+    private final String TAG = "AddEvent";
+
 
     private AddEventViewModel mViewModel;
     private EditText title;
@@ -153,8 +156,10 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
 
 
     @Override
-    public void onDialogResult(String result) {
+    public void onDialogResult(String result, GeoPoint geoPoint) {
+        Log.i(TAG, "onDialogResult: " + geoPoint.getLongitude());
         location.setText(result);
+        mViewModel.setEventLocation(geoPoint.getLatitude(), geoPoint.getLongitude());
     }
 
     @Override
@@ -175,7 +180,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
                     startImageCropping(imageUri);
                 }
             } else {
-                Log.d("asd", "onActivityResult: else");
+                Log.d(TAG, "onActivityResult: else");
             }
         }
     }
@@ -280,7 +285,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
                     mViewModel.setEndDateAndTime(date, time);
                     endDateAndTime.setText(String.format("%s %s", date, time));
                 }
-                Log.i("asd", "onSet: " + date + " " + time);
+                Log.i(TAG, "onSet: " + date + " " + time);
             }
 
             @Override

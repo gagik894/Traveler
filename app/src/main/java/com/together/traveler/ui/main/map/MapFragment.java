@@ -163,7 +163,7 @@ public class MapFragment extends Fragment {
             mLocationOverlay.disableFollowLocation();
             mapController.setCenter(data);
         });
-        mapViewModel.getLocationName().observe(getViewLifecycleOwner(), data-> Toast.makeText(ctx, data, Toast.LENGTH_SHORT).show());
+
 
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
         requestPermissionsIfNecessary(perms);
