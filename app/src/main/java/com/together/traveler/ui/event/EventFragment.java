@@ -42,12 +42,12 @@ public class EventFragment extends Fragment {
         final TextView time = binding.eventTvTime;
         final TextView description = binding.eventTvDescription;
         final TextView moreButton = binding.eventTvMore;
+        final TextView category = binding.eventTvCategory;
         final Button bottomButton = binding.eventBtnBottom;
         final ImageButton backButton = binding.eventIBtnBack;
         final ImageButton saveButton = binding.eventIBtnSave;
         final FragmentContainerView userCard = binding.eventUser;
         final FragmentContainerView mapCard = binding.eventMap;
-
         int maxLines = description.getMaxLines();
 
         if (getArguments() != null) {
@@ -64,6 +64,7 @@ public class EventFragment extends Fragment {
             location.setText(data.getLocation());
             date.setText(String.format("From %s, %s", data.getStartDate(), data.getStartTime()));
             time.setText(String.format("To %s, %s", data.getEndDate(), data.getEndTime()));
+            category.setText(data.getCategory());
             description.setText(data.getDescription());
 
             if (data.isEnrolled()){

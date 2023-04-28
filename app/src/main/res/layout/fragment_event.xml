@@ -157,6 +157,16 @@
                             app:layout_constraintStart_toStartOf="@+id/imageView13"
                             app:layout_constraintTop_toTopOf="@+id/eventTvDate" />
 
+                        <ImageView
+                            android:id="@+id/imageView"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:contentDescription="@string/category_icon"
+                            android:src="@drawable/category"
+                            app:layout_constraintBottom_toBottomOf="@+id/eventTvCategory"
+                            app:layout_constraintStart_toStartOf="@+id/imageView65"
+                            app:layout_constraintTop_toTopOf="@+id/eventTvCategory" />
+
                         <TextView
                             android:id="@+id/eventTvLocation"
                             android:layout_width="0dp"
@@ -167,6 +177,18 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/imageView13"
                             app:layout_constraintTop_toBottomOf="@+id/ticketTvName" />
+
+                        <TextView
+                            android:id="@+id/eventTvCategory"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Category"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toEndOf="@+id/imageView13"
+                            app:layout_constraintTop_toBottomOf="@+id/eventTvTime" />
 
                         <TextView
                             android:id="@+id/eventTvDate"
@@ -199,7 +221,7 @@
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/eventTvTime" />
+                            app:layout_constraintTop_toBottomOf="@+id/eventTvCategory" />
 
                         <TextView
                             android:id="@+id/eventTvDescription"

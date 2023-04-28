@@ -6,6 +6,7 @@
     <string name="calendar_icon">Calendar</string>
     <string name="location_icon">Location</string>
     <string name="settings_icon">Settings</string>
+    <string name="category_icon">Category</string>
     <string name="star_icon">Star</string>
     <string name="btn_add">Add</string>
     <string name="btn_center_on_location">CenterOnLocation</string>

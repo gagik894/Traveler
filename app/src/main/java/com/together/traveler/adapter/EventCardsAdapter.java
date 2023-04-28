@@ -23,6 +23,7 @@ public class EventCardsAdapter extends RecyclerView.Adapter<EventCardsAdapter.Vi
     public interface OnItemClickListener {
         void onItemClick(Event item);
     }
+
     private List<Event> events;
     private final OnItemClickListener listener;
     private Context context;

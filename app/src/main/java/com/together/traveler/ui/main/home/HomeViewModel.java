@@ -22,13 +22,16 @@ import retrofit2.Response;
 public class HomeViewModel extends ViewModel {
     private final String TAG = "HomeViewModel";
     private final MutableLiveData<ArrayList<Event>> data;
+    private final MutableLiveData<ArrayList<String>> categories;
     private String userId;
     private final ApiService apiService;
 
     public HomeViewModel() {
         data = new MutableLiveData<>();
+        categories = new MutableLiveData<>(new ArrayList<>());
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         fetchEvents();
+        fetchCategories();
     }
 
     public void setData(ArrayList<Event> data) {
@@ -40,6 +43,9 @@ public class HomeViewModel extends ViewModel {
         return data;
     }
 
+    public MutableLiveData<ArrayList<String>> getCategories() {
+        return categories;
+    }
 
     public void fetchEvents() {
         apiService.getEvents().enqueue(new Callback<EventsResponse>() {
@@ -52,7 +58,7 @@ public class HomeViewModel extends ViewModel {
                     data.postValue((ArrayList<Event>) events);
                     userId = eventsResponse != null ? eventsResponse.getUserId() : null;
                 } else {
-                    Log.e(TAG, "fetchEvents request failed with code: " + response.code());
+                    Log.e(TAG, "fetchEvents request failed with code: " + response.code() +response.body());
                 }
             }
 
@@ -63,6 +69,23 @@ public class HomeViewModel extends ViewModel {
         });
     }
 
+    private void fetchCategories(){
+        apiService.getCategories().enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
+                if (response.isSuccessful()) {
+                    List<String> categoriesResponse = response.body();
+                    Log.i(TAG, "onResponse: " + categoriesResponse);
+                    categories.setValue((ArrayList<String>) categoriesResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
+                // Handle the error
+            }
+        });
+    }
 
     public String getUserId() {
         return userId;

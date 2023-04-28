@@ -51,7 +51,7 @@
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="5dp"
                     android:lines="1"
-                    android:text="Asasfddfgsfd Fsidfhiushd"
+                    android:text="username"
                     android:textStyle="bold"
                     app:autoSizeMaxTextSize="100sp"
                     app:autoSizeMinTextSize="8sp"
