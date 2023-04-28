@@ -44,8 +44,7 @@ public class EventViewModel extends ViewModel {
             return;
         }
         String eventId = current.get_id();
-        Call<Void> call = apiService.enroll(eventId);
-        call.enqueue(new Callback<Void>() {
+        apiService.enroll(eventId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()) {
@@ -69,8 +68,7 @@ public class EventViewModel extends ViewModel {
             return;
         }
         String eventId = current.get_id();
-        Call<Void> call = apiService.save(eventId);
-        call.enqueue(new Callback<Void>() {
+        apiService.save(eventId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()) {

@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            Thread thread = new Thread(homeViewModel::getEvents);
+            Thread thread = new Thread(homeViewModel::fetchEvents);
             thread.start();
         });
 

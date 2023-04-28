@@ -162,6 +162,57 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/add_select_tags"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/addTagSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:contentDescription="@string/add_select_tags"
+            android:minHeight="48dp"
+            android:prompt="@string/add_select_tags"
+            android:spinnerMode="dropdown" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/add_create_new_tags"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/addEtNewTag"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:autofillHints=""
+                android:hint="@string/add_enter_new_tag"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/addBtnAddTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_submit"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+
         <Button
             android:id="@+id/addBtnCreate"
             android:layout_width="wrap_content"
@@ -170,4 +221,5 @@
             android:text="@string/add_create_event"
             android:textSize="16sp" />
     </LinearLayout>
+
 </ScrollView>

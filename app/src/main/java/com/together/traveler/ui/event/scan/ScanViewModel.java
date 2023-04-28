@@ -56,8 +56,7 @@ public class ScanViewModel extends ViewModel {
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json.toString());
 
-        Call<CheckTicketResponse> call = apiService.checkTicket(requestBody);
-        call.enqueue(new Callback<CheckTicketResponse>() {
+        apiService.checkTicket(requestBody).enqueue(new Callback<CheckTicketResponse>() {
             @Override
             public void onResponse(@NonNull Call<CheckTicketResponse> call, @NonNull Response<CheckTicketResponse> response) {
                 if (response.isSuccessful()) {

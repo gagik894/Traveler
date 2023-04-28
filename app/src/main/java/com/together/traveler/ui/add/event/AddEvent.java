@@ -4,11 +4,9 @@ import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,20 +17,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -48,10 +46,9 @@ import org.osmdroid.util.GeoPoint;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
 
 public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
     private final String TAG = "AddEvent";
@@ -64,12 +61,14 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
     private EditText endDateAndTime;
     private EditText description;
     private EditText ticketsCount;
+    private EditText newTag;
     private ImageButton eventImage;
-    private static final int PERMISSION_REQUEST_CODE = 200;
-    private static final int REQUEST_CAMERA = 201;
     private static final int SELECT_FILE = 202;
+    private ArrayAdapter<String> adapter;
+
     private ActivityResultLauncher<Intent> imageCroppingActivityResultLauncher;
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,14 +99,13 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
                 new ActivityResultContracts.RequestMultiplePermissions(),
                 isGranted -> {
                     if (isGranted.containsValue(false)) {
-                        // Permission not granted
-                        Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show();
+
                     } else {
-                        // Permission granted, open the camera
-                        openCamera();
+
                     }
                 }
         );
+
     }
 
     @Nullable
@@ -122,13 +120,23 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         View root = binding.getRoot();
 
         Button btnCreate = binding.addBtnCreate;
+        Spinner spinner = binding.addTagSpinner;
+        Button addTag = binding.addBtnAddTag;
         title = binding.addEtTitle;
         location = binding.addEtLocation;
         startDateAndTime = binding.addEtStartDate;
         endDateAndTime = binding.addEtEndDate;
         description = binding.addEtDescription;
         ticketsCount = binding.addEtTicketsCount;
+        newTag = binding.addEtNewTag;
         eventImage = binding.addIbEventImage;
+
+        adapter = new ArrayAdapter<>(
+                requireActivity(), android.R.layout.simple_spinner_item,
+                new ArrayList<>());
+
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spinner.setAdapter(adapter);
 
         title.addTextChangedListener(afterTextChangedListener);
         location.addTextChangedListener(afterTextChangedListener);
@@ -140,15 +148,39 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         location.setOnClickListener(this::showPopupView);
         startDateAndTime.setOnClickListener(v -> showDateTimePicker(true));
         endDateAndTime.setOnClickListener(v -> showDateTimePicker(false));
+        eventImage.setOnClickListener(v -> selectImage());
         btnCreate.setOnClickListener(v -> {
             mViewModel.create();
             Intent switchActivityIntent = new Intent(requireActivity(), MainActivity.class);
             startActivity(switchActivityIntent);
         });
-        eventImage.setOnClickListener(v -> selectImage());
+        addTag.setOnClickListener(v -> {
+            mViewModel.addCategory(String.valueOf(newTag.getText()));
+            newTag.setText("");
+            spinner.setSelection(adapter.getCount() - 1);
+        });
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                mViewModel.setEventCategory(selectedItem);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
 
         mViewModel.getData().observe(getViewLifecycleOwner(), data -> eventImage.setImageBitmap(data.getImageBitmap()));
         mViewModel.isValid().observe(getViewLifecycleOwner(), btnCreate::setEnabled);
+        mViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            ArrayList<String> categoriesList = new ArrayList<>(categories);
+            adapter.clear();
+            adapter.addAll(categoriesList);
+            adapter.notifyDataSetChanged();
+        });
 
 
         return root;
@@ -167,7 +199,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i("asd", "onActivityResult: " + requestCode + resultCode + data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_FILE || requestCode == REQUEST_CAMERA) {
+            if (requestCode == SELECT_FILE) {
                 Bitmap selectedImageBitmap = null;
                 Uri selectedImageUri = data.getData();
                 try {
@@ -191,7 +223,6 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         uCrop.withAspectRatio(4, 3);
         uCrop.withMaxResultSize(1000, 1000);
 
-        // Launch the image cropping activity
         Intent cropIntent = uCrop.getIntent(requireActivity());
         imageCroppingActivityResultLauncher.launch(cropIntent);
     }
@@ -205,60 +236,10 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
 
 
     private void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setTitle("Add Photo!");
-        builder.setItems(items, (dialog, item) -> {
-            if (items[item].equals("Take Photo")) {
-                requestCameraPermissionAndOpenCamera();
-            } else if (items[item].equals("Choose from Library")) {
-                requestReadExternalStoragePermissionAndOpenGallery();
-            } else if (items[item].equals("Cancel")) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
-    }
-
-    private void requestCameraPermissionAndOpenCamera() {
-        String[] permissions = {Manifest.permission.CAMERA};
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted, request the permission
-            requestPermissionLauncher.launch(permissions);
-        } else {
-            // Permission is already granted, open the camera
-            openCamera();
-        }
-    }
-
-    private void openCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_CAMERA);
-    }
-
-
-    private void requestReadExternalStoragePermissionAndOpenGallery() {
         String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
         requestPermissionLauncher.launch(permissions);
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, SELECT_FILE);
-    }
-
-    private void requestPermission(String[] permissions, int requestCode) {
-        if (ContextCompat.checkSelfPermission(requireContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED) {
-            // Permission already granted, proceed with the operation
-            if (requestCode == REQUEST_CAMERA) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, REQUEST_CAMERA);
-            } else if (requestCode == SELECT_FILE) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, SELECT_FILE);
-            }
-        } else {
-            // Permission not granted yet, request it
-            requestPermissionLauncher.launch(permissions);
-        }
     }
 
     private void showPopupView(View anchorView) {

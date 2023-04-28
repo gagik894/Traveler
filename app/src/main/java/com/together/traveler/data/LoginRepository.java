@@ -15,7 +15,7 @@ public class LoginRepository {
     private static volatile LoginRepository instance;
 
     private final LoginDataSource dataSource;
-    private final String TAG = "asd";
+    private final String TAG = "LoginRepository";
     Context context = AppContext.getContext();
     private final SharedPreferences sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
     private final SharedPreferences.Editor editor = sharedPreferences.edit();

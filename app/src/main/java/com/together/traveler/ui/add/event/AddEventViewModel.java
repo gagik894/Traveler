@@ -17,6 +17,8 @@ import com.together.traveler.requests.ApiService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import okhttp3.MediaType;
@@ -31,15 +33,19 @@ public class AddEventViewModel extends ViewModel {
     private final String TAG = "AddEventViewModel";
 
     private final MutableLiveData<Event> data;
+    private final MutableLiveData<ArrayList<String>> categories;
     private final MutableLiveData<Boolean> isValid;
     private final ApiService apiService;
 
     public AddEventViewModel() {
         data = new MutableLiveData<>();
+        categories = new MutableLiveData<>(new ArrayList<>());
         isValid = new MutableLiveData<>(false);
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         this.data.setValue(new Event());
+        fetchCategories();
     }
+
 
     public void dataChanged(String tittle, String location, String description, int count) {
         Event current = data.getValue();
@@ -75,6 +81,14 @@ public class AddEventViewModel extends ViewModel {
         this.data.setValue(current);
         checkValid(current);
     }
+    public void setEventCategory(String eventCategory) {
+        Log.i(TAG, "setEventCategory: " + eventCategory);
+        Event current = data.getValue();
+        Objects.requireNonNull(current).setCategory(eventCategory);
+        this.data.setValue(current);
+        checkValid(current);
+    }
+
     public void create() {
         Event event = data.getValue();
         if (event == null) {
@@ -98,6 +112,7 @@ public class AddEventViewModel extends ViewModel {
         RequestBody requestBodyLocation = RequestBody.create(MediaType.parse("text/plain"), event.getLocation());
         RequestBody requestBodyLatitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getLatitude()));
         RequestBody requestBodyLongitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getLongitude()));
+        RequestBody requestBodyCategory = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getCategory()));
 
         if (apiService == null) {
             // Handle error, ApiService is null
@@ -114,7 +129,8 @@ public class AddEventViewModel extends ViewModel {
                 requestBodyEndTime,
                 requestBodyLocation,
                 requestBodyLatitude,
-                requestBodyLongitude
+                requestBodyLongitude,
+                requestBodyCategory
         );
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -135,6 +151,9 @@ public class AddEventViewModel extends ViewModel {
         });
     }
 
+    public MutableLiveData<ArrayList<String>> getCategories() {
+        return categories;
+    }
 
     public LiveData<Event> getData() {
         return data;
@@ -144,13 +163,24 @@ public class AddEventViewModel extends ViewModel {
         return isValid;
     }
 
+    public void addCategory(String category) {
+        ArrayList<String> currentTags = categories.getValue();
+        if (currentTags == null) {
+            return;
+        }
+        ArrayList<String> newTags = new ArrayList<>(currentTags);
+        newTags.add(category);
+        categories.setValue(newTags);
+        Log.i(TAG, "addCategory: " + categories.getValue().toString() + categories.getValue().get(0));
+    }
+
     private void checkValid(Event current) {
         isValid.setValue(!Objects.equals(current.getTitle(), "") && !Objects.equals(current.getLocation(), "")
                 && !Objects.equals(current.getStartTime(), "") && !Objects.equals(current.getEndTime(), "")
-                && !Objects.equals(current.getDescription(), "") && current.getTicketsCount() > 0
+                && !Objects.equals(current.getDescription(), "") && !Objects.equals(current.getCategory(), "")
+                && current.getTicketsCount() > 0
                 && current.getImageBitmap() != null);
     }
-
 
     private File saveBitmapToFile(Bitmap bitmap) {
         Context context = AppContext.getContext();
@@ -166,4 +196,20 @@ public class AddEventViewModel extends ViewModel {
         return file;
     }
 
+    private void fetchCategories(){
+        apiService.getCategories().enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
+                if (response.isSuccessful()) {
+                    List<String> categoriesResponse = response.body();
+                    categories.setValue((ArrayList<String>) categoriesResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
+                // Handle the error
+            }
+        });
+    }
 }

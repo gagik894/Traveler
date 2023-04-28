@@ -4,6 +4,8 @@ import com.together.traveler.model.CheckTicketResponse;
 import com.together.traveler.model.EventsResponse;
 import com.together.traveler.model.User;
 
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -35,6 +37,9 @@ public interface ApiService {
             @Path("eventId") String eventId
     );
 
+    @GET("events/categories")
+    Call<List<String>> getCategories();
+
     @POST("events/checkTicket")
     Call<CheckTicketResponse> checkTicket(@Body RequestBody requestBody);
 
@@ -51,6 +56,7 @@ public interface ApiService {
             @Part("endTime") RequestBody endTime,
             @Part("location") RequestBody location,
             @Part("latitude") RequestBody latitude,
-            @Part("longitude") RequestBody longitude
+            @Part("longitude") RequestBody longitude,
+            @Part("category") RequestBody requestBodyCategory
     );
 }

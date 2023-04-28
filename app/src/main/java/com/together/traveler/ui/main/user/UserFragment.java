@@ -53,6 +53,7 @@ public class UserFragment extends Fragment {
         rvCards = binding.rvUser;
         swipeRefreshLayout = binding.userSwipeRefresh;
         progressBar = binding.userPb;
+
         if (getArguments() != null) {
             if (getArguments().getString("userId") != null) {
                 userViewModel.setUserId(getArguments().getString("userId"));
@@ -178,11 +179,12 @@ public class UserFragment extends Fragment {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.clear();
             editor.apply();
-            startActivity(new Intent(requireActivity(), LoginActivity.class));
             requireActivity().finish();
+            startActivity(new Intent(requireActivity(), LoginActivity.class));
+
         });
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            Thread thread = new Thread(userViewModel::getUser);
+            Thread thread = new Thread(userViewModel::fetchUser);
             thread.start();
         });
 

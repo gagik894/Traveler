@@ -1,7 +1,5 @@
 package com.together.traveler.ui.main.home;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -9,7 +7,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.together.traveler.context.AppContext;
 import com.together.traveler.model.Event;
 import com.together.traveler.model.EventsResponse;
 import com.together.traveler.requests.ApiClient;
@@ -31,7 +28,7 @@ public class HomeViewModel extends ViewModel {
     public HomeViewModel() {
         data = new MutableLiveData<>();
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
-        getEvents();
+        fetchEvents();
     }
 
     public void setData(ArrayList<Event> data) {
@@ -44,9 +41,8 @@ public class HomeViewModel extends ViewModel {
     }
 
 
-    public void getEvents() {
-        Call<EventsResponse> call = apiService.getEvents();
-        call.enqueue(new Callback<EventsResponse>() {
+    public void fetchEvents() {
+        apiService.getEvents().enqueue(new Callback<EventsResponse>() {
             @Override
             public void onResponse(@NonNull Call<EventsResponse> call, @NonNull Response<EventsResponse> response) {
                 if (response.isSuccessful()) {
@@ -56,13 +52,13 @@ public class HomeViewModel extends ViewModel {
                     data.postValue((ArrayList<Event>) events);
                     userId = eventsResponse != null ? eventsResponse.getUserId() : null;
                 } else {
-                    Log.e(TAG, "getEvents request failed with code: " + response.code());
+                    Log.e(TAG, "fetchEvents request failed with code: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<EventsResponse> call, @NonNull Throwable t) {
-                Log.e(TAG, "getEvents request failed with error: " + t.getMessage());
+                Log.e(TAG, "fetchEvents request failed with error: " + t.getMessage());
             }
         });
     }

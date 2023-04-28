@@ -36,10 +36,9 @@ public class UserViewModel extends ViewModel {
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
     }
 
-    public void getUser() {
-        Call<User> call = apiService.getUser(userId);
-        Log.i(TAG, "getUser: " + userId);
-        call.enqueue(new Callback<User>() {
+    public void fetchUser() {
+        Log.i(TAG, "fetchUser: " + userId);
+        apiService.getUser(userId).enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
@@ -58,13 +57,13 @@ public class UserViewModel extends ViewModel {
                         firstFetch = false;
                     }
                 } else {
-                    Log.e(TAG, "getUser request failed with code: " + response.code());
+                    Log.e(TAG, "fetchUser request failed with code: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                Log.e(TAG, "getUser request failed with error: " + t.getMessage());
+                Log.e(TAG, "fetchUser request failed with error: " + t.getMessage());
             }
         });
     }
@@ -101,7 +100,7 @@ public class UserViewModel extends ViewModel {
             }
             Log.d(TAG, "setUserId: " + userId);
         }
-        getUser();
+        fetchUser();
     }
 
 }

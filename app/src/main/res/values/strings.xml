@@ -86,6 +86,10 @@
     <string name="add_select_photo">Select Photo</string>
     <string name="add_capture_photo">Capture Photo</string>
     <string name="add_photo_permission_rationale">We need permission to access your device\'s camera and gallery to add a photo to your event.</string>
+    <string name="add_select_tags">Select a category</string>
+    <string name="add_create_new_tags">Create new category</string>
+    <string name="add_enter_new_tag">Enter new category</string>
+    <string name="add_submit">Submit</string>
 
     <!--    sPen-->
     <string name="move_car">Move Car</string>
