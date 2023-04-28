@@ -4,9 +4,9 @@
         android:title="@string/nav_home"
         android:icon="@drawable/nav_home"
        />
-    <item android:id="@+id/blankFragment"
-        android:title="@string/nav_search"
-        android:icon="@drawable/nav_search"
+    <item android:id="@+id/universalTicketFragment"
+        android:title="@string/nav_ticket"
+        android:icon="@drawable/nav_ticket"
     />
     <item android:id="@+id/addEvent"
         android:title="@string/nav_add"/>

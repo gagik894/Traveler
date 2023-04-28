@@ -64,7 +64,7 @@
     <string name="nav_user">user</string>
     <string name="nav_map">map</string>
     <string name="nav_add">add</string>
-    <string name="nav_search">search</string>
+    <string name="nav_ticket">ticket</string>
     <string name="nav_home">home</string>
     <string name="title_activity_signup">SignupActivity</string>
 
@@ -91,6 +91,9 @@
     <string name="add_create_new_tags">Create new category</string>
     <string name="add_enter_new_tag">Enter new category</string>
     <string name="add_submit">Submit</string>
+
+    <!--    universal ticket-->
+    <string name="utk_note">This ticket grants you access to all enrolled events.</string>
 
     <!--    sPen-->
     <string name="move_car">Move Car</string>

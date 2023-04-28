@@ -43,12 +43,6 @@
             app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/blankFragment"
-        android:name="com.together.traveler.BlankFragment"
-        android:label="BlankFragment" >
-
-    </fragment>
-    <fragment
         android:id="@+id/eventFragment"
         android:name="com.together.traveler.ui.event.EventFragment"
         android:label="fragment_event">
@@ -80,4 +74,9 @@
             android:name="_id"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/universalTicketFragment"
+        android:name="com.together.traveler.UniversalTicketFragment"
+        android:label="fragment_universal_ticket"
+        tools:layout="@layout/fragment_universal_ticket" />
 </navigation>
