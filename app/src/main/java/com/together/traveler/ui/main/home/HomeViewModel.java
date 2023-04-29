@@ -23,11 +23,14 @@ public class HomeViewModel extends ViewModel {
     private final String TAG = "HomeViewModel";
     private final MutableLiveData<ArrayList<Event>> data;
     private final MutableLiveData<ArrayList<String>> categories;
+
+    private final MutableLiveData<Event> mapSelectedEvent;
     private String userId;
     private final ApiService apiService;
 
     public HomeViewModel() {
         data = new MutableLiveData<>();
+        mapSelectedEvent = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         fetchEvents();
@@ -38,6 +41,9 @@ public class HomeViewModel extends ViewModel {
         this.data.setValue(data);
     }
 
+    public void setMapSelectedEvent(int position){
+        this.mapSelectedEvent.setValue(this.getData().getValue().get(position));
+    }
 
     public LiveData<ArrayList<Event>> getData() {
         return data;
@@ -89,6 +95,10 @@ public class HomeViewModel extends ViewModel {
 
     public String getUserId() {
         return userId;
+    }
+
+    public MutableLiveData<Event> getMapSelectedEvent() {
+        return mapSelectedEvent;
     }
 
     @Override

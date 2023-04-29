@@ -26,10 +26,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentMapBinding;
+import com.together.traveler.model.Event;
+import com.together.traveler.ui.main.home.HomeViewModel;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
@@ -64,6 +68,7 @@ public class MapFragment extends Fragment {
     private IMapController mapController;
     private EditText locationSearch;
     private MapViewModel mapViewModel;
+    private HomeViewModel homeViewModel;
     private Timer timer = new Timer();
 
     @Override
@@ -76,6 +81,7 @@ public class MapFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMapBinding.inflate(inflater, container, false);
         mapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
+        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         return binding.getRoot();
     }
 
@@ -91,6 +97,8 @@ public class MapFragment extends Fragment {
         final GeoPoint startPoint = new GeoPoint(40.740295, 44.865835);
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         ImageButton onCenterButton = binding.mapBtnCenterOnLocation;
+        FragmentContainerView eventContainerView = binding.mapFcvUser;
+
         locationSearch = binding.mapEtLocation;
         map = requireView().findViewById(R.id.map);
         mapController = map.getController();
@@ -111,7 +119,8 @@ public class MapFragment extends Fragment {
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
                     public boolean onItemSingleTapUp(final int position, final OverlayItem item) {
-                        //do something
+                        eventContainerView.setVisibility(View.VISIBLE);
+                        homeViewModel.setMapSelectedEvent(position);
                         return true;
                     }
 
@@ -128,6 +137,7 @@ public class MapFragment extends Fragment {
             public boolean singleTapConfirmedHelper(GeoPoint p) {
                 Log.d("debug", "Single tap helper");
                 mPointsOverlay.unSetFocusedItem();
+                eventContainerView.setVisibility(View.GONE);
                 return false;
             }
 
@@ -164,7 +174,21 @@ public class MapFragment extends Fragment {
             mapController.setCenter(data);
         });
 
+        homeViewModel.getData().observe(getViewLifecycleOwner(), data->{
+            Event event;
+            mPointsOverlay.removeAllItems();
+            for (int i = 0; i < data.size(); i++) {
+                event = data.get(i);
+                mPointsOverlay.addItem(new OverlayItem(event.getTitle(), event.getDescription(), new GeoPoint(event.getLatitude(), event.getLongitude())));
+            }
+        });
 
+        eventContainerView.setOnClickListener(v->{
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("cardData", homeViewModel.getMapSelectedEvent().getValue());
+            bundle.putString("userId", homeViewModel.getUserId());
+            NavHostFragment.findNavController(this).navigate(R.id.action_homeFragment_to_eventFragment, bundle);
+        });
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
         requestPermissionsIfNecessary(perms);
     }

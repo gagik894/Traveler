@@ -42,7 +42,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="90dp"
+        android:layout_marginBottom="100dp"
         android:background="#00FFFFFF"
         android:contentDescription="@string/btn_center_on_location"
         android:focusableInTouchMode="false"
@@ -50,5 +50,19 @@
         android:src="@drawable/osm_ic_center_map"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/mapFcvUser"
+        android:name="com.together.traveler.ui.cards.EventCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="100dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout="@layout/fragment_event_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
