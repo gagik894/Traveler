@@ -187,7 +187,7 @@ public class MapFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putParcelable("cardData", homeViewModel.getMapSelectedEvent().getValue());
             bundle.putString("userId", homeViewModel.getUserId());
-            NavHostFragment.findNavController(this).navigate(R.id.action_homeFragment_to_eventFragment, bundle);
+            NavHostFragment.findNavController(this).navigate(R.id.action_mapFragment_to_eventFragment, bundle);
         });
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
         requestPermissionsIfNecessary(perms);
