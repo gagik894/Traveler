@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -70,6 +71,10 @@ public class EventCardsAdapter extends RecyclerView.Adapter<EventCardsAdapter.Vi
         String userImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", card.getUser().getAvatar());
         Glide.with(context).load(imageUrl).into(eventImage);
         Glide.with(context).load(userImageUrl).into(userAvatar);
+
+        View sharedView = holder.ivImage;
+        String transitionName = "event_image_transition";
+        ViewCompat.setTransitionName(sharedView, transitionName);
     }
 
     @Override

@@ -9,14 +9,13 @@
         android:id="@+id/homeFragment"
         android:name="com.together.traveler.ui.main.home.HomeFragment"
         android:label="HomeFragment">
-
         <action
             android:id="@+id/action_homeFragment_to_eventFragment"
             app:destination="@id/eventFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"
             app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
+            app:popExitAnim="@android:anim/fade_out"/>
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -52,6 +51,10 @@
         <argument
             android:name="cardData"
             app:argType="com.together.traveler.model.Event" />
+
+        <argument
+            android:name="userId"
+            app:argType="string" />
         <action
             android:id="@+id/action_eventFragment_to_scanFragment"
             app:destination="@id/scanFragment" />

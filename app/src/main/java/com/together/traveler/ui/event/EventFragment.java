@@ -17,11 +17,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentEventBinding;
+import com.together.traveler.ui.main.user.UserFragmentDirections;
 
 import java.util.Objects;
 
@@ -108,9 +110,8 @@ public class EventFragment extends Fragment {
                 }else if(buttonText.equals(getString(R.string.event_button_check_tickets))){
                     if (eventViewModel.getData().getValue() == null)
                         return;
-                    Bundle bundle = new Bundle();
-                    bundle.putString("_id", eventViewModel.getData().getValue().get_id());
-                    NavHostFragment.findNavController(this).navigate(R.id.action_eventFragment_to_scanFragment, bundle);
+                    NavDirections action = EventFragmentDirections.actionEventFragmentToScanFragment(eventViewModel.getData().getValue().get_id());
+                    NavHostFragment.findNavController(this).navigate(action);
                 }else{
                     eventViewModel.enroll();
                 }
@@ -127,9 +128,8 @@ public class EventFragment extends Fragment {
             }
         });
         userCard.setOnClickListener(v-> {
-            Bundle bundle = new Bundle();
-            bundle.putString("userId", Objects.requireNonNull(eventViewModel.getData().getValue()).getUser().get_id());
-            NavHostFragment.findNavController(this).navigate(R.id.action_eventFragment_to_userFragment, bundle);
+            NavDirections action = EventFragmentDirections.actionEventFragmentToUserFragment(eventViewModel.getData().getValue().getUser().get_id());
+            NavHostFragment.findNavController(this).navigate(action);
         });
 
         return root;

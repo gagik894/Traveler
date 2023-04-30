@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ import com.together.traveler.adapter.CategoryAdapter;
 import com.together.traveler.adapter.EventCardsAdapter;
 import com.together.traveler.databinding.FragmentHomeBinding;
 import com.together.traveler.model.Event;
+import com.together.traveler.ui.event.EventFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,12 +56,13 @@ public class HomeFragment extends Fragment {
 
         eventCardsAdapter = new EventCardsAdapter(eventList, item -> {
             if (isAdded()) {
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("cardData", item);
-                bundle.putString("userId", homeViewModel.getUserId());
-                NavHostFragment.findNavController(this).navigate(R.id.action_homeFragment_to_eventFragment, bundle);
+                NavDirections action = HomeFragmentDirections.actionHomeFragmentToEventFragment(item, homeViewModel.getUserId());
+                NavHostFragment.findNavController(this).navigate(action);
             }
         });
+
+
+
         categoryAdapter = new CategoryAdapter(categoryList, item -> Toast.makeText(requireContext(), item, Toast.LENGTH_SHORT).show());
         rvCategories.setAdapter(categoryAdapter);
         rvCards.setAdapter(eventCardsAdapter);

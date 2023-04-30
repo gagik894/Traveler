@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.together.traveler.R;
@@ -108,7 +109,7 @@ public class MapFragment extends Fragment {
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setBuiltInZoomControls(false);
         map.setMultiTouchControls(true);
-        mapController.setZoom(18);
+        mapController.setZoom(10);
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.enableFollowLocation();
         mLocationOverlay.setDrawAccuracyEnabled(true);
@@ -184,11 +185,10 @@ public class MapFragment extends Fragment {
         });
 
         eventContainerView.setOnClickListener(v->{
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("cardData", homeViewModel.getMapSelectedEvent().getValue());
-            bundle.putString("userId", homeViewModel.getUserId());
-            NavHostFragment.findNavController(this).navigate(R.id.action_mapFragment_to_eventFragment, bundle);
+            NavDirections action = MapFragmentDirections.actionMapFragmentToEventFragment(homeViewModel.getMapSelectedEvent().getValue(), homeViewModel.getUserId());
+            NavHostFragment.findNavController(this).navigate(action);
         });
+
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
         requestPermissionsIfNecessary(perms);
     }

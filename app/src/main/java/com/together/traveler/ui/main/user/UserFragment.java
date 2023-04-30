@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ import com.together.traveler.adapter.EventCardsAdapter;
 import com.together.traveler.databinding.FragmentUserBinding;
 import com.together.traveler.model.Event;
 import com.together.traveler.ui.login.LoginActivity;
+import com.together.traveler.ui.main.home.HomeFragmentDirections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +65,8 @@ public class UserFragment extends Fragment {
         }
 
         adapter = new EventCardsAdapter(eventList, item -> {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("cardData", item);
-            bundle.putString("userId", userViewModel.getUserId());
-            NavHostFragment.findNavController(this).navigate(R.id.action_userFragment_to_eventFragment, bundle);
+            NavDirections action = UserFragmentDirections.actionUserFragmentToEventFragment(item, userViewModel.getUserId());
+            NavHostFragment.findNavController(this).navigate(action);
         });
         rvCards.setAdapter(adapter);
         rvCards.setLayoutManager(new LinearLayoutManager(requireActivity()));
@@ -187,8 +187,6 @@ public class UserFragment extends Fragment {
             Thread thread = new Thread(userViewModel::fetchUser);
             thread.start();
         });
-
-
 
     }
 
