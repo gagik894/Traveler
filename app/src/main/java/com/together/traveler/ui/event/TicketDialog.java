@@ -4,13 +4,21 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.common.images.ImageManager;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -21,6 +29,15 @@ import com.together.traveler.model.Event;
 public class TicketDialog extends Dialog {
     private final Event data;
     private String userId;
+    private OnImageLoadedListener listener;
+
+    public interface OnImageLoadedListener {
+        void onImageLoaded();
+    }
+
+    public void setOnImageLoadedListener(OnImageLoadedListener listener) {
+        this.listener = listener;
+    }
 
     public TicketDialog(Context context, Event data, String userId) {
         super(context);
@@ -57,7 +74,26 @@ public class TicketDialog extends Dialog {
         location.setText(data.getLocation());
         start.setText(String.format("From %s", data.getStartDate()));
         end.setText(String.format("To %s", data.getEndDate()));
-        Glide.with(getContext()).load(imageUrl).into(imageView);
+        Glide.with(getContext())
+                .load(imageUrl)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        // Handle the failure
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        if (listener != null) {
+                            listener.onImageLoaded();
+                        }
+                        return false;
+                    }
+                })
+                .into(imageView);
+
+
 
         int qrCodeSize = 1000;
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
