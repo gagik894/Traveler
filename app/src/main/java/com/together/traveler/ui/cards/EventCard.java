@@ -47,8 +47,8 @@ public class EventCard extends Fragment {
             username.setText(data.getUser().getUsername());
             location.setText(data.getLocation());
             title.setText(data.getTitle());
-            startDate.setText(String.format("%s, %s -", data.getStartDate(), data.getStartTime()));
-            endDate.setText(String.format("%s, %s", data.getEndDate(), data.getEndTime()));
+            startDate.setText(data.getStartDate());
+            endDate.setText(data.getEndDate());
         });
 
         return root;

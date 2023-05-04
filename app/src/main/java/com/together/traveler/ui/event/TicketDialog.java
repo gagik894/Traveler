@@ -55,8 +55,8 @@ public class TicketDialog extends Dialog {
 
         title.setText(data.getTitle());
         location.setText(data.getLocation());
-        start.setText(String.format("From %s, %s", data.getStartDate(), data.getStartTime()));
-        end.setText(String.format("To %s, %s", data.getEndDate(), data.getEndTime()));
+        start.setText(String.format("From %s", data.getStartDate()));
+        end.setText(String.format("To %s", data.getEndDate()));
         Glide.with(getContext()).load(imageUrl).into(imageView);
 
         int qrCodeSize = 1000;

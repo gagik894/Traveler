@@ -14,7 +14,6 @@
     <string name="btn_save">Save</string>
     <string name="qr">Qr</string>
 
-
     <!--    login-->
     <string name="title_activity_login">LoginActivity</string>
     <string name="action_sign_in">Sign in</string>
@@ -83,7 +82,7 @@
     <string name="add_enter_number_of_tickets">Enter number of tickets</string>
     <string name="add_event_photo">Event photo</string>
     <string name="add_create_event">Create Event</string>
-    <string name="add_upload_photo">Upload Photo</string>
+    <string name="add_upload_photo">Upload a photo</string>
     <string name="add_select_photo">Select Photo</string>
     <string name="add_capture_photo">Capture Photo</string>
     <string name="add_photo_permission_rationale">We need permission to access your device\'s camera and gallery to add a photo to your event.</string>

@@ -103,7 +103,6 @@
                     android:layout_marginTop="-30dp"
                     android:nestedScrollingEnabled="true"
                     android:visibility="visible"
-                    app:cardBackgroundColor="#FAFFFFFF"
                     app:cardElevation="0dp"
                     app:cardPreventCornerOverlap="true"
                     app:layout_constraintEnd_toEndOf="parent"

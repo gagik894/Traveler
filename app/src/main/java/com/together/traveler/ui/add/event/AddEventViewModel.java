@@ -57,14 +57,14 @@ public class AddEventViewModel extends ViewModel {
     }
 
     public void setStartDateAndTime(String date, String time) {
-        Objects.requireNonNull(data.getValue()).setStartDate(date);
-        Objects.requireNonNull(data.getValue()).setStartTime(time);
+        String startDate = String.format("%s, %s", date, time);
+        Objects.requireNonNull(data.getValue()).setStartDate(startDate);
         this.data.setValue(data.getValue());
     }
 
     public void setEndDateAndTime(String date, String time) {
-        Objects.requireNonNull(data.getValue()).setEndDate(date);
-        Objects.requireNonNull(data.getValue()).setEndTime(time);
+        String endDate = String.format("%s, %s", date, time);
+        Objects.requireNonNull(data.getValue()).setEndDate(endDate);
         this.data.setValue(data.getValue());
     }
 
@@ -106,9 +106,7 @@ public class AddEventViewModel extends ViewModel {
         RequestBody requestBodyTitle = RequestBody.create(MediaType.parse("text/plain"), event.getTitle());
         RequestBody requestBodyDescription = RequestBody.create(MediaType.parse("text/plain"), event.getDescription());
         RequestBody requestBodyStartDate = RequestBody.create(MediaType.parse("text/plain"), event.getStartDate());
-        RequestBody requestBodyStartTime = RequestBody.create(MediaType.parse("text/plain"), event.getStartTime());
         RequestBody requestBodyEndDate = RequestBody.create(MediaType.parse("text/plain"), event.getEndDate());
-        RequestBody requestBodyEndTime = RequestBody.create(MediaType.parse("text/plain"), event.getEndTime());
         RequestBody requestBodyLocation = RequestBody.create(MediaType.parse("text/plain"), event.getLocation());
         RequestBody requestBodyLatitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getLatitude()));
         RequestBody requestBodyLongitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getLongitude()));
@@ -124,9 +122,7 @@ public class AddEventViewModel extends ViewModel {
                 requestBodyTitle,
                 requestBodyDescription,
                 requestBodyStartDate,
-                requestBodyStartTime,
                 requestBodyEndDate,
-                requestBodyEndTime,
                 requestBodyLocation,
                 requestBodyLatitude,
                 requestBodyLongitude,
@@ -176,7 +172,7 @@ public class AddEventViewModel extends ViewModel {
 
     private void checkValid(Event current) {
         isValid.setValue(!Objects.equals(current.getTitle(), "") && !Objects.equals(current.getLocation(), "")
-                && !Objects.equals(current.getStartTime(), "") && !Objects.equals(current.getEndTime(), "")
+                && !Objects.equals(current.getStartDate(), "") && !Objects.equals(current.getEndDate(), "")
                 && !Objects.equals(current.getDescription(), "") && !Objects.equals(current.getCategory(), "")
                 && current.getTicketsCount() > 0
                 && current.getImageBitmap() != null);

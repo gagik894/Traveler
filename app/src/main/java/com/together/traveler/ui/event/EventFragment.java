@@ -23,9 +23,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.bumptech.glide.Glide;
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentEventBinding;
-import com.together.traveler.ui.main.user.UserFragmentDirections;
-
-import java.util.Objects;
 
 public class EventFragment extends Fragment {
     private FragmentEventBinding binding;
@@ -64,8 +61,8 @@ public class EventFragment extends Fragment {
             Glide.with(requireContext()).load(imageUrl).into(image);
             name.setText(data.getTitle());
             location.setText(data.getLocation());
-            date.setText(String.format("From %s, %s", data.getStartDate(), data.getStartTime()));
-            time.setText(String.format("To %s, %s", data.getEndDate(), data.getEndTime()));
+            date.setText(String.format("From %s", data.getStartDate()));
+            time.setText(String.format("To %s", data.getEndDate()));
             category.setText(data.getCategory());
             description.setText(data.getDescription());
 

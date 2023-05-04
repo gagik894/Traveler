@@ -91,16 +91,8 @@ public class Event implements Parcelable {
         this.startDate = startDate;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
     public void setEndDate(String endDate) {
         this.endDate = endDate;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
     }
 
     public void setTicketsCount(int ticketsCount) {

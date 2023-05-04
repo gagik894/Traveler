@@ -64,8 +64,8 @@ public class EventCardsAdapter extends RecyclerView.Adapter<EventCardsAdapter.Vi
 
         tvName.setText(card.getTitle());
         tvLocation.setText(card.getLocation());
-        tvDate.setText(String.format("%s, %s -", card.getStartDate(), card.getStartTime()));
-        tvTime.setText(String.format("%s, %s", card.getEndDate(), card.getEndTime()));
+        tvDate.setText(String.format("%s -", card.getStartDate()));
+        tvTime.setText(card.getEndDate());
         tvUserUsername.setText(card.getUser().getUsername());
         String imageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", card.getImgId());
         String userImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", card.getUser().getAvatar());
