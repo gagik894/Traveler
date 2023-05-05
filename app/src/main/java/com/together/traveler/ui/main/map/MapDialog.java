@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +43,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MapDialog extends DialogFragment {
+    private final String TAG = "MapDialog";
 
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private FragmentMapBinding binding;
@@ -112,14 +112,15 @@ public class MapDialog extends DialogFragment {
         MapEventsReceiver mReceive = new MapEventsReceiver() {
             @Override
             public boolean singleTapConfirmedHelper(GeoPoint p) {
-                Log.d("debug", "Single tap helper");
+                Log.d(TAG, "Single tap helper");
+                mapViewModel.setItem(p);
                 return false;
 
             }
 
             @Override
             public boolean longPressHelper(GeoPoint p) {
-                Log.d("debug", "LongPressHelper");
+                Log.d(TAG, "LongPressHelper");
                 mapViewModel.setItem(p);
                 return false;
             }
@@ -146,9 +147,10 @@ public class MapDialog extends DialogFragment {
             marker[0].setPosition(location);
 
             map.getOverlays().add(marker[0]);
-            mapController.setCenter(location);
+            mapController.animateTo(location);
             map.invalidate();
-            Toast.makeText(ctx, mapViewModel.getLocationName(), Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "onViewCreated: " + mapViewModel.getLocationName());
+//            Toast.makeText(ctx, mapViewModel.getLocationName().toString(), Toast.LENGTH_SHORT).show();
             if (listener != null && mapViewModel.getOverlayItems().getValue() != null) {
                 listener.onDialogResult(mapViewModel.getLocationName(), location);
             }
