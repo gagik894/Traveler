@@ -1,4 +1,4 @@
-package com.together.traveler.ui.add.event;
+package com.together.traveler.ui.add.place;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.together.traveler.context.AppContext;
-import com.together.traveler.model.Event;
+import com.together.traveler.model.Place;
 import com.together.traveler.requests.ApiClient;
 import com.together.traveler.requests.ApiService;
 
@@ -29,68 +29,58 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddEventViewModel extends ViewModel {
-    private final String TAG = "AddEventViewModel";
+public class AddPlaceViewModel extends ViewModel {
+    private final String TAG = "AddPlaceViewModel";
 
-    private final MutableLiveData<Event> data;
+    private final MutableLiveData<Place> data;
     private final MutableLiveData<ArrayList<String>> categories;
     private final MutableLiveData<Boolean> isValid;
     private final ApiService apiService;
 
-    public AddEventViewModel() {
+    public AddPlaceViewModel() {
         data = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
         isValid = new MutableLiveData<>(false);
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
-        this.data.setValue(new Event());
+        this.data.setValue(new Place());
         fetchCategories();
     }
 
 
-    public void dataChanged(String tittle, String location, String description, int count) {
-        Event current = data.getValue();
-        Objects.requireNonNull(current).setTitle(tittle);
+    public void dataChanged(String name, String location, String description) {
+        Place current = data.getValue();
+        Objects.requireNonNull(current).setName(name);
         Objects.requireNonNull(current).setLocation(location);
         Objects.requireNonNull(current).setDescription(description);
-        Objects.requireNonNull(current).setTicketsCount(count);
         checkValid(current);
     }
 
-    public void setStartDateAndTime(String date, String time) {
-        String startDate = String.format("%s, %s", date, time);
-        Objects.requireNonNull(data.getValue()).setStartDate(startDate);
-        this.data.setValue(data.getValue());
-    }
-
-    public void setEndDateAndTime(String date, String time) {
-        String endDate = String.format("%s, %s", date, time);
-        Objects.requireNonNull(data.getValue()).setEndDate(endDate);
-        this.data.setValue(data.getValue());
-    }
 
     public void setEventImage(Bitmap image) {
-        Event current = data.getValue();
+        Place current = data.getValue();
         Objects.requireNonNull(current).setImageBitmap(image);
         this.data.setValue(current);
         checkValid(current);
     }
+
     public void setEventLocation(double latitude, double longitude) {
-        Event current = data.getValue();
+        Place current = data.getValue();
         Objects.requireNonNull(current).setLongitude(longitude);
         Objects.requireNonNull(current).setLatitude(latitude);
         this.data.setValue(current);
         checkValid(current);
     }
+
     public void setEventCategory(String eventCategory) {
         Log.i(TAG, "setEventCategory: " + eventCategory);
-        Event current = data.getValue();
+        Place current = data.getValue();
         Objects.requireNonNull(current).setCategory(eventCategory);
         this.data.setValue(current);
         checkValid(current);
     }
 
     public void create() {
-        Event event = data.getValue();
+        Place event = data.getValue();
         if (event == null) {
             // Handle error, event is null
             return;
@@ -103,10 +93,8 @@ public class AddEventViewModel extends ViewModel {
         }
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-        RequestBody requestBodyTitle = RequestBody.create(MediaType.parse("text/plain"), event.getTitle());
+        RequestBody requestBodyName = RequestBody.create(MediaType.parse("text/plain"), event.getName());
         RequestBody requestBodyDescription = RequestBody.create(MediaType.parse("text/plain"), event.getDescription());
-        RequestBody requestBodyStartDate = RequestBody.create(MediaType.parse("text/plain"), event.getStartDate());
-        RequestBody requestBodyEndDate = RequestBody.create(MediaType.parse("text/plain"), event.getEndDate());
         RequestBody requestBodyLocation = RequestBody.create(MediaType.parse("text/plain"), event.getLocation());
         RequestBody requestBodyLatitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getLatitude()));
         RequestBody requestBodyLongitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getLongitude()));
@@ -117,12 +105,10 @@ public class AddEventViewModel extends ViewModel {
             return;
         }
 
-        Call<ResponseBody> call = apiService.uploadEventFile(
+        Call<ResponseBody> call = apiService.uploadPlaceFile(
                 body,
-                requestBodyTitle,
+                requestBodyName,
                 requestBodyDescription,
-                requestBodyStartDate,
-                requestBodyEndDate,
                 requestBodyLocation,
                 requestBodyLatitude,
                 requestBodyLongitude,
@@ -151,7 +137,7 @@ public class AddEventViewModel extends ViewModel {
         return categories;
     }
 
-    public LiveData<Event> getData() {
+    public LiveData<Place> getData() {
         return data;
     }
 
@@ -159,22 +145,9 @@ public class AddEventViewModel extends ViewModel {
         return isValid;
     }
 
-    public void addCategory(String category) {
-        ArrayList<String> currentTags = categories.getValue();
-        if (currentTags == null) {
-            return;
-        }
-        ArrayList<String> newTags = new ArrayList<>(currentTags);
-        newTags.add(category);
-        categories.setValue(newTags);
-        Log.i(TAG, "addCategory: " + categories.getValue().toString() + categories.getValue().get(0));
-    }
-
-    private void checkValid(Event current) {
-        isValid.setValue(!Objects.equals(current.getTitle(), "") && !Objects.equals(current.getLocation(), "")
-                && !Objects.equals(current.getStartDate(), "") && !Objects.equals(current.getEndDate(), "")
+    private void checkValid(Place current) {
+        isValid.setValue(!Objects.equals(current.getName(), "") && !Objects.equals(current.getLocation(), "")
                 && !Objects.equals(current.getDescription(), "") && !Objects.equals(current.getCategory(), "")
-                && current.getTicketsCount() > 0
                 && current.getImageBitmap() != null);
     }
 
@@ -193,7 +166,7 @@ public class AddEventViewModel extends ViewModel {
     }
 
     private void fetchCategories(){
-        apiService.getEventCategories().enqueue(new Callback<List<String>>() {
+        apiService.getPlaceCategories().enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
                 if (response.isSuccessful()) {

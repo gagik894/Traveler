@@ -38,7 +38,10 @@ public interface ApiService {
     );
 
     @GET("events/categories")
-    Call<List<String>> getCategories();
+    Call<List<String>> getEventCategories();
+
+    @GET("places/categories")
+    Call<List<String>> getPlaceCategories();
 
     @POST("events/checkTicket")
     Call<CheckTicketResponse> checkTicket(@Body RequestBody requestBody);
@@ -46,12 +49,23 @@ public interface ApiService {
 
     @Multipart
     @POST("events/add/event")
-    Call<ResponseBody> uploadFile(
+    Call<ResponseBody> uploadEventFile(
             @Part MultipartBody.Part filePart,
             @Part("title") RequestBody title,
             @Part("description") RequestBody description,
             @Part("startDate") RequestBody startDate,
             @Part("endDate") RequestBody endDate,
+            @Part("location") RequestBody location,
+            @Part("latitude") RequestBody latitude,
+            @Part("longitude") RequestBody longitude,
+            @Part("category") RequestBody requestBodyCategory
+    );
+    @Multipart
+    @POST("places/add")
+    Call<ResponseBody> uploadPlaceFile(
+            @Part MultipartBody.Part filePart,
+            @Part("name") RequestBody name,
+            @Part("description") RequestBody description,
             @Part("location") RequestBody location,
             @Part("latitude") RequestBody latitude,
             @Part("longitude") RequestBody longitude,

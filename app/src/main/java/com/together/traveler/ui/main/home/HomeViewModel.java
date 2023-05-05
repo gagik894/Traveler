@@ -76,7 +76,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     private void fetchCategories(){
-        apiService.getCategories().enqueue(new Callback<List<String>>() {
+        apiService.getEventCategories().enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
                 if (response.isSuccessful()) {
