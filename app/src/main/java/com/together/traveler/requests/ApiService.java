@@ -2,6 +2,7 @@ package com.together.traveler.requests;
 
 import com.together.traveler.model.CheckTicketResponse;
 import com.together.traveler.model.EventsResponse;
+import com.together.traveler.model.Place;
 import com.together.traveler.model.User;
 
 import java.util.List;
@@ -20,6 +21,9 @@ import retrofit2.http.Path;
 public interface ApiService {
     @GET("events")
     Call<EventsResponse> getEvents();
+
+    @GET("places")
+    Call<List<Place>> getPlaces();
 
     @GET("events/profile/{userId}")
     Call<User> getUser(

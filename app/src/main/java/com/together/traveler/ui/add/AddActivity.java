@@ -24,7 +24,7 @@ public class AddActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         new AlertDialog.Builder(this)
-                .setTitle("Choose an option")
+                .setTitle("What you want to add?")
                 .setItems(new CharSequence[]{"Event", "Place"}, (dialog, which) -> {
                     if (which == 0) {
                         AddEvent addEventFragment = new AddEvent();

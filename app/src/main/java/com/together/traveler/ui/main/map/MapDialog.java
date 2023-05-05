@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -93,12 +94,17 @@ public class MapDialog extends DialogFragment {
         final GeoPoint startPoint = new GeoPoint(40.740295, 44.865835);
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         ImageButton onCenterButton = binding.mapBtnCenterOnLocation;
+        Button eventsButton = binding.mapBtnEvents;
+        Button placesButton = binding.mapBtnPlaces;
         locationSearch = binding.mapEtLocation;
         map = requireView().findViewById(R.id.map);
         mapController = map.getController();
         assert ctx != null;
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx), map);
         final Marker[] marker = {null};
+
+        eventsButton.setVisibility(View.GONE);
+        placesButton.setVisibility(View.GONE);
 
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setBuiltInZoomControls(false);

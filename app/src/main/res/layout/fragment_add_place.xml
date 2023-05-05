@@ -88,7 +88,8 @@
             android:contentDescription="@string/add_select_tags"
             android:minHeight="48dp"
             android:prompt="@string/add_select_tags"
-            android:spinnerMode="dropdown" />
+            android:spinnerMode="dropdown"
+            tools:ignore="DuplicateSpeakableTextCheck" />
 
         <TextView
             android:layout_width="match_parent"
@@ -123,7 +124,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:text="@string/add_create_event"
+            android:text="@string/add_add_place"
             android:textSize="16sp" />
     </LinearLayout>
 

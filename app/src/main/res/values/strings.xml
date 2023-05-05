@@ -94,12 +94,17 @@
     <!--    universal ticket-->
     <string name="utk_note">This ticket grants you access to all enrolled events.</string>
 
+    <!--    map-->
+    <string name="map_search_for_location">Search for location</string>
+    <string name="map_btn_events">Events</string>
+    <string name="map_btn_places">Places</string>
+
     <!--    sPen-->
     <string name="move_car">Move Car</string>
     <string name="scroll_down">Scroll down</string>
     <string name="scroll_up">Scroll up</string>
     <string name="pause_or_resume">Pause or Resume</string>
     <string name="restart">Restart</string>
-    <string name="map_search_for_location">Search for location</string>
+    <string name="add_add_place">Add place</string>
 
 </resources>

@@ -17,6 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
     </org.osmdroid.views.MapView>
 
     <EditText
@@ -28,6 +29,7 @@
         android:layout_marginEnd="10dp"
         android:autofillHints=""
         android:background="@drawable/edit_text_background"
+        android:backgroundTint="#CCFFFFFF"
         android:ems="10"
         android:hint="@string/map_search_for_location"
         android:inputType="text"
@@ -64,5 +66,49 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout="@layout/fragment_event_card" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/mapEtLocation"
+        app:layout_constraintStart_toStartOf="@+id/mapEtLocation"
+        app:layout_constraintTop_toBottomOf="@+id/mapEtLocation">
+
+        <Button
+            android:id="@+id/mapBtnEvents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_weight="1"
+            android:backgroundTint="#80FFFFFF"
+            android:contextClickable="false"
+            android:text="@string/map_btn_events"
+            android:textColor="@android:color/secondary_text_light"
+            android:textSize="12sp"
+            app:cornerRadius="25dp" />
+
+        <Button
+            android:id="@+id/mapBtnPlaces"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_weight="1"
+            android:backgroundTint="#80FFFFFF"
+            android:contextClickable="false"
+            android:text="@string/map_btn_places"
+            android:textColor="@android:color/secondary_text_light"
+            android:textSize="12sp"
+            app:cornerRadius="25dp" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mapRvCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,9 +3,14 @@ package com.together.traveler.ui.main.map;
 import android.location.Address;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.together.traveler.model.Place;
+import com.together.traveler.requests.ApiClient;
+import com.together.traveler.requests.ApiService;
 
 import org.osmdroid.bonuspack.location.GeocoderNominatim;
 import org.osmdroid.util.GeoPoint;
@@ -18,17 +23,31 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MapViewModel extends ViewModel {
+    private final String TAG = "MapViewModel";
+
     public static final String MY_USER_AGENT = "Traveler";
     private final MutableLiveData<ArrayList<OverlayItem>> overlayItems;
+    private final MutableLiveData<ArrayList<Place>> places;
     private final MutableLiveData<String> search;
     private final MutableLiveData<GeoPoint> center;
+    private final MutableLiveData<Integer> state;
+    private final ApiService apiService;
     private String locationName;
+    private final MutableLiveData<Place> mapSelectedPlace;
 
     public MapViewModel() {
+        mapSelectedPlace = new MutableLiveData<>();
         overlayItems = new MutableLiveData<>(new ArrayList<>());
         search = new MutableLiveData<>();
         center = new MutableLiveData<>();
+        places = new MutableLiveData<>();
+        state = new MutableLiveData<>(0);
+        apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
     }
 
     public void setSearch(String data) {
@@ -36,9 +55,12 @@ public class MapViewModel extends ViewModel {
         getLocationFromName(data);
     }
 
-    public void addItem(GeoPoint p) {
-        Objects.requireNonNull(this.overlayItems.getValue()).add(new OverlayItem("Dilijan", "", new GeoPoint(p.getLatitude(), p.getLongitude())));
-        this.overlayItems.setValue(this.overlayItems.getValue());
+    public void setMapSelectedPlace(int position){
+        this.mapSelectedPlace.setValue(this.getPlaces().getValue().get(position));
+    }
+
+    public void setState(Integer state){
+        this.state.setValue(state);
     }
 
     public void setItem(GeoPoint p){
@@ -53,14 +75,24 @@ public class MapViewModel extends ViewModel {
         this.center.setValue(center);
     }
 
-
+    public MutableLiveData<Place> getMapSelectedPlace() {
+        return mapSelectedPlace;
+    }
     public LiveData<ArrayList<OverlayItem>> getOverlayItems() {
         return overlayItems;
+    }
+
+    public MutableLiveData<Integer> getState() {
+        return state;
     }
 
     public LiveData<GeoPoint> getCenter() {
         Log.d("asd", "getCenter: " + center.getValue());
         return center;
+    }
+
+    public MutableLiveData<ArrayList<Place>> getPlaces() {
+        return places;
     }
 
     public String getLocationName() {
@@ -109,6 +141,27 @@ public class MapViewModel extends ViewModel {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        });
+    }
+
+    public void fetchPlaces(){
+        apiService.getPlaces().enqueue(new Callback<List<Place>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Place>> call, @NonNull Response<List<Place>> response) {
+                if (response.isSuccessful()) {
+                    Log.d("UserViewModel", "onResponse: " + response.body());
+                    List<Place> placesRes = response.body();
+
+                    places.postValue((ArrayList<Place>) placesRes);
+                } else {
+                    Log.e(TAG, "fetchEvents request failed with code: " + response.code() +response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Place>> call, @NonNull Throwable t) {
+                Log.e(TAG, "fetchEvents request failed with error: " + t.getMessage());
             }
         });
     }

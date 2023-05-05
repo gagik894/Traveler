@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -30,10 +31,15 @@ import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.together.traveler.R;
+import com.together.traveler.adapter.CategoryAdapter;
 import com.together.traveler.databinding.FragmentMapBinding;
 import com.together.traveler.model.Event;
+import com.together.traveler.model.Place;
 import com.together.traveler.ui.main.home.HomeViewModel;
 
 import org.osmdroid.api.IMapController;
@@ -55,11 +61,13 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MapFragment extends Fragment {
-
+    private final String TAG = "MapFragment";
 
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private final ArrayList<OverlayItem> items = new ArrayList<>();
@@ -71,6 +79,9 @@ public class MapFragment extends Fragment {
     private MapViewModel mapViewModel;
     private HomeViewModel homeViewModel;
     private Timer timer = new Timer();
+    private RecyclerView rvCategories;
+    private CategoryAdapter categoryAdapter;
+    private final List<String> categoryList  = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,6 +94,43 @@ public class MapFragment extends Fragment {
         binding = FragmentMapBinding.inflate(inflater, container, false);
         mapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
         homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        rvCategories = binding.mapRvCategory;
+
+        categoryAdapter = new CategoryAdapter(categoryList, item -> Toast.makeText(requireContext(), item, Toast.LENGTH_SHORT).show());
+        rvCategories.setAdapter(categoryAdapter);
+        rvCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        homeViewModel.getCategories().observe(getViewLifecycleOwner(), newCategories ->{
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+                @Override
+                public int getOldListSize() {
+                    return categoryList.size();
+                }
+
+                @Override
+                public int getNewListSize() {
+                    return newCategories.size();
+                }
+
+                @Override
+                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                    String oldEvent = categoryList.get(oldItemPosition);
+                    String newEvent = newCategories.get(newItemPosition);
+                    return (Objects.equals(oldEvent, newEvent));
+                }
+
+                @Override
+                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                    String oldEvent = categoryList.get(oldItemPosition);
+                    String newEvent = newCategories.get(newItemPosition);
+                    return oldEvent.equals(newEvent);
+                }
+            });
+
+            categoryList.clear();
+            categoryList.addAll(newCategories);
+            diffResult.dispatchUpdatesTo(categoryAdapter);
+        });
+
         return binding.getRoot();
     }
 
@@ -98,7 +146,11 @@ public class MapFragment extends Fragment {
         final GeoPoint startPoint = new GeoPoint(40.740295, 44.865835);
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         ImageButton onCenterButton = binding.mapBtnCenterOnLocation;
+        Button eventsButton = binding.mapBtnEvents;
+        Button placesButton = binding.mapBtnPlaces;
         FragmentContainerView eventContainerView = binding.mapFcvUser;
+
+        final int textColor = placesButton.getCurrentTextColor();
 
         locationSearch = binding.mapEtLocation;
         map = requireView().findViewById(R.id.map);
@@ -120,8 +172,12 @@ public class MapFragment extends Fragment {
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
                     public boolean onItemSingleTapUp(final int position, final OverlayItem item) {
-                        eventContainerView.setVisibility(View.VISIBLE);
-                        homeViewModel.setMapSelectedEvent(position);
+                        if (mapViewModel.getState().getValue() == 0) {
+                            eventContainerView.setVisibility(View.VISIBLE);
+                            homeViewModel.setMapSelectedEvent(position);
+                        }else{
+                            mapViewModel.setMapSelectedPlace(position);
+                        }
                         return true;
                     }
 
@@ -136,7 +192,7 @@ public class MapFragment extends Fragment {
         MapEventsReceiver mReceive = new MapEventsReceiver() {
             @Override
             public boolean singleTapConfirmedHelper(GeoPoint p) {
-                Log.d("debug", "Single tap helper");
+                Log.d(TAG, "Single tap helper");
                 mPointsOverlay.unSetFocusedItem();
                 eventContainerView.setVisibility(View.GONE);
                 return false;
@@ -144,7 +200,7 @@ public class MapFragment extends Fragment {
 
             @Override
             public boolean longPressHelper(GeoPoint p) {
-                Log.d("debug", "LongPressHelper");
+                Log.d(TAG, "LongPressHelper");
                 return false;
             }
 
@@ -164,7 +220,7 @@ public class MapFragment extends Fragment {
 
 
         mapViewModel.getOverlayItems().observe(getViewLifecycleOwner(), data -> {
-            Log.i("asd", "onViewCreated: " + data);
+            Log.i(TAG, "onViewCreated: " + data);
             mPointsOverlay.removeAllItems();
             mPointsOverlay.addItems(data);
             map.invalidate();
@@ -175,6 +231,33 @@ public class MapFragment extends Fragment {
             mapController.setCenter(data);
         });
 
+        mapViewModel.getState().observe(getViewLifecycleOwner(), state->{
+            int orangeColor = ContextCompat.getColor(requireActivity(), R.color.orange);
+            eventsButton.setTextColor(textColor);
+            placesButton.setTextColor(textColor);
+
+            switch (state){
+                case 0:
+                    eventsButton.setTextColor(orangeColor);
+//                    newEvents = userViewModel.getData().getValue().getUpcomingEvents();
+                    break;
+                case 1:
+                    placesButton.setTextColor(orangeColor);
+//                    newEvents = userViewModel.getData().getValue().getSavedEvents();
+                    break;
+            }
+        });
+
+        mapViewModel.getPlaces().observe(getViewLifecycleOwner(), places -> {
+            Place place;
+            mPointsOverlay.removeAllItems();
+            for (int i = 0; i < places.size(); i++) {
+                place = places.get(i);
+                mPointsOverlay.addItem(new OverlayItem(place.getName(), place.getDescription(), new GeoPoint(place.getLatitude(), place.getLongitude())));
+            }
+            map.invalidate();
+        });
+
         homeViewModel.getData().observe(getViewLifecycleOwner(), data->{
             Event event;
             mPointsOverlay.removeAllItems();
@@ -182,11 +265,21 @@ public class MapFragment extends Fragment {
                 event = data.get(i);
                 mPointsOverlay.addItem(new OverlayItem(event.getTitle(), event.getDescription(), new GeoPoint(event.getLatitude(), event.getLongitude())));
             }
+            map.invalidate();
         });
 
         eventContainerView.setOnClickListener(v->{
             NavDirections action = MapFragmentDirections.actionMapFragmentToEventFragment(homeViewModel.getMapSelectedEvent().getValue(), homeViewModel.getUserId());
             NavHostFragment.findNavController(this).navigate(action);
+        });
+
+        eventsButton.setOnClickListener(v -> {
+            mapViewModel.setState(0);
+            homeViewModel.fetchEvents();
+        });
+        placesButton.setOnClickListener(v -> {
+            mapViewModel.setState(1);
+            mapViewModel.fetchPlaces();
         });
 
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
