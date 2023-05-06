@@ -34,12 +34,15 @@ public class AddEventViewModel extends ViewModel {
 
     private final MutableLiveData<Event> data;
     private final MutableLiveData<ArrayList<String>> categories;
+
+    private final MutableLiveData<ArrayList<String>> tags;
     private final MutableLiveData<Boolean> isValid;
     private final ApiService apiService;
 
     public AddEventViewModel() {
         data = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
+        tags = new MutableLiveData<>(new ArrayList<>());
         isValid = new MutableLiveData<>(false);
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         this.data.setValue(new Event());
@@ -147,6 +150,10 @@ public class AddEventViewModel extends ViewModel {
         });
     }
 
+    public MutableLiveData<ArrayList<String>> getTags() {
+        return tags;
+    }
+
     public MutableLiveData<ArrayList<String>> getCategories() {
         return categories;
     }
@@ -159,15 +166,14 @@ public class AddEventViewModel extends ViewModel {
         return isValid;
     }
 
-    public void addCategory(String category) {
-        ArrayList<String> currentTags = categories.getValue();
-        if (currentTags == null) {
-            return;
-        }
-        ArrayList<String> newTags = new ArrayList<>(currentTags);
-        newTags.add(category);
-        categories.setValue(newTags);
-        Log.i(TAG, "addCategory: " + categories.getValue().toString() + categories.getValue().get(0));
+    public void addTag(String tag) {
+        ArrayList<String> currentTags = tags.getValue();
+        currentTags.add(tag);
+        tags.setValue(currentTags);
+        this.data.getValue().setTags(tags.getValue());
+        this.data.setValue(this.data.getValue());
+
+        Log.i(TAG, "addCategory: " + tags.getValue().toString() + tags.getValue().get(0));
     }
 
     private void checkValid(Event current) {

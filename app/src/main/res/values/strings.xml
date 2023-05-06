@@ -42,7 +42,7 @@
     <string name="event_read_less">less</string>
     <string name="event_image">Event image</string>
     <string name="event_button_enroll">Enroll</string>
-    <string name="event_button_ticket">Ticket</string>
+    <string name="event_button_ticket">Show ticket</string>
     <string name="event_button_check_tickets">Check Tickets</string>
     <string name="event_enroll_button_enrolled">Enrolled</string>
     <string name="event_event_by">Event by</string>

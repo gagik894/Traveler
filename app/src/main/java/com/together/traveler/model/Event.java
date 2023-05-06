@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Event implements Parcelable {
     private String title;
@@ -25,6 +26,8 @@ public class Event implements Parcelable {
     private boolean userOwned;
     private User userId;
     private String category;
+
+    private List<String> tags;
 
     public Event(String title, String location, Double longitude, Double latitude, String startDate, String startTime, String endDate, String endTime, String imgId, String description, User userId, int ticketsCount) {
         this.title = title;
@@ -53,6 +56,7 @@ public class Event implements Parcelable {
         this.endTime = "";
         this.description = "";
         this.imageBitmap = null;
+        this.tags = null;
         this.ticketsCount = 0;
         this.category = "";
         this.imgId = "";
@@ -123,6 +127,9 @@ public class Event implements Parcelable {
         this.category = category;
     }
 
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
 
     public String getTitle() {
         return title;
@@ -196,6 +203,10 @@ public class Event implements Parcelable {
         return category;
     }
 
+    public List<String> getTags() {
+        return tags;
+    }
+
     public static ArrayList<Event> createCardList(int quantity) {
         String longDesc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida dictum fusce. Vel eros donec ac odio tempor orci dapibus ultrices in. Urna nec tincidunt praesent semper feugiat. Quis eleifend quam adipiscing vitae. Mi tempus imperdiet nulla malesuada pellentesque. Vitae auctor eu augue ut. Eu volutpat odio facilisis mauris sit amet massa vitae tortor. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque dignissim. Fermentum iaculis eu non diam phasellus vestibulum lorem sed risus. Sed id semper risus in hendrerit gravida. In vitae turpis massa sed. Tortor dignissim convallis aenean et tortor at. Turpis egestas maecenas pharetra convallis. A cras semper auctor neque vitae. Aliquam ut porttitor leo a. Lacinia quis vel eros donec ac odio tempor orci dapibus.";
         int lastId = 0;
@@ -238,6 +249,7 @@ public class Event implements Parcelable {
         dest.writeByte(this.userOwned ? (byte) 1 : (byte) 0);
         dest.writeParcelable(this.userId, flags);
         dest.writeString(this.category);
+        dest.writeStringList(this.tags);
     }
 
     public void readFromParcel(Parcel source) {
@@ -259,6 +271,7 @@ public class Event implements Parcelable {
         this.userOwned = source.readByte() != 0;
         this.userId = source.readParcelable(User.class.getClassLoader());
         this.category = source.readString();
+        this.tags = source.createStringArrayList();
     }
 
     protected Event(Parcel in) {
@@ -280,6 +293,7 @@ public class Event implements Parcelable {
         this.userOwned = in.readByte() != 0;
         this.userId = in.readParcelable(User.class.getClassLoader());
         this.category = in.readString();
+        this.tags = in.createStringArrayList();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {

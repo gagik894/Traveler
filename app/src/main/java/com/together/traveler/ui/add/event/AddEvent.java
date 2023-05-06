@@ -34,6 +34,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.noowenz.customdatetimepicker.CustomDateTimePicker;
 import com.together.traveler.databinding.FragmentAddEventBinding;
 import com.together.traveler.ui.main.MainActivity;
@@ -63,6 +65,8 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
     private EditText ticketsCount;
     private EditText newTag;
     private ImageButton eventImage;
+
+    private ChipGroup chipGroup;
     private static final int SELECT_FILE = 202;
     private ArrayAdapter<String> adapter;
 
@@ -130,7 +134,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         ticketsCount = binding.addEtTicketsCount;
         newTag = binding.addEtNewTag;
         eventImage = binding.addIbEventImage;
-
+        chipGroup = binding.chipGroup;
         adapter = new ArrayAdapter<>(
                 requireActivity(), android.R.layout.simple_spinner_item,
                 new ArrayList<>());
@@ -155,9 +159,8 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
             startActivity(switchActivityIntent);
         });
         addTag.setOnClickListener(v -> {
-            mViewModel.addCategory(String.valueOf(newTag.getText()));
+            mViewModel.addTag(String.valueOf(newTag.getText()));
             newTag.setText("");
-            spinner.setSelection(adapter.getCount() - 1);
         });
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -181,6 +184,22 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
             adapter.addAll(categoriesList);
             adapter.notifyDataSetChanged();
         });
+
+        mViewModel.getTags().observe(getViewLifecycleOwner(), tags->{
+            chipGroup.removeAllViews();
+            for (int i = 0; i < tags.size(); i++) {
+                Chip chip = new Chip(requireContext());
+                chip.setText(tags.get(i));
+                chip.setCloseIconVisible(true);
+                chip.setClickable(true);
+                chip.setCheckable(false);
+                chip.setOnCloseIconClickListener(v -> {
+                    // Handle the click event here
+                });
+                chipGroup.addView(chip);
+            }
+        });
+
 
 
         return root;

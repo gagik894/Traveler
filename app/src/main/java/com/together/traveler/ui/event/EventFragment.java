@@ -189,12 +189,13 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
     }
 
     private void requestCalendarAndSetEvent() {
-        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.WRITE_CALENDAR)) {
+        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.WRITE_CALENDAR) && EasyPermissions.hasPermissions(requireContext(), Manifest.permission.READ_CALENDAR)) {
             // Permission already granted
             alertSaveInCalendar();
         } else {
             // Request permission
             requestPermissionLauncher.launch(Manifest.permission.WRITE_CALENDAR);
+            requestPermissionLauncher.launch(Manifest.permission.READ_CALENDAR);
         }
 
     }
