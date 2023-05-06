@@ -99,7 +99,7 @@ public class MapFragment extends Fragment {
         categoryAdapter = new CategoryAdapter(categoryList, item -> Toast.makeText(requireContext(), item, Toast.LENGTH_SHORT).show());
         rvCategories.setAdapter(categoryAdapter);
         rvCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        homeViewModel.getCategories().observe(getViewLifecycleOwner(), newCategories ->{
+        mapViewModel.getCategories().observe(getViewLifecycleOwner(), newCategories ->{
             DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
                 @Override
                 public int getOldListSize() {

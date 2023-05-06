@@ -193,7 +193,7 @@ public class AddEventViewModel extends ViewModel {
     }
 
     private void fetchCategories(){
-        apiService.getEventCategories().enqueue(new Callback<List<String>>() {
+        apiService.getCategories("events").enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
                 if (response.isSuccessful()) {

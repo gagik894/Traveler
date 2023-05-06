@@ -30,6 +30,8 @@ import retrofit2.Response;
 public class MapViewModel extends ViewModel {
     private final String TAG = "MapViewModel";
 
+    private final MutableLiveData<ArrayList<String>> categories;
+
     public static final String MY_USER_AGENT = "Traveler";
     private final MutableLiveData<ArrayList<OverlayItem>> overlayItems;
     private final MutableLiveData<ArrayList<Place>> places;
@@ -38,16 +40,24 @@ public class MapViewModel extends ViewModel {
     private final MutableLiveData<Integer> state;
     private final ApiService apiService;
     private String locationName;
+
+    private final ArrayList<String> placeCategories;
+    private final ArrayList<String> eventCategories;
+
     private final MutableLiveData<Place> mapSelectedPlace;
 
     public MapViewModel() {
+        placeCategories = new ArrayList<>();
+        eventCategories = new ArrayList<>();
+        categories = new MutableLiveData<>(new ArrayList<>());
         mapSelectedPlace = new MutableLiveData<>();
         overlayItems = new MutableLiveData<>(new ArrayList<>());
         search = new MutableLiveData<>();
         center = new MutableLiveData<>();
         places = new MutableLiveData<>();
-        state = new MutableLiveData<>(0);
+        state = new MutableLiveData<>();
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+        setState(0);
     }
 
     public void setSearch(String data) {
@@ -60,6 +70,15 @@ public class MapViewModel extends ViewModel {
     }
 
     public void setState(Integer state){
+        if (eventCategories.size() == 0) {
+            fetchCategories("events");
+            fetchCategories("places");
+        }
+        if (state == 0){
+            categories.setValue(eventCategories);
+        }else{
+            categories.setValue(placeCategories);
+        }
         this.state.setValue(state);
     }
 
@@ -78,6 +97,11 @@ public class MapViewModel extends ViewModel {
     public MutableLiveData<Place> getMapSelectedPlace() {
         return mapSelectedPlace;
     }
+
+    public MutableLiveData<ArrayList<String>> getCategories() {
+        return categories;
+    }
+
     public LiveData<ArrayList<OverlayItem>> getOverlayItems() {
         return overlayItems;
     }
@@ -162,6 +186,31 @@ public class MapViewModel extends ViewModel {
             @Override
             public void onFailure(@NonNull Call<List<Place>> call, @NonNull Throwable t) {
                 Log.e(TAG, "fetchEvents request failed with error: " + t.getMessage());
+            }
+        });
+    }
+
+    public void fetchCategories(String type) {
+        apiService.getCategories(type).enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
+                if (response.isSuccessful()) {
+                    List<String> categoriesResponse = response.body();
+                    Log.i(TAG, "onResponse: " + categoriesResponse);
+                    if (categoriesResponse != null){
+                        if (Objects.equals(type, "events")) {
+                            eventCategories.addAll(categoriesResponse);
+                        }else{
+                            placeCategories.addAll(categoriesResponse);
+                        }
+                    }
+                    categories.setValue((ArrayList<String>) categoriesResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
+                // Handle the error
             }
         });
     }

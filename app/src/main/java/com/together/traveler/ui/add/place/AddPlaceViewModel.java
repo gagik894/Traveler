@@ -166,7 +166,7 @@ public class AddPlaceViewModel extends ViewModel {
     }
 
     private void fetchCategories(){
-        apiService.getPlaceCategories().enqueue(new Callback<List<String>>() {
+        apiService.getCategories("places").enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
                 if (response.isSuccessful()) {

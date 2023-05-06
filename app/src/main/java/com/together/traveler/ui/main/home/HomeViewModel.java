@@ -14,6 +14,7 @@ import com.together.traveler.requests.ApiService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,7 +43,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void setMapSelectedEvent(int position){
-        this.mapSelectedEvent.setValue(this.getData().getValue().get(position));
+        this.mapSelectedEvent.setValue(Objects.requireNonNull(this.getData().getValue()).get(position));
     }
 
     public LiveData<ArrayList<Event>> getData() {
@@ -76,12 +77,15 @@ public class HomeViewModel extends ViewModel {
     }
 
     private void fetchCategories(){
-        apiService.getEventCategories().enqueue(new Callback<List<String>>() {
+        apiService.getCategories("events").enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
                 if (response.isSuccessful()) {
                     List<String> categoriesResponse = response.body();
                     Log.i(TAG, "onResponse: " + categoriesResponse);
+                    if (categoriesResponse != null) {
+                        categoriesResponse.add(0, "All");
+                    }
                     categories.setValue((ArrayList<String>) categoriesResponse);
                 }
             }

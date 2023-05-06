@@ -41,11 +41,10 @@ public interface ApiService {
             @Path("eventId") String eventId
     );
 
-    @GET("events/categories")
-    Call<List<String>> getEventCategories();
-
-    @GET("places/categories")
-    Call<List<String>> getPlaceCategories();
+    @GET("{type}/categories")
+    Call<List<String>> getCategories(
+            @Path("type") String type
+    );
 
     @POST("events/checkTicket")
     Call<CheckTicketResponse> checkTicket(@Body RequestBody requestBody);

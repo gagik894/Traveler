@@ -1,11 +1,17 @@
 package com.together.traveler.ui.main.home;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,15 +39,16 @@ import java.util.Objects;
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private RecyclerView rvCards;
-    private RecyclerView rvCategories;
+    private Spinner spCategories;
     private SwipeRefreshLayout swipeRefreshLayout;
     private HomeViewModel homeViewModel;
     private ProgressBar progressBar;
+
+    private SearchView searchView;
     private EventCardsAdapter eventCardsAdapter;
-    private CategoryAdapter categoryAdapter;
     private final List<Event> eventList = new ArrayList<>();
     private final List<String> categoryList  = new ArrayList<>();
-
+    private ArrayAdapter<String> adapter;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -50,9 +57,10 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         rvCards = binding.rvHome;
-        rvCategories = binding.homeRvCategories;
+        spCategories = binding.homeLvCategories;
         swipeRefreshLayout = binding.cardSwipeRefreshLayout;
         progressBar = binding.homePb;
+        searchView = binding.searchView;
 
         eventCardsAdapter = new EventCardsAdapter(eventList, item -> {
             if (isAdded()) {
@@ -62,12 +70,20 @@ public class HomeFragment extends Fragment {
         });
 
 
+        String[] fruits = {"Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig", "Grape"};
 
-        categoryAdapter = new CategoryAdapter(categoryList, item -> Toast.makeText(requireContext(), item, Toast.LENGTH_SHORT).show());
-        rvCategories.setAdapter(categoryAdapter);
         rvCards.setAdapter(eventCardsAdapter);
-        rvCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         rvCards.setLayoutManager(new LinearLayoutManager(requireContext()));
+        adapter = new ArrayAdapter<>(
+                requireActivity(), android.R.layout.simple_spinner_item,
+                new ArrayList<>());
+
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spCategories.setAdapter(adapter);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            searchView.setIconifiedByDefault(false);
+        }
         return root;
     }
 
@@ -113,36 +129,40 @@ public class HomeFragment extends Fragment {
             diffResult.dispatchUpdatesTo(eventCardsAdapter);
         });
 
-        homeViewModel.getCategories().observe(getViewLifecycleOwner(), newCategories ->{
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
-                @Override
-                public int getOldListSize() {
-                    return categoryList.size();
-                }
-
-                @Override
-                public int getNewListSize() {
-                    return newCategories.size();
-                }
-
-                @Override
-                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                    String oldEvent = categoryList.get(oldItemPosition);
-                    String newEvent = newCategories.get(newItemPosition);
-                    return (Objects.equals(oldEvent, newEvent));
-                }
-
-                @Override
-                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                    String oldEvent = categoryList.get(oldItemPosition);
-                    String newEvent = newCategories.get(newItemPosition);
-                    return oldEvent.equals(newEvent);
-                }
-            });
-
-            categoryList.clear();
-            categoryList.addAll(newCategories);
-            diffResult.dispatchUpdatesTo(categoryAdapter);
+        homeViewModel.getCategories().observe(getViewLifecycleOwner(), categories ->{
+            ArrayList<String> categoriesList = new ArrayList<>(categories);
+            adapter.clear();
+            adapter.addAll(categoriesList);
+            adapter.notifyDataSetChanged();
+//            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+//                @Override
+//                public int getOldListSize() {
+//                    return categoryList.size();
+//                }
+//
+//                @Override
+//                public int getNewListSize() {
+//                    return newCategories.size();
+//                }
+//
+//                @Override
+//                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+//                    String oldEvent = categoryList.get(oldItemPosition);
+//                    String newEvent = newCategories.get(newItemPosition);
+//                    return (Objects.equals(oldEvent, newEvent));
+//                }
+//
+//                @Override
+//                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+//                    String oldEvent = categoryList.get(oldItemPosition);
+//                    String newEvent = newCategories.get(newItemPosition);
+//                    return oldEvent.equals(newEvent);
+//                }
+//            });
+//
+//            categoryList.clear();
+//            categoryList.addAll(newCategories);
+//            diffResult.dispatchUpdatesTo(categoryAdapter);
         });
     }
 
