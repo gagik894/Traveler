@@ -34,15 +34,12 @@ public class AddEventViewModel extends ViewModel {
 
     private final MutableLiveData<Event> data;
     private final MutableLiveData<ArrayList<String>> categories;
-
-    private final MutableLiveData<ArrayList<String>> tags;
     private final MutableLiveData<Boolean> isValid;
     private final ApiService apiService;
 
     public AddEventViewModel() {
         data = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
-        tags = new MutableLiveData<>(new ArrayList<>());
         isValid = new MutableLiveData<>(false);
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         this.data.setValue(new Event());
@@ -115,6 +112,16 @@ public class AddEventViewModel extends ViewModel {
         RequestBody requestBodyLongitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getLongitude()));
         RequestBody requestBodyCategory = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getCategory()));
 
+        List<String> tags = event.getTags(); // Retrieve the list of tags
+
+        List<MultipartBody.Part> tagParts = new ArrayList<>();
+
+        for (String tag : tags) {
+            RequestBody tagBody = RequestBody.create(MediaType.parse("text/plain"), tag);
+            MultipartBody.Part tagPart = MultipartBody.Part.createFormData("tags[]", tag);
+            tagParts.add(tagPart);
+        }
+
         if (apiService == null) {
             // Handle error, ApiService is null
             return;
@@ -129,7 +136,8 @@ public class AddEventViewModel extends ViewModel {
                 requestBodyLocation,
                 requestBodyLatitude,
                 requestBodyLongitude,
-                requestBodyCategory
+                requestBodyCategory,
+                tagParts
         );
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -150,9 +158,9 @@ public class AddEventViewModel extends ViewModel {
         });
     }
 
-    public MutableLiveData<ArrayList<String>> getTags() {
-        return tags;
-    }
+
+
+
 
     public MutableLiveData<ArrayList<String>> getCategories() {
         return categories;
@@ -167,13 +175,25 @@ public class AddEventViewModel extends ViewModel {
     }
 
     public void addTag(String tag) {
-        ArrayList<String> currentTags = tags.getValue();
-        currentTags.add(tag);
-        tags.setValue(currentTags);
-        this.data.getValue().setTags(tags.getValue());
+        ArrayList<String> currentTags = (ArrayList<String>) Objects.requireNonNull(data.getValue()).getTags();
+        if (currentTags != null) {
+            currentTags.add(tag);
+        }
+        Log.i(TAG, "addTag: " +currentTags.toString());
+        this.data.getValue().setTags(currentTags);
+        Log.i(TAG, "addTag: " +this.data.getValue().getTags());
         this.data.setValue(this.data.getValue());
+    }
 
-        Log.i(TAG, "addCategory: " + tags.getValue().toString() + tags.getValue().get(0));
+    public void deleteTag(String tag){
+        ArrayList<String> currentTags = (ArrayList<String>) Objects.requireNonNull(data.getValue()).getTags();
+        if (currentTags != null) {
+            currentTags.remove(tag);
+        }
+        Log.i(TAG, "deleteTag: " +currentTags.toString());
+        this.data.getValue().setTags(currentTags);
+        Log.i(TAG, "deleteTag: " +this.data.getValue().getTags());
+        this.data.setValue(this.data.getValue());
     }
 
     private void checkValid(Event current) {

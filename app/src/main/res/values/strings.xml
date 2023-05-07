@@ -7,6 +7,7 @@
     <string name="location_icon">Location</string>
     <string name="settings_icon">Settings</string>
     <string name="category_icon">Category</string>
+    <string name="btn_show_filters">Filters</string>
     <string name="star_icon">Star</string>
     <string name="btn_add">Add</string>
     <string name="btn_center_on_location">CenterOnLocation</string>
@@ -87,8 +88,8 @@
     <string name="add_capture_photo">Capture Photo</string>
     <string name="add_photo_permission_rationale">We need permission to access your device\'s camera and gallery to add a photo to your event.</string>
     <string name="add_select_tags">Select a category</string>
-    <string name="add_create_new_tags">Create new category</string>
-    <string name="add_enter_new_tag">Enter new category</string>
+    <string name="add_add_tags">Add tags (optional)</string>
+    <string name="add_enter_tags">Enter a tag</string>
     <string name="add_submit">Submit</string>
 
     <!--    universal ticket-->

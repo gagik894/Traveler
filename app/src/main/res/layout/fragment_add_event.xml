@@ -155,7 +155,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="@string/add_create_new_tags"
+            android:text="@string/add_add_tags"
             android:textSize="16sp" />
 
         <LinearLayout
@@ -170,7 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:autofillHints=""
-                android:hint="@string/add_enter_new_tag"
+                android:hint="@string/add_enter_tags"
                 android:inputType="text"
                 android:minHeight="48dp"
                 android:textSize="16sp" />

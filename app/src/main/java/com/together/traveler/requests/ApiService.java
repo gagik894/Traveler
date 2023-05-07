@@ -61,7 +61,8 @@ public interface ApiService {
             @Part("location") RequestBody location,
             @Part("latitude") RequestBody latitude,
             @Part("longitude") RequestBody longitude,
-            @Part("category") RequestBody requestBodyCategory
+            @Part("category") RequestBody category,
+            @Part List<MultipartBody.Part> tags
     );
     @Multipart
     @POST("places/add")

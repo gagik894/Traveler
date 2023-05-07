@@ -66,7 +66,7 @@ public class MapViewModel extends ViewModel {
     }
 
     public void setMapSelectedPlace(int position){
-        this.mapSelectedPlace.setValue(this.getPlaces().getValue().get(position));
+        this.mapSelectedPlace.setValue(Objects.requireNonNull(this.getPlaces().getValue()).get(position));
     }
 
     public void setState(Integer state){

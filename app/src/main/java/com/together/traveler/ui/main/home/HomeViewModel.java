@@ -26,6 +26,7 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<String>> categories;
 
     private final MutableLiveData<Event> mapSelectedEvent;
+    private final MutableLiveData<Boolean> categoriesVisibility;
     private String userId;
     private final ApiService apiService;
 
@@ -33,9 +34,15 @@ public class HomeViewModel extends ViewModel {
         data = new MutableLiveData<>();
         mapSelectedEvent = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
+        categoriesVisibility = new MutableLiveData<>(false);
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         fetchEvents();
         fetchCategories();
+    }
+
+
+    public void changeCategoriesVisibility() {
+        this.categoriesVisibility.setValue(Boolean.FALSE.equals(this.categoriesVisibility.getValue()));
     }
 
     public void setData(ArrayList<Event> data) {
@@ -52,6 +59,10 @@ public class HomeViewModel extends ViewModel {
 
     public MutableLiveData<ArrayList<String>> getCategories() {
         return categories;
+    }
+
+    public MutableLiveData<Boolean> getCategoriesVisibility() {
+        return categoriesVisibility;
     }
 
     public void fetchEvents() {
@@ -83,9 +94,6 @@ public class HomeViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     List<String> categoriesResponse = response.body();
                     Log.i(TAG, "onResponse: " + categoriesResponse);
-                    if (categoriesResponse != null) {
-                        categoriesResponse.add(0, "All");
-                    }
                     categories.setValue((ArrayList<String>) categoriesResponse);
                 }
             }

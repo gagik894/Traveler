@@ -56,7 +56,7 @@ public class Event implements Parcelable {
         this.endTime = "";
         this.description = "";
         this.imageBitmap = null;
-        this.tags = null;
+        this.tags = new ArrayList<>();
         this.ticketsCount = 0;
         this.category = "";
         this.imgId = "";

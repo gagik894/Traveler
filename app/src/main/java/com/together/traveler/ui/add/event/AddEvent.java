@@ -5,7 +5,6 @@ import static android.app.Activity.RESULT_OK;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -45,7 +44,6 @@ import com.yalantis.ucrop.UCrop;
 import org.jetbrains.annotations.NotNull;
 import org.osmdroid.util.GeoPoint;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -176,7 +174,23 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
             }
         });
 
-        mViewModel.getData().observe(getViewLifecycleOwner(), data -> eventImage.setImageBitmap(data.getImageBitmap()));
+        mViewModel.getData().observe(getViewLifecycleOwner(), data -> {
+            eventImage.setImageBitmap(data.getImageBitmap());
+            chipGroup.removeAllViews();
+            Log.i(TAG, "onCreateView: " + data.getTags());
+            if (data.getTags() != null) {
+                for (int i = 0; i < data.getTags().size(); i++) {
+                    Chip chip = new Chip(requireContext());
+                    chip.setText(data.getTags().get(i));
+                    chip.setCloseIconVisible(true);
+                    chip.setClickable(true);
+                    chip.setCheckable(false);
+                    chip.setOnCloseIconClickListener(v -> mViewModel.deleteTag((String) chip.getText()));
+                    chipGroup.addView(chip);
+                }
+            }
+        });
+
         mViewModel.isValid().observe(getViewLifecycleOwner(), btnCreate::setEnabled);
         mViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             ArrayList<String> categoriesList = new ArrayList<>(categories);
@@ -184,23 +198,6 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
             adapter.addAll(categoriesList);
             adapter.notifyDataSetChanged();
         });
-
-        mViewModel.getTags().observe(getViewLifecycleOwner(), tags->{
-            chipGroup.removeAllViews();
-            for (int i = 0; i < tags.size(); i++) {
-                Chip chip = new Chip(requireContext());
-                chip.setText(tags.get(i));
-                chip.setCloseIconVisible(true);
-                chip.setClickable(true);
-                chip.setCheckable(false);
-                chip.setOnCloseIconClickListener(v -> {
-                    // Handle the click event here
-                });
-                chipGroup.addView(chip);
-            }
-        });
-
-
 
         return root;
     }
@@ -219,17 +216,8 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         Log.i("asd", "onActivityResult: " + requestCode + resultCode + data);
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_FILE) {
-                Bitmap selectedImageBitmap = null;
                 Uri selectedImageUri = data.getData();
-                try {
-                    selectedImageBitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), selectedImageUri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (selectedImageBitmap != null) {
-                    Uri imageUri = getImageUri(requireContext(), selectedImageBitmap);
-                    startImageCropping(imageUri);
-                }
+                startImageCropping(selectedImageUri);
             } else {
                 Log.d(TAG, "onActivityResult: else");
             }
@@ -245,14 +233,6 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         Intent cropIntent = uCrop.getIntent(requireActivity());
         imageCroppingActivityResultLauncher.launch(cropIntent);
     }
-
-    private Uri getImageUri(Context context, Bitmap bitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
-        return Uri.parse(path);
-    }
-
 
     private void selectImage() {
         String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};

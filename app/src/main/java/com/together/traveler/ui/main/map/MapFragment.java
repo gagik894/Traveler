@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,12 +30,10 @@ import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.together.traveler.R;
-import com.together.traveler.adapter.CategoryAdapter;
 import com.together.traveler.databinding.FragmentMapBinding;
 import com.together.traveler.model.Event;
 import com.together.traveler.model.Place;
@@ -61,8 +58,6 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -79,9 +74,6 @@ public class MapFragment extends Fragment {
     private MapViewModel mapViewModel;
     private HomeViewModel homeViewModel;
     private Timer timer = new Timer();
-    private RecyclerView rvCategories;
-    private CategoryAdapter categoryAdapter;
-    private final List<String> categoryList  = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,42 +86,6 @@ public class MapFragment extends Fragment {
         binding = FragmentMapBinding.inflate(inflater, container, false);
         mapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
         homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
-        rvCategories = binding.mapRvCategory;
-
-        categoryAdapter = new CategoryAdapter(categoryList, item -> Toast.makeText(requireContext(), item, Toast.LENGTH_SHORT).show());
-        rvCategories.setAdapter(categoryAdapter);
-        rvCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        mapViewModel.getCategories().observe(getViewLifecycleOwner(), newCategories ->{
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
-                @Override
-                public int getOldListSize() {
-                    return categoryList.size();
-                }
-
-                @Override
-                public int getNewListSize() {
-                    return newCategories.size();
-                }
-
-                @Override
-                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                    String oldEvent = categoryList.get(oldItemPosition);
-                    String newEvent = newCategories.get(newItemPosition);
-                    return (Objects.equals(oldEvent, newEvent));
-                }
-
-                @Override
-                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                    String oldEvent = categoryList.get(oldItemPosition);
-                    String newEvent = newCategories.get(newItemPosition);
-                    return oldEvent.equals(newEvent);
-                }
-            });
-
-            categoryList.clear();
-            categoryList.addAll(newCategories);
-            diffResult.dispatchUpdatesTo(categoryAdapter);
-        });
 
         return binding.getRoot();
     }
@@ -147,6 +103,7 @@ public class MapFragment extends Fragment {
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         ImageButton onCenterButton = binding.mapBtnCenterOnLocation;
         Button eventsButton = binding.mapBtnEvents;
+        ChipGroup chipGroup = binding.mapChgcategories;
         Button placesButton = binding.mapBtnPlaces;
         FragmentContainerView eventContainerView = binding.mapFcvUser;
 
@@ -172,7 +129,7 @@ public class MapFragment extends Fragment {
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
                     public boolean onItemSingleTapUp(final int position, final OverlayItem item) {
-                        if (mapViewModel.getState().getValue() == 0) {
+                        if (mapViewModel.getState().getValue() != null && mapViewModel.getState().getValue() == 0) {
                             eventContainerView.setVisibility(View.VISIBLE);
                             homeViewModel.setMapSelectedEvent(position);
                         }else{
@@ -256,6 +213,20 @@ public class MapFragment extends Fragment {
                 mPointsOverlay.addItem(new OverlayItem(place.getName(), place.getDescription(), new GeoPoint(place.getLatitude(), place.getLongitude())));
             }
             map.invalidate();
+        });
+
+        mapViewModel.getCategories().observe(getViewLifecycleOwner(), categories ->{
+            chipGroup.removeAllViews();
+            for (int i = 0; i < categories.size(); i++) {
+                Chip chip = new Chip(requireContext());
+                chip.setText(categories.get(i));
+                chip.setClickable(true);
+                chip.setCheckable(false);
+                chip.setOnCloseIconClickListener(v -> {
+                    //TODO: Handle the click event here
+                });
+                chipGroup.addView(chip);
+            }
         });
 
         homeViewModel.getData().observe(getViewLifecycleOwner(), data->{

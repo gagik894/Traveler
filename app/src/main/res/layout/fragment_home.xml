@@ -12,7 +12,8 @@
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -26,20 +27,46 @@
 
         <SearchView
             android:id="@+id/searchView"
-            android:layout_width="40dp"
+            android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="3"
             android:background="@drawable/edit_text_background" />
 
-        <Spinner
-            android:id="@+id/homeLvCategories"
+        <ImageButton
+            android:id="@+id/homeBtnFilters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/transparent_background"
+            android:contentDescription="@string/btn_show_filters"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_baseline_filter_list"
+            tools:ignore="TouchTargetSizeCheck" />
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:minHeight="48dp" />
-    </LinearLayout>
+            android:paddingHorizontal="5dp"
+            android:visibility="gone"
+            app:singleLine="true">
+
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+
 
 
     <androidx.cardview.widget.CardView
@@ -80,7 +107,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvHome"
