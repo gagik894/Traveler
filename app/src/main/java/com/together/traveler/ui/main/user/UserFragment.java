@@ -81,7 +81,6 @@ public class UserFragment extends Fragment {
 
         final TextView username = binding.userTvUsername;
         final TextView rating = binding.userTvRating;
-        final TextView location = binding.userTvLocation;
         final Button upcomingButton = binding.userBtnUpcoming;
         final Button savedButton = binding.userBtnSaved;
         final Button myEventsButton = binding.userBtnMyEvents;
@@ -111,7 +110,6 @@ public class UserFragment extends Fragment {
             progressBar.setVisibility(View.GONE);
             username.setText(data.getUsername());
             rating.setText(String.valueOf(data.getRating()));
-            location.setText(data.getLocation());
         });
 
         int orangeColor = ContextCompat.getColor(requireActivity(), R.color.orange);

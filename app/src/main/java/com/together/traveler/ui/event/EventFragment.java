@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
@@ -37,6 +36,8 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentEventBinding;
 import com.together.traveler.model.Event;
@@ -59,7 +60,6 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
 
     private FragmentEventBinding binding;
     private EventViewModel eventViewModel;
-    private ViewGroup rootView;
     private TicketDialog dialog;
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -83,9 +83,11 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
         final TextView description = binding.eventTvDescription;
         final TextView moreButton = binding.eventTvMore;
         final TextView category = binding.eventTvCategory;
+        final TextView tags = binding.eventTvTags;
         final Button bottomButton = binding.eventBtnBottom;
         final ImageButton backButton = binding.eventIBtnBack;
         final ImageButton saveButton = binding.eventIBtnSave;
+        final ChipGroup chipGroup = binding.eventChgTags;
         final FragmentContainerView userCard = binding.eventUser;
         final FragmentContainerView mapCard = binding.eventMap;
         int maxLines = description.getMaxLines();
@@ -109,16 +111,34 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
 
             if (data.isEnrolled()) {
                 bottomButton.setText(R.string.event_button_ticket);
+                bottomButton.setBackgroundColor(requireContext().getResources().getColor(R.color.secondary_color));
             } else if (data.isUserOwned()) {
                 bottomButton.setText(R.string.event_button_check_tickets);
+                bottomButton.setBackgroundColor(requireContext().getResources().getColor(R.color.check_btn_color));
             } else {
                 bottomButton.setText(R.string.event_button_enroll);
+                bottomButton.setBackgroundColor(requireContext().getResources().getColor(R.color.primary_color));
             }
 
             if (data.isSaved()) {
                 saveButton.setImageResource(R.drawable.favorite);
             } else {
                 saveButton.setImageResource(R.drawable.favorite_border);
+            }
+
+            if (data.getTags().size() > 0){
+                Toast.makeText(requireContext(), data.getTags().toString(), Toast.LENGTH_SHORT).show();
+                tags.setVisibility(View.VISIBLE);
+                chipGroup.removeAllViews();
+                for (int i = 0; i < data.getTags().size(); i++) {
+                    Chip chip = new Chip(requireContext());
+                    chip.setText(data.getTags().get(i));
+                    chip.setClickable(false);
+                    chip.setCheckable(false);
+                    chipGroup.addView(chip);
+                }
+            }else{
+                tags.setVisibility(View.GONE);
             }
 
             ViewTreeObserver vto = description.getViewTreeObserver();

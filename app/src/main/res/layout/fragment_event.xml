@@ -280,19 +280,40 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/eventUser" />
 
+                        <TextView
+                            android:id="@+id/eventTvTags"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:text="@string/event_tags"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/eventMap" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/eventChgTags"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/eventTvTags">
+
+                        </com.google.android.material.chip.ChipGroup>
+
                         <Button
                             android:id="@+id/eventBtnBottom"
                             android:layout_width="0dp"
                             android:layout_height="60dp"
                             android:layout_marginTop="30dp"
-                            android:backgroundTint="@color/secondary_color"
                             android:contextClickable="false"
                             android:maxWidth="100dp"
                             android:text="@string/event_button_enroll"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/eventMap" />
+                            app:layout_constraintTop_toBottomOf="@+id/eventChgTags" />
 
                         <androidx.fragment.app.FragmentContainerView
                             android:id="@+id/eventMap"

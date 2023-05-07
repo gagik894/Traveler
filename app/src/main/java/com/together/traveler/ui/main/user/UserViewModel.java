@@ -93,6 +93,7 @@ public class UserViewModel extends ViewModel {
     }
 
     public void setUserId(String userId) {
+        boolean fetch = !Objects.equals(userId, "self") || this.userId == null;
         if (!Objects.equals(userId, "")) {
             this.userId = userId;
             if (!Objects.equals(userId, "self")) {
@@ -100,7 +101,8 @@ public class UserViewModel extends ViewModel {
             }
             Log.d(TAG, "setUserId: " + userId);
         }
-        fetchUser();
+        if (fetch)
+            fetchUser();
     }
 
 }

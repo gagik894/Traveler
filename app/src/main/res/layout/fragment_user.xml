@@ -52,6 +52,7 @@
                     android:layout_marginHorizontal="5dp"
                     android:lines="1"
                     android:text="username"
+                    android:textColor="@color/white"
                     android:textStyle="bold"
                     app:autoSizeMaxTextSize="100sp"
                     app:autoSizeMinTextSize="8sp"
@@ -64,10 +65,12 @@
                     android:id="@+id/userTvRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:text="5.0"
+                    android:textColor="@color/white"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView7"
-                    app:layout_constraintStart_toStartOf="@+id/userTvLocation"
+                    app:layout_constraintStart_toEndOf="@+id/imageView7"
                     app:layout_constraintTop_toTopOf="@+id/imageView7" />
 
                 <ImageView
@@ -80,25 +83,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/userTvUsername"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/imageView13"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:contentDescription="@string/location_icon"
-                    android:src="@drawable/location"
-                    app:layout_constraintBottom_toBottomOf="@+id/userIvProfileImage"
-                    app:layout_constraintStart_toStartOf="@+id/userTvUsername" />
-
-                <TextView
-                    android:id="@+id/userTvLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:text="Yerevan, Armenia"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView13"
-                    app:layout_constraintStart_toEndOf="@+id/imageView13"
-                    app:layout_constraintTop_toTopOf="@+id/imageView13" />
 
                 <ImageButton
                     android:id="@+id/userBtnSettings"
@@ -226,7 +210,6 @@
                     android:id="@+id/userSwipeRefresh"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:paddingBottom="65dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -236,7 +219,8 @@
                         android:id="@+id/rvUser"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:clipToPadding="false" />
+                        android:clipToPadding="false"
+                        android:paddingBottom="65dp" />
 
                 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

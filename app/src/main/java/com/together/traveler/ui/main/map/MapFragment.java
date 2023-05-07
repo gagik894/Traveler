@@ -221,7 +221,7 @@ public class MapFragment extends Fragment {
                 Chip chip = new Chip(requireContext());
                 chip.setText(categories.get(i));
                 chip.setClickable(true);
-                chip.setCheckable(false);
+                chip.setCheckable(true);
                 chip.setOnCloseIconClickListener(v -> {
                     //TODO: Handle the click event here
                 });
@@ -229,7 +229,7 @@ public class MapFragment extends Fragment {
             }
         });
 
-        homeViewModel.getData().observe(getViewLifecycleOwner(), data->{
+        homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), data->{
             Event event;
             mPointsOverlay.removeAllItems();
             for (int i = 0; i < data.size(); i++) {

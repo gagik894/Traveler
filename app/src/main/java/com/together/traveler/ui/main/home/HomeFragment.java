@@ -1,5 +1,6 @@
 package com.together.traveler.ui.main.home;
 
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
+    private final String TAG = "HomeFragment";
+
     private FragmentHomeBinding binding;
     private RecyclerView rvCards;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -49,13 +52,23 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        SearchView searchView = binding.searchView;
         rvCards = binding.rvHome;
         swipeRefreshLayout = binding.cardSwipeRefreshLayout;
         progressBar = binding.homePb;
         filtersButton = binding.homeBtnFilters;
-        chipGroup = binding.chipGroup3;
+        chipGroup = binding.homeChgCategories;
 
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        SearchView searchView = binding.searchView;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            searchView.setIconifiedByDefault(false);
+        }
 
         eventCardsAdapter = new EventCardsAdapter(eventList, item -> {
             if (isAdded()) {
@@ -64,19 +77,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         rvCards.setAdapter(eventCardsAdapter);
         rvCards.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            searchView.setIconifiedByDefault(false);
-        }
-        return root;
-    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             Thread thread = new Thread(homeViewModel::fetchEvents);
             thread.start();
@@ -84,10 +88,67 @@ public class HomeFragment extends Fragment {
 
         filtersButton.setOnClickListener(v-> homeViewModel.changeCategoriesVisibility());
 
-        homeViewModel.getData().observe(getViewLifecycleOwner(), newEvents  -> {
+        homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), newEvents -> {
             swipeRefreshLayout.setRefreshing(false);
             progressBar.setVisibility(View.GONE);
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+
+            new CalculateDiffTask(eventList, newEvents, eventCardsAdapter).execute();
+        });
+
+        homeViewModel.getCategoriesVisibility().observe(getViewLifecycleOwner(), visible->{
+            chipGroup.setVisibility(visible? View.VISIBLE: View.GONE);
+            filtersButton.setImageResource(visible? R.drawable.ic_baseline_filter_list_off: R.drawable.ic_baseline_filter_list);
+        });
+
+        homeViewModel.getCategories().observe(getViewLifecycleOwner(), categories ->{
+            chipGroup.removeAllViews();
+            for (int i = 0; i < categories.size(); i++) {
+                Chip chip = new Chip(requireContext());
+                chip.setText(categories.get(i));
+                chip.setClickable(true);
+                chip.setCheckable(true);
+                chip.setOnClickListener(v -> homeViewModel.addOrRemoveSelectedCategories((String) chip.getText()));
+                chipGroup.addView(chip);
+            }
+        });
+
+        homeViewModel.getSelectedCategories().observe(getViewLifecycleOwner(), selectedCategories->{
+            for (int i = 0; i < selectedCategories.size(); i++) {
+                Chip chip = (Chip) chipGroup.getChildAt(selectedCategories.get(i));
+                chip.setChecked(true);
+            }
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    public void scrollUp(){
+        Log.i("asd", "scrollUp: " + rvCards);
+        rvCards.post(() -> rvCards.smoothScrollBy(0, -1000));
+    }
+    public void scrollDown(){
+        Log.i("asd", "scrollDown: " + rvCards);
+        rvCards.post(() -> rvCards.smoothScrollBy(0, 1000));
+    }
+
+    private static class CalculateDiffTask extends AsyncTask<Void, Void, DiffUtil.DiffResult> {
+        private final List<Event> eventList;
+        private final List<Event> newEvents;
+        private final EventCardsAdapter eventCardsAdapter;
+
+        public CalculateDiffTask(List<Event> eventList, List<Event> newEvents, EventCardsAdapter eventCardsAdapter) {
+            this.eventList = eventList;
+            this.newEvents = newEvents;
+            this.eventCardsAdapter = eventCardsAdapter;
+        }
+
+        @Override
+        protected DiffUtil.DiffResult doInBackground(Void... voids) {
+            return DiffUtil.calculateDiff(new DiffUtil.Callback() {
                 @Override
                 public int getOldListSize() {
                     return eventList.size();
@@ -112,44 +173,13 @@ public class HomeFragment extends Fragment {
                     return oldEvent.equals(newEvent);
                 }
             });
+        }
 
+        @Override
+        protected void onPostExecute(DiffUtil.DiffResult diffResult) {
             eventList.clear();
             eventList.addAll(newEvents);
             diffResult.dispatchUpdatesTo(eventCardsAdapter);
-        });
-
-        homeViewModel.getCategoriesVisibility().observe(getViewLifecycleOwner(), visible->{
-            chipGroup.setVisibility(visible? View.VISIBLE: View.GONE);
-            filtersButton.setImageResource(visible? R.drawable.ic_baseline_filter_list_off: R.drawable.ic_baseline_filter_list);
-        });
-
-        homeViewModel.getCategories().observe(getViewLifecycleOwner(), categories ->{chipGroup.removeAllViews();
-            for (int i = 0; i < categories.size(); i++) {
-                Chip chip = new Chip(requireContext());
-                chip.setText(categories.get(i));
-                chip.setClickable(true);
-                chip.setCheckable(false);
-                chip.setOnCloseIconClickListener(v -> {
-                    //TODO: Handle the click event here
-                });
-                chipGroup.addView(chip);
-            }
-        });
+        }
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    public void scrollUp(){
-        Log.i("asd", "scrollUp: " + rvCards);
-        rvCards.post(() -> rvCards.smoothScrollBy(0, -1000));
-    }
-    public void scrollDown(){
-        Log.i("asd", "scrollDown: " + rvCards);
-        rvCards.post(() -> rvCards.smoothScrollBy(0, 1000));
-    }
-
 }

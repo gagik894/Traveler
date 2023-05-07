@@ -1,5 +1,6 @@
 package com.together.traveler.ui.main.home;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,8 @@ import com.together.traveler.requests.ApiService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,8 +25,10 @@ import retrofit2.Response;
 
 public class HomeViewModel extends ViewModel {
     private final String TAG = "HomeViewModel";
-    private final MutableLiveData<ArrayList<Event>> data;
+    private final ArrayList<Event> allEvents;
+    private final MutableLiveData<ArrayList<Event>> filteredEvents;
     private final MutableLiveData<ArrayList<String>> categories;
+    private final MutableLiveData<List<Integer>> selectedCategories;
 
     private final MutableLiveData<Event> mapSelectedEvent;
     private final MutableLiveData<Boolean> categoriesVisibility;
@@ -31,9 +36,11 @@ public class HomeViewModel extends ViewModel {
     private final ApiService apiService;
 
     public HomeViewModel() {
-        data = new MutableLiveData<>();
+        allEvents = new ArrayList<>();
+        filteredEvents = new MutableLiveData<>(new ArrayList<>());
         mapSelectedEvent = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
+        selectedCategories = new MutableLiveData<>(new ArrayList<>());
         categoriesVisibility = new MutableLiveData<>(false);
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         fetchEvents();
@@ -45,16 +52,16 @@ public class HomeViewModel extends ViewModel {
         this.categoriesVisibility.setValue(Boolean.FALSE.equals(this.categoriesVisibility.getValue()));
     }
 
-    public void setData(ArrayList<Event> data) {
-        this.data.setValue(data);
-    }
+//    public void setAllEvents(ArrayList<Event> allEvents) {
+//        this.allEvents.setValue(allEvents);
+//    }
 
     public void setMapSelectedEvent(int position){
-        this.mapSelectedEvent.setValue(Objects.requireNonNull(this.getData().getValue()).get(position));
+        this.mapSelectedEvent.setValue(Objects.requireNonNull(this.getAllEvents().getValue()).get(position));
     }
 
-    public LiveData<ArrayList<Event>> getData() {
-        return data;
+    public LiveData<ArrayList<Event>> getAllEvents() {
+        return filteredEvents;
     }
 
     public MutableLiveData<ArrayList<String>> getCategories() {
@@ -65,6 +72,10 @@ public class HomeViewModel extends ViewModel {
         return categoriesVisibility;
     }
 
+    public MutableLiveData<List<Integer>> getSelectedCategories() {
+        return selectedCategories;
+    }
+
     public void fetchEvents() {
         apiService.getEvents().enqueue(new Callback<EventsResponse>() {
             @Override
@@ -73,10 +84,14 @@ public class HomeViewModel extends ViewModel {
                     Log.d("UserViewModel", "onResponse: " + response.body());
                     EventsResponse eventsResponse = response.body();
                     List<Event> events = eventsResponse != null ? eventsResponse.getData() : null;
-                    data.postValue((ArrayList<Event>) events);
-                    userId = eventsResponse != null ? eventsResponse.getUserId() : null;
+
+                    AsyncTask.execute(() -> {
+                        HomeViewModel.this.filteredEvents.postValue((ArrayList<Event>) events);
+                        HomeViewModel.this.allEvents.addAll(events);
+                        userId = eventsResponse != null ? eventsResponse.getUserId() : null;
+                    });
                 } else {
-                    Log.e(TAG, "fetchEvents request failed with code: " + response.code() +response.body());
+                    Log.e(TAG, "fetchEvents request failed with code: " + response.code() + response.body());
                 }
             }
 
@@ -87,6 +102,7 @@ public class HomeViewModel extends ViewModel {
         });
     }
 
+
     private void fetchCategories(){
         apiService.getCategories("events").enqueue(new Callback<List<String>>() {
             @Override
@@ -94,7 +110,8 @@ public class HomeViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     List<String> categoriesResponse = response.body();
                     Log.i(TAG, "onResponse: " + categoriesResponse);
-                    categories.setValue((ArrayList<String>) categoriesResponse);
+                    AsyncTask.execute(() -> categories.postValue((ArrayList<String>) categoriesResponse));
+
                 }
             }
 
@@ -116,6 +133,51 @@ public class HomeViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
+    }
+
+
+    public void addOrRemoveSelectedCategories(String checkedChip) {
+        Integer selectedId = Objects.requireNonNull(categories.getValue()).indexOf(checkedChip);
+        List<Integer> selected = this.selectedCategories.getValue();
+        if (selected != null) {
+            if (selected.contains(selectedId)){
+                selected.remove(selectedId);
+            }else{
+                selected.add(selectedId);
+            }
+        }
+        this.selectedCategories.setValue(selected);
+        filterEventsByCategory();
+    }
+
+    public void filterEventsByCategory() {
+        ArrayList<Event> allEvents = this.allEvents;
+        if (allEvents != null) {
+            List<Integer> selectedCategories = this.selectedCategories.getValue();
+            if (selectedCategories == null || selectedCategories.size() == 0) {
+                HomeViewModel.this.filteredEvents.setValue(allEvents);
+                return;
+            }
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.submit(() -> {
+                ArrayList<Event> filteredEvents = new ArrayList<>();
+
+                for (Event event : allEvents) {
+                    for (int i = 0; i < selectedCategories.size(); i++) {
+                        String category = this.categories.getValue().get(selectedCategories.get(i));
+                        if (Objects.equals(event.getCategory(), category)) {
+                            filteredEvents.add(event);
+                            break; // Skip to the next event
+                        }
+                    }
+                }
+
+                HomeViewModel.this.filteredEvents.postValue(filteredEvents);
+            });
+
+            executorService.shutdown();
+        }
     }
 
 }
