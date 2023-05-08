@@ -88,11 +88,38 @@ public class HomeFragment extends Fragment {
 
         filtersButton.setOnClickListener(v-> homeViewModel.changeCategoriesVisibility());
 
-        homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), newEvents -> {
+        homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), newEvents  -> {
             swipeRefreshLayout.setRefreshing(false);
             progressBar.setVisibility(View.GONE);
+                DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+                    @Override
+                    public int getOldListSize() {
+                        return eventList.size();
+                    }
 
-            new CalculateDiffTask(eventList, newEvents, eventCardsAdapter).execute();
+                    @Override
+                    public int getNewListSize() {
+                        return newEvents.size();
+                    }
+
+                    @Override
+                    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                        Event oldEvent = eventList.get(oldItemPosition);
+                        Event newEvent = newEvents.get(newItemPosition);
+                        return oldEvent.get_id().equals(newEvent.get_id());
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                        Event oldEvent = eventList.get(oldItemPosition);
+                        Event newEvent = newEvents.get(newItemPosition);
+                        return oldEvent.equals(newEvent);
+                    }
+                });
+                diffResult.dispatchUpdatesTo(eventCardsAdapter);
+                eventList.clear();
+                eventList.addAll(newEvents);
+
         });
 
         homeViewModel.getCategoriesVisibility().observe(getViewLifecycleOwner(), visible->{
@@ -133,53 +160,5 @@ public class HomeFragment extends Fragment {
     public void scrollDown(){
         Log.i("asd", "scrollDown: " + rvCards);
         rvCards.post(() -> rvCards.smoothScrollBy(0, 1000));
-    }
-
-    private static class CalculateDiffTask extends AsyncTask<Void, Void, DiffUtil.DiffResult> {
-        private final List<Event> eventList;
-        private final List<Event> newEvents;
-        private final EventCardsAdapter eventCardsAdapter;
-
-        public CalculateDiffTask(List<Event> eventList, List<Event> newEvents, EventCardsAdapter eventCardsAdapter) {
-            this.eventList = eventList;
-            this.newEvents = newEvents;
-            this.eventCardsAdapter = eventCardsAdapter;
-        }
-
-        @Override
-        protected DiffUtil.DiffResult doInBackground(Void... voids) {
-            return DiffUtil.calculateDiff(new DiffUtil.Callback() {
-                @Override
-                public int getOldListSize() {
-                    return eventList.size();
-                }
-
-                @Override
-                public int getNewListSize() {
-                    return newEvents.size();
-                }
-
-                @Override
-                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                    Event oldEvent = eventList.get(oldItemPosition);
-                    Event newEvent = newEvents.get(newItemPosition);
-                    return oldEvent.get_id().equals(newEvent.get_id());
-                }
-
-                @Override
-                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                    Event oldEvent = eventList.get(oldItemPosition);
-                    Event newEvent = newEvents.get(newItemPosition);
-                    return oldEvent.equals(newEvent);
-                }
-            });
-        }
-
-        @Override
-        protected void onPostExecute(DiffUtil.DiffResult diffResult) {
-            eventList.clear();
-            eventList.addAll(newEvents);
-            diffResult.dispatchUpdatesTo(eventCardsAdapter);
-        }
     }
 }

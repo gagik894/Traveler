@@ -87,8 +87,10 @@ public class HomeViewModel extends ViewModel {
 
                     AsyncTask.execute(() -> {
                         HomeViewModel.this.filteredEvents.postValue((ArrayList<Event>) events);
+                        HomeViewModel.this.allEvents.clear();
                         HomeViewModel.this.allEvents.addAll(events);
                         userId = eventsResponse != null ? eventsResponse.getUserId() : null;
+                        HomeViewModel.this.filterEventsByCategory();
                     });
                 } else {
                     Log.e(TAG, "fetchEvents request failed with code: " + response.code() + response.body());
@@ -155,7 +157,7 @@ public class HomeViewModel extends ViewModel {
         if (allEvents != null) {
             List<Integer> selectedCategories = this.selectedCategories.getValue();
             if (selectedCategories == null || selectedCategories.size() == 0) {
-                HomeViewModel.this.filteredEvents.setValue(allEvents);
+                HomeViewModel.this.filteredEvents.postValue(allEvents);
                 return;
             }
 
