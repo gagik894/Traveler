@@ -1,6 +1,5 @@
 package com.together.traveler.ui.main.home;
 
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;

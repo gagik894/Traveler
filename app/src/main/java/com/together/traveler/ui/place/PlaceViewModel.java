@@ -1,0 +1,71 @@
+package com.together.traveler.ui.place;
+
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import com.together.traveler.model.Place;
+import com.together.traveler.requests.ApiClient;
+import com.together.traveler.requests.ApiService;
+
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
+public class PlaceViewModel extends ViewModel {
+    private final MutableLiveData<Place> placeData;
+    private String userId;
+    private final ApiService apiService;
+    private int dayIndex;
+
+    public PlaceViewModel() {
+        placeData = new MutableLiveData<>();
+        apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+    }
+
+    public void setPlaceData(Place placeData) {
+        this.placeData.setValue(placeData);
+    }
+
+    public void setUserId(String userId) {
+        Log.d("asd", "setUserId: " + userId);
+        this.userId = userId;
+    }
+
+    public LiveData<Place> getPlaceData() {
+        return placeData;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public boolean isOpen() {
+        Place place = this.placeData.getValue();
+        String[] openingTimes = new String[0];
+        if (place != null) {
+            openingTimes = place.getOpeningTimes();
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm a");
+        LocalTime currentTime = LocalTime.now();
+        DayOfWeek currentDayOfWeek = DayOfWeek.from(currentTime);
+        dayIndex = currentDayOfWeek.getValue() - 1;
+        LocalTime openingTime = LocalTime.parse(openingTimes[dayIndex], formatter);
+        return currentTime.isAfter(openingTime);
+    }
+
+    public String getNextTime() {
+        Place place = this.placeData.getValue();
+        if (place == null) {
+            return null;
+        }
+        if (this.isOpen()) {
+            return place.getClosingTimes()[dayIndex];
+        }else{
+            dayIndex = (dayIndex + 1) % 7;
+            return place.getOpeningTimes()[dayIndex];
+        }
+    }
+}

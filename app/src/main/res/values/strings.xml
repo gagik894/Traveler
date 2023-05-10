@@ -14,6 +14,9 @@
     <string name="btn_back">Back</string>
     <string name="btn_save">Save</string>
     <string name="qr">Qr</string>
+    <string name="phone_icon">phone</string>
+    <string name="link_icon">link</string>
+
 
     <!--    login-->
     <string name="title_activity_login">LoginActivity</string>
@@ -50,6 +53,14 @@
     <string name="event_about">About</string>
     <string name="event_location">Location</string>
     <string name="event_tags">Tags</string>
+
+    <!--    place-->
+    <string name="place_read_more">more</string>
+    <string name="place_read_less">less</string>
+    <string name="place_image">Place image</string>
+    <string name="place_about">Description</string>
+    <string name="place_location">Location</string>
+    <string name="place_rate">Rate this place</string>
 
     <!--    event card-->
     <string name="event_card_image">Card event image</string>
@@ -92,6 +103,7 @@
     <string name="add_add_tags">Add tags (optional)</string>
     <string name="add_enter_tags">Enter a tag</string>
     <string name="add_submit">Submit</string>
+    <string name="add_add_place">Add place</string>
 
     <!--    universal ticket-->
     <string name="utk_note">This ticket grants you access to all enrolled events.</string>
@@ -107,6 +119,10 @@
     <string name="scroll_up">Scroll up</string>
     <string name="pause_or_resume">Pause or Resume</string>
     <string name="restart">Restart</string>
-    <string name="add_add_place">Add place</string>
+    <string name="place_open">Open</string>
+    <string name="place_closed">Closed</string>
+    <string name="place_closes">Closes</string>
+    <string name="place_opens">Opens</string>
+
 
 </resources>

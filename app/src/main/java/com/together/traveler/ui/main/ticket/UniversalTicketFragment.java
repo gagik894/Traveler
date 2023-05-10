@@ -1,4 +1,4 @@
-package com.together.traveler;
+package com.together.traveler.ui.main.ticket;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;

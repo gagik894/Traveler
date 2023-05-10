@@ -82,7 +82,7 @@
     </fragment>
     <fragment
         android:id="@+id/universalTicketFragment"
-        android:name="com.together.traveler.UniversalTicketFragment"
+        android:name="com.together.traveler.ui.main.ticket.UniversalTicketFragment"
         android:label="fragment_universal_ticket"
         tools:layout="@layout/fragment_universal_ticket" />
 </navigation>

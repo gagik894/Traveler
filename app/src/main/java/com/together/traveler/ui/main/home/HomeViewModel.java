@@ -25,6 +25,7 @@ import retrofit2.Response;
 
 public class HomeViewModel extends ViewModel {
     private final String TAG = "HomeViewModel";
+
     private final ArrayList<Event> allEvents;
     private final MutableLiveData<ArrayList<Event>> filteredEvents;
     private final MutableLiveData<ArrayList<String>> categories;
@@ -51,10 +52,6 @@ public class HomeViewModel extends ViewModel {
     public void changeCategoriesVisibility() {
         this.categoriesVisibility.setValue(Boolean.FALSE.equals(this.categoriesVisibility.getValue()));
     }
-
-//    public void setAllEvents(ArrayList<Event> allEvents) {
-//        this.allEvents.setValue(allEvents);
-//    }
 
     public void setMapSelectedEvent(int position){
         this.mapSelectedEvent.setValue(Objects.requireNonNull(this.getAllEvents().getValue()).get(position));
@@ -167,7 +164,7 @@ public class HomeViewModel extends ViewModel {
 
                 for (Event event : allEvents) {
                     for (int i = 0; i < selectedCategories.size(); i++) {
-                        String category = this.categories.getValue().get(selectedCategories.get(i));
+                        String category = Objects.requireNonNull(this.categories.getValue()).get(selectedCategories.get(i));
                         if (Objects.equals(event.getCategory(), category)) {
                             filteredEvents.add(event);
                             break; // Skip to the next event

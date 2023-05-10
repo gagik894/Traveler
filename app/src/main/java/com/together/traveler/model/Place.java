@@ -4,15 +4,22 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class Place implements Parcelable {
     private String name;
     private String location;
     private String imgId;
     private String _id;
     private String description;
+    private String phone;
+    private String link;
     private Double longitude;
     private Double latitude;
+    private float rating;
     private Bitmap imageBitmap;
+    private String[] openingTimes;
+    private String[] closingTimes;
     private boolean userOwned;
     private User userId;
     private String category;
@@ -57,6 +64,22 @@ public class Place implements Parcelable {
         this.description = description;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
     public Double getLongitude() {
         return longitude;
     }
@@ -73,12 +96,36 @@ public class Place implements Parcelable {
         this.latitude = latitude;
     }
 
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
     public Bitmap getImageBitmap() {
         return imageBitmap;
     }
 
     public void setImageBitmap(Bitmap imageBitmap) {
         this.imageBitmap = imageBitmap;
+    }
+
+    public String[] getOpeningTimes() {
+        return openingTimes;
+    }
+
+    public void setOpeningTimes(String[] openingTimes) {
+        this.openingTimes = openingTimes;
+    }
+
+    public String[] getClosingTimes() {
+        return closingTimes;
+    }
+
+    public void setClosingTimes(String[] closingTimes) {
+        this.closingTimes = closingTimes;
     }
 
     public boolean isUserOwned() {
@@ -118,9 +165,14 @@ public class Place implements Parcelable {
         dest.writeString(this.imgId);
         dest.writeString(this._id);
         dest.writeString(this.description);
+        dest.writeString(this.phone);
+        dest.writeString(this.link);
         dest.writeValue(this.longitude);
         dest.writeValue(this.latitude);
+        dest.writeFloat(this.rating);
         dest.writeParcelable(this.imageBitmap, flags);
+        dest.writeStringArray(this.openingTimes);
+        dest.writeStringArray(this.closingTimes);
         dest.writeByte(this.userOwned ? (byte) 1 : (byte) 0);
         dest.writeParcelable(this.userId, flags);
         dest.writeString(this.category);
@@ -132,9 +184,14 @@ public class Place implements Parcelable {
         this.imgId = source.readString();
         this._id = source.readString();
         this.description = source.readString();
+        this.phone = source.readString();
+        this.link = source.readString();
         this.longitude = (Double) source.readValue(Double.class.getClassLoader());
         this.latitude = (Double) source.readValue(Double.class.getClassLoader());
+        this.rating = source.readFloat();
         this.imageBitmap = source.readParcelable(Bitmap.class.getClassLoader());
+        this.openingTimes = source.createStringArray();
+        this.closingTimes = source.createStringArray();
         this.userOwned = source.readByte() != 0;
         this.userId = source.readParcelable(User.class.getClassLoader());
         this.category = source.readString();
@@ -149,15 +206,20 @@ public class Place implements Parcelable {
         this.imgId = in.readString();
         this._id = in.readString();
         this.description = in.readString();
+        this.phone = in.readString();
+        this.link = in.readString();
         this.longitude = (Double) in.readValue(Double.class.getClassLoader());
         this.latitude = (Double) in.readValue(Double.class.getClassLoader());
+        this.rating = in.readFloat();
         this.imageBitmap = in.readParcelable(Bitmap.class.getClassLoader());
+        this.openingTimes = in.createStringArray();
+        this.closingTimes = in.createStringArray();
         this.userOwned = in.readByte() != 0;
         this.userId = in.readParcelable(User.class.getClassLoader());
         this.category = in.readString();
     }
 
-    public static final Parcelable.Creator<Place> CREATOR = new Parcelable.Creator<Place>() {
+    public static final Creator<Place> CREATOR = new Creator<Place>() {
         @Override
         public Place createFromParcel(Parcel source) {
             return new Place(source);
