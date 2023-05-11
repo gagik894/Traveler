@@ -1,6 +1,7 @@
 package com.together.traveler.requests;
 
 import com.together.traveler.model.CheckTicketResponse;
+import com.together.traveler.model.Event;
 import com.together.traveler.model.EventsResponse;
 import com.together.traveler.model.MapItem;
 import com.together.traveler.model.Place;
@@ -29,6 +30,12 @@ public interface ApiService {
 
     @GET("{type}")
     Call<List<MapItem>> getMapItems(@Path("type") String type, @Query("fields") String fields);
+
+    @GET("events/event/{id}")
+    Call<Event> getEvent(@Path("id") String id, @Query("fields") String fields);
+
+    @GET("places/place/{id}")
+    Call<Place> getPlace(@Path("id") String id, @Query("fields") String fields);
 
     @GET("events/profile/{userId}")
     Call<User> getUser(

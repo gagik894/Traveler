@@ -1,11 +1,13 @@
 package com.together.traveler.ui.cards;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,10 +15,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentEventCardBinding;
 import com.together.traveler.databinding.FragmentPlaceCardBinding;
 import com.together.traveler.ui.main.home.HomeViewModel;
 import com.together.traveler.ui.main.map.MapViewModel;
+import com.together.traveler.ui.place.PlaceViewModel;
 
 import org.osmdroid.views.MapView;
 
@@ -24,11 +28,13 @@ import org.osmdroid.views.MapView;
 public class PlaceCard extends Fragment {
     private FragmentPlaceCardBinding binding;
     private MapViewModel mapViewModel;
+    private PlaceViewModel placeViewModel;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         mapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
+        placeViewModel = new ViewModelProvider(requireActivity()).get(PlaceViewModel.class);
         binding = FragmentPlaceCardBinding.inflate(inflater, container, false);
 
         return binding.getRoot();
@@ -46,16 +52,20 @@ public class PlaceCard extends Fragment {
         final TextView nextStatus = binding.placeCardTvNextStatus;
         final TextView nextTime = binding.placeCardTvNextTime;
 
-//        mapViewModel.getMapSelectedPlace().observe(getViewLifecycleOwner(), data -> {
-//            String eventImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", data.getImgId());
-//            Glide.with(requireContext()).load(eventImageUrl).into(eventImage);
-//            name.setText(data.getName());
-//            phone.setText(data.getLocation());
-//            category.setText(data.getCategory());
-//            currentStatus.setText(data.getTitle());
-//            nextStatus.setText(data.getStartDate());
-//            nextTime.setText(data.getEndDate());
-//        });
+
+        mapViewModel.getMapSelectedPlaceData().observe(getViewLifecycleOwner(), data -> placeViewModel.setPlaceData(data));
+        placeViewModel.getPlaceData().observe(getViewLifecycleOwner(), data->{
+            boolean isOpen = placeViewModel.isOpen();
+            String eventImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", data.getImgId());
+            Glide.with(requireContext()).load(eventImageUrl).into(eventImage);
+            name.setText(data.getName());
+            phone.setText(data.getLocation());
+            category.setText(data.getCategory());
+            currentStatus.setText(isOpen? R.string.place_open: R.string.place_closed);
+            currentStatus.setTextColor(isOpen? Color.GREEN : Color.RED);
+            nextStatus.setText(isOpen? R.string.place_closes : R.string.place_opens);
+            nextTime.setText(placeViewModel.getNextTime());
+        });
     }
 
     @Override

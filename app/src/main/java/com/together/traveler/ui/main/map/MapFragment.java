@@ -35,9 +35,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentMapBinding;
-import com.together.traveler.model.Event;
 import com.together.traveler.model.MapItem;
-import com.together.traveler.model.Place;
 import com.together.traveler.ui.main.home.HomeViewModel;
 
 import org.osmdroid.api.IMapController;
@@ -107,6 +105,7 @@ public class MapFragment extends Fragment {
         ChipGroup chipGroup = binding.mapChgcategories;
         Button placesButton = binding.mapBtnPlaces;
         FragmentContainerView eventContainerView = binding.mapFcvUser;
+        FragmentContainerView placeContainerView = binding.mapFcbPlace;
 
         final int textColor = placesButton.getCurrentTextColor();
 
@@ -131,10 +130,13 @@ public class MapFragment extends Fragment {
                     @Override
                     public boolean onItemSingleTapUp(final int position, final OverlayItem item) {
                         if (mapViewModel.getState().getValue() != null && mapViewModel.getState().getValue() == 0) {
+                            placeContainerView.setVisibility(View.GONE);
+                            mapViewModel.setMapSelectedEventData(position);
                             eventContainerView.setVisibility(View.VISIBLE);
-                            homeViewModel.setMapSelectedEvent(position);
                         }else{
-//                            mapViewModel.setMapSelectedPlace(position);
+                            eventContainerView.setVisibility(View.GONE);
+                            mapViewModel.setMapSelectedPlaceData(position);
+                            placeContainerView.setVisibility(View.VISIBLE);
                         }
                         return true;
                     }
@@ -153,6 +155,7 @@ public class MapFragment extends Fragment {
                 Log.d(TAG, "Single tap helper");
                 mPointsOverlay.unSetFocusedItem();
                 eventContainerView.setVisibility(View.GONE);
+                placeContainerView.setVisibility(View.GONE);
                 return false;
             }
 
@@ -176,13 +179,6 @@ public class MapFragment extends Fragment {
 
 //        startRoadManagerTask(ctx, startPoint);
 
-
-//        mapViewModel.getOverlayItems().observe(getViewLifecycleOwner(), data -> {
-//            Log.i(TAG, "onViewCreated: " + data);
-//            mPointsOverlay.removeAllItems();
-//            mPointsOverlay.addItems(data);
-//            map.invalidate();
-//        });
 
         mapViewModel.getCenter().observe(getViewLifecycleOwner(), data->{
             mLocationOverlay.disableFollowLocation();
@@ -230,20 +226,12 @@ public class MapFragment extends Fragment {
             }
         });
 
-
-
-//        homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), data->{
-//            Event event;
-//            mPointsOverlay.removeAllItems();
-//            for (int i = 0; i < data.size(); i++) {
-//                event = data.get(i);
-//                mPointsOverlay.addItem(new OverlayItem(event.getTitle(), event.getDescription(), new GeoPoint(event.getLatitude(), event.getLongitude())));
-//            }
-//            map.invalidate();
-//        });
-
         eventContainerView.setOnClickListener(v->{
-            NavDirections action = MapFragmentDirections.actionMapFragmentToEventFragment(homeViewModel.getMapSelectedEvent().getValue(), homeViewModel.getUserId());
+            NavDirections action = MapFragmentDirections.actionMapFragmentToEventFragment(mapViewModel.getMapSelectedEventData().getValue(), homeViewModel.getUserId());
+            NavHostFragment.findNavController(this).navigate(action);
+        });
+        placeContainerView.setOnClickListener(v->{
+            NavDirections action = MapFragmentDirections.actionMapFragmentToPlaceFragment(mapViewModel.getMapSelectedPlaceData().getValue(), homeViewModel.getUserId());
             NavHostFragment.findNavController(this).navigate(action);
         });
 

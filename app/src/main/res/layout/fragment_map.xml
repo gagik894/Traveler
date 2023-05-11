@@ -54,6 +54,22 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/mapFcbPlace"
+        android:name="com.together.traveler.ui.cards.PlaceCard"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="100dp"
+        android:foregroundGravity="bottom"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
+        app:layout_constraintDimensionRatio=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout="@layout/fragment_place_card" />
+
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/mapFcvUser"
         android:name="com.together.traveler.ui.cards.EventCard"
         android:layout_width="0dp"
@@ -105,6 +121,7 @@
     </LinearLayout>
 
     <HorizontalScrollView
+        android:id="@+id/horizontalScrollView2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

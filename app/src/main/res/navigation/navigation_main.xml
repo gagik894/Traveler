@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_mapFragment_to_eventFragment"
             app:destination="@id/eventFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_placeFragment"
+            app:destination="@id/placeFragment" />
     </fragment>
     <fragment
         android:id="@+id/userFragment"
@@ -85,4 +88,19 @@
         android:name="com.together.traveler.ui.main.ticket.UniversalTicketFragment"
         android:label="fragment_universal_ticket"
         tools:layout="@layout/fragment_universal_ticket" />
+    <fragment
+        android:id="@+id/placeFragment"
+        android:name="com.together.traveler.ui.place.PlaceFragment"
+        android:label="fragment_place"
+        tools:layout="@layout/fragment_place" >
+        <action
+            android:id="@+id/action_placeFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+        <argument
+            android:name="placeData"
+            app:argType="com.together.traveler.model.Place" />
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -4,10 +4,10 @@ import android.location.Address;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.together.traveler.model.Event;
 import com.together.traveler.model.MapItem;
 import com.together.traveler.model.Place;
 import com.together.traveler.requests.ApiClient;
@@ -40,12 +40,14 @@ public class MapViewModel extends ViewModel {
     private final MutableLiveData<String> search;
     private final MutableLiveData<GeoPoint> center;
     private final MutableLiveData<Integer> state;
-    private final MutableLiveData<Place> mapSelectedPlace;
+    private final MutableLiveData<Place> mapSelectedPlaceData;
+    private final MutableLiveData<Event> mapSelectedEventData;
 
     private final ArrayList<String> placeCategories;
     private final ArrayList<String> eventCategories;
     private final ArrayList<MapItem> events;
     private final ArrayList<MapItem> places;
+
 
     private String locationName;
 
@@ -58,17 +60,17 @@ public class MapViewModel extends ViewModel {
         search = new MutableLiveData<>();
         center = new MutableLiveData<>();
         state = new MutableLiveData<>();
-        mapSelectedPlace = new MutableLiveData<>();
+        mapSelectedPlaceData = new MutableLiveData<>();
+        mapSelectedEventData = new MutableLiveData<>();
 
         placeCategories = new ArrayList<>();
         eventCategories = new ArrayList<>();
         events = new ArrayList<>();
         places = new ArrayList<>();
-
         setState(0);
     }
 
-    public LiveData<ArrayList<OverlayItem>> getOverlayItems() {
+    public MutableLiveData<ArrayList<OverlayItem>> getOverlayItems() {
         return overlayItems;
     }
 
@@ -80,14 +82,27 @@ public class MapViewModel extends ViewModel {
         return categories;
     }
 
-    public LiveData<GeoPoint> getCenter() {return center;}
+    public MutableLiveData<GeoPoint> getCenter() {return center;}
 
     public MutableLiveData<Integer> getState() {
         return state;
     }
 
-    public MutableLiveData<Place> getMapSelectedPlace() {
-        return mapSelectedPlace;
+    public MutableLiveData<Place> getMapSelectedPlaceData() {
+        return mapSelectedPlaceData;
+    }
+
+    public MutableLiveData<Event> getMapSelectedEventData() {
+        return mapSelectedEventData;
+    }
+
+
+    public void setMapSelectedEventData(int position){
+        fetchEventData(events.get(position).get_id());
+    }
+
+    public void setMapSelectedPlaceData(int position){
+        fetchPlaceData(places.get(position).get_id());
     }
 
     public void setSearch(String data) {
@@ -238,4 +253,41 @@ public class MapViewModel extends ViewModel {
         });
     }
 
+    private void fetchEventData(String id){
+        apiService.getEvent(id, null).enqueue(new Callback<Event>() {
+            @Override
+            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                if (response.isSuccessful()) {
+                    Event event = response.body();
+                    mapSelectedEventData.postValue(event);
+                } else {
+                    Log.e(TAG, "fetchEvents request failed with code: " + response.code() + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                Log.e(TAG, "fetchEvents request failed with error: " + t.getMessage());
+            }
+        });
+    }
+
+    private void fetchPlaceData(String id){
+        apiService.getPlace(id, null).enqueue(new Callback<Place>() {
+            @Override
+            public void onResponse(@NonNull Call<Place> call, @NonNull Response<Place> response) {
+                if (response.isSuccessful()) {
+                    Place place = response.body();
+                    mapSelectedPlaceData.postValue(place);
+                } else {
+                    Log.e(TAG, "fetchEvents request failed with code: " + response.code() + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Place> call, @NonNull Throwable t) {
+                Log.e(TAG, "fetchEvents request failed with error: " + t.getMessage());
+            }
+        });
+    }
 }

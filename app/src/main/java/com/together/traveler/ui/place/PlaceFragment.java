@@ -3,6 +3,7 @@ package com.together.traveler.ui.place;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.together.traveler.R;
@@ -37,7 +39,7 @@ public class PlaceFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentPlaceBinding.inflate(inflater, container, false);
         placeViewModel = new ViewModelProvider(requireActivity()).get(PlaceViewModel.class);
-        return inflater.inflate(R.layout.fragment_place, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -59,9 +61,10 @@ public class PlaceFragment extends Fragment {
         final FragmentContainerView mapCard = binding.placeMap;
         int maxLines = description.getMaxLines();
 
+
         if (getArguments() != null) {
             Log.d("asd", "onCreateView: " + getArguments());
-            placeViewModel.setPlaceData(getArguments().getParcelable("cardData"));
+            placeViewModel.setPlaceData(getArguments().getParcelable("placeData"));
             placeViewModel.setUserId(getArguments().getString("userId"));
         }
 
@@ -77,16 +80,18 @@ public class PlaceFragment extends Fragment {
         });
 
         placeViewModel.getPlaceData().observe(getViewLifecycleOwner(), place -> {
+
             boolean isOpen = placeViewModel.isOpen();
             String imageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", place.getImgId());
             Log.i("asd", "onCreateView: " + imageUrl);
             Glide.with(requireContext()).load(imageUrl).into(image);
-
+            Toast.makeText(requireContext(), place.getName() + "" + isOpen, Toast.LENGTH_SHORT).show();
             name.setText(place.getName());
             location.setText(place.getLocation());
             category.setText(place.getCategory());
             description.setText(place.getDescription());
             openStatus.setText(isOpen? R.string.place_open: R.string.place_closed);
+            openStatus.setTextColor(isOpen? Color.GREEN : Color.RED);
             nextStatus.setText(isOpen? R.string.place_closes : R.string.place_opens);
             nextTime.setText(placeViewModel.getNextTime());
             phone.setText(place.getPhone());

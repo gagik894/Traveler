@@ -4,54 +4,59 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.together.traveler.databinding.FragmentEventCardBinding;
-import com.together.traveler.model.Event;
-import com.together.traveler.model.User;
-import com.together.traveler.ui.main.home.HomeViewModel;
+import com.together.traveler.ui.main.map.MapViewModel;
 
 
 public class EventCard extends Fragment {
+
     private FragmentEventCardBinding binding;
+    private MapViewModel mapViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        mapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
         binding = FragmentEventCardBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
 
-        final ImageView eventImage = binding.eventCardIvImage;
-        final TextView title = binding.eventCardTvName;
-        final TextView username = binding.eventCardTvUsername;
-        final TextView location = binding.eventCardTvLocation;
-        final TextView startDate = binding.eventCardTvDate;
-        final TextView endDate = binding.eventCardTvTime;
-        final ImageView userImage = binding.eventCardIvUserImage;
 
-        homeViewModel.getMapSelectedEvent().observe(getViewLifecycleOwner(), data -> {
-            String userImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", data.getUser().getAvatar());
-            String eventImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", data.getImgId());
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        TextView title = binding.eventCardTvName;
+        TextView username = binding.eventCardTvUsername;
+        TextView location = binding.eventCardTvLocation;
+        TextView startDate = binding.eventCardTvDate;
+        TextView endDate = binding.eventCardTvTime;
+        ImageView userImage = binding.eventCardIvUserImage;
+        ImageView eventImage = binding.eventCardIvImage;
+
+        mapViewModel.getMapSelectedEventData().observe(getViewLifecycleOwner(), event -> {
+            String userImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", event.getUser().getAvatar());
+            String eventImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", event.getImgId());
             Glide.with(requireContext()).load(userImageUrl).into(userImage);
             Glide.with(requireContext()).load(eventImageUrl).into(eventImage);
-            username.setText(data.getUser().getUsername());
-            location.setText(data.getLocation());
-            title.setText(data.getTitle());
-            startDate.setText(data.getStartDate());
-            endDate.setText(data.getEndDate());
+            username.setText(event.getUser().getUsername());
+            location.setText(event.getLocation());
+            title.setText(event.getTitle());
+            startDate.setText(event.getStartDate());
+            endDate.setText(event.getEndDate());
         });
 
-        return root;
     }
 
     @Override

@@ -11,10 +11,13 @@ import com.together.traveler.requests.ApiClient;
 import com.together.traveler.requests.ApiService;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class PlaceViewModel extends ViewModel {
+    private final String TAG = "PlaceViewModel";
+
     private final MutableLiveData<Place> placeData;
     private String userId;
     private final ApiService apiService;
@@ -26,15 +29,16 @@ public class PlaceViewModel extends ViewModel {
     }
 
     public void setPlaceData(Place placeData) {
+        Log.d(TAG, "setPlaceData: "+ placeData.getDescription());
         this.placeData.setValue(placeData);
     }
 
     public void setUserId(String userId) {
-        Log.d("asd", "setUserId: " + userId);
+        Log.d(TAG, "setUserId: " + userId);
         this.userId = userId;
     }
 
-    public LiveData<Place> getPlaceData() {
+    public MutableLiveData<Place> getPlaceData() {
         return placeData;
     }
 
@@ -44,16 +48,20 @@ public class PlaceViewModel extends ViewModel {
 
     public boolean isOpen() {
         Place place = this.placeData.getValue();
-        String[] openingTimes = new String[0];
+        String[] openingTimes = new String[7];
         if (place != null) {
             openingTimes = place.getOpeningTimes();
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime currentTime = LocalTime.now();
-        DayOfWeek currentDayOfWeek = DayOfWeek.from(currentTime);
-        dayIndex = currentDayOfWeek.getValue() - 1;
+        DayOfWeek currentDayOfWeek = LocalDate.now().getDayOfWeek();
+        int dayIndex = currentDayOfWeek.getValue() - 1;
+        if (openingTimes[dayIndex] == null) {
+            return false;
+        }
         LocalTime openingTime = LocalTime.parse(openingTimes[dayIndex], formatter);
         return currentTime.isAfter(openingTime);
+
     }
 
     public String getNextTime() {
