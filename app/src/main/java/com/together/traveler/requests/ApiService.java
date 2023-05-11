@@ -2,6 +2,7 @@ package com.together.traveler.requests;
 
 import com.together.traveler.model.CheckTicketResponse;
 import com.together.traveler.model.EventsResponse;
+import com.together.traveler.model.MapItem;
 import com.together.traveler.model.Place;
 import com.together.traveler.model.User;
 
@@ -17,13 +18,17 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
     @GET("events")
-    Call<EventsResponse> getEvents();
+    Call<EventsResponse> getEvents(@Query("fields") String fields);
 
     @GET("places")
-    Call<List<Place>> getPlaces();
+    Call<List<Place>> getPlaces(@Query("fields") String fields);
+
+    @GET("{type}")
+    Call<List<MapItem>> getMapItems(@Path("type") String type, @Query("fields") String fields);
 
     @GET("events/profile/{userId}")
     Call<User> getUser(
@@ -33,7 +38,6 @@ public interface ApiService {
     @GET("events/enroll/{eventId}")
     Call<Void> enroll(
             @Path("eventId") String eventId
-
     );
 
     @GET("events/save/{eventId}")

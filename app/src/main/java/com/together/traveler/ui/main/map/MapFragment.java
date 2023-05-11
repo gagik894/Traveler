@@ -36,6 +36,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentMapBinding;
 import com.together.traveler.model.Event;
+import com.together.traveler.model.MapItem;
 import com.together.traveler.model.Place;
 import com.together.traveler.ui.main.home.HomeViewModel;
 
@@ -133,7 +134,7 @@ public class MapFragment extends Fragment {
                             eventContainerView.setVisibility(View.VISIBLE);
                             homeViewModel.setMapSelectedEvent(position);
                         }else{
-                            mapViewModel.setMapSelectedPlace(position);
+//                            mapViewModel.setMapSelectedPlace(position);
                         }
                         return true;
                     }
@@ -176,12 +177,12 @@ public class MapFragment extends Fragment {
 //        startRoadManagerTask(ctx, startPoint);
 
 
-        mapViewModel.getOverlayItems().observe(getViewLifecycleOwner(), data -> {
-            Log.i(TAG, "onViewCreated: " + data);
-            mPointsOverlay.removeAllItems();
-            mPointsOverlay.addItems(data);
-            map.invalidate();
-        });
+//        mapViewModel.getOverlayItems().observe(getViewLifecycleOwner(), data -> {
+//            Log.i(TAG, "onViewCreated: " + data);
+//            mPointsOverlay.removeAllItems();
+//            mPointsOverlay.addItems(data);
+//            map.invalidate();
+//        });
 
         mapViewModel.getCenter().observe(getViewLifecycleOwner(), data->{
             mLocationOverlay.disableFollowLocation();
@@ -205,12 +206,12 @@ public class MapFragment extends Fragment {
             }
         });
 
-        mapViewModel.getPlaces().observe(getViewLifecycleOwner(), places -> {
-            Place place;
+        mapViewModel.getMapItems().observe(getViewLifecycleOwner(), places -> {
+            MapItem mapItem;
             mPointsOverlay.removeAllItems();
             for (int i = 0; i < places.size(); i++) {
-                place = places.get(i);
-                mPointsOverlay.addItem(new OverlayItem(place.getName(), place.getDescription(), new GeoPoint(place.getLatitude(), place.getLongitude())));
+                mapItem = places.get(i);
+                mPointsOverlay.addItem(new OverlayItem("", "", new GeoPoint(mapItem.getLatitude(), mapItem.getLongitude())));
             }
             map.invalidate();
         });
@@ -229,15 +230,17 @@ public class MapFragment extends Fragment {
             }
         });
 
-        homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), data->{
-            Event event;
-            mPointsOverlay.removeAllItems();
-            for (int i = 0; i < data.size(); i++) {
-                event = data.get(i);
-                mPointsOverlay.addItem(new OverlayItem(event.getTitle(), event.getDescription(), new GeoPoint(event.getLatitude(), event.getLongitude())));
-            }
-            map.invalidate();
-        });
+
+
+//        homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), data->{
+//            Event event;
+//            mPointsOverlay.removeAllItems();
+//            for (int i = 0; i < data.size(); i++) {
+//                event = data.get(i);
+//                mPointsOverlay.addItem(new OverlayItem(event.getTitle(), event.getDescription(), new GeoPoint(event.getLatitude(), event.getLongitude())));
+//            }
+//            map.invalidate();
+//        });
 
         eventContainerView.setOnClickListener(v->{
             NavDirections action = MapFragmentDirections.actionMapFragmentToEventFragment(homeViewModel.getMapSelectedEvent().getValue(), homeViewModel.getUserId());
@@ -246,11 +249,9 @@ public class MapFragment extends Fragment {
 
         eventsButton.setOnClickListener(v -> {
             mapViewModel.setState(0);
-            homeViewModel.fetchEvents();
         });
         placesButton.setOnClickListener(v -> {
             mapViewModel.setState(1);
-            mapViewModel.fetchPlaces();
         });
 
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};

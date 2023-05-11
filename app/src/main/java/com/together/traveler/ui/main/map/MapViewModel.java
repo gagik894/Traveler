@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.together.traveler.model.MapItem;
 import com.together.traveler.model.Place;
 import com.together.traveler.requests.ApiClient;
 import com.together.traveler.requests.ApiService;
@@ -30,34 +31,63 @@ import retrofit2.Response;
 public class MapViewModel extends ViewModel {
     private final String TAG = "MapViewModel";
 
-    private final MutableLiveData<ArrayList<String>> categories;
-
     public static final String MY_USER_AGENT = "Traveler";
+    private final ApiService apiService;
+
     private final MutableLiveData<ArrayList<OverlayItem>> overlayItems;
-    private final MutableLiveData<ArrayList<Place>> places;
+    private final MutableLiveData<ArrayList<MapItem>> mapItems;
+    private final MutableLiveData<ArrayList<String>> categories;
     private final MutableLiveData<String> search;
     private final MutableLiveData<GeoPoint> center;
     private final MutableLiveData<Integer> state;
-    private final ApiService apiService;
-    private String locationName;
+    private final MutableLiveData<Place> mapSelectedPlace;
 
     private final ArrayList<String> placeCategories;
     private final ArrayList<String> eventCategories;
+    private final ArrayList<MapItem> events;
+    private final ArrayList<MapItem> places;
 
-    private final MutableLiveData<Place> mapSelectedPlace;
+    private String locationName;
 
     public MapViewModel() {
-        placeCategories = new ArrayList<>();
-        eventCategories = new ArrayList<>();
-        categories = new MutableLiveData<>(new ArrayList<>());
-        mapSelectedPlace = new MutableLiveData<>();
+        apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+
         overlayItems = new MutableLiveData<>(new ArrayList<>());
+        mapItems = new MutableLiveData<>(new ArrayList<>());
+        categories = new MutableLiveData<>(new ArrayList<>());
         search = new MutableLiveData<>();
         center = new MutableLiveData<>();
-        places = new MutableLiveData<>();
         state = new MutableLiveData<>();
-        apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+        mapSelectedPlace = new MutableLiveData<>();
+
+        placeCategories = new ArrayList<>();
+        eventCategories = new ArrayList<>();
+        events = new ArrayList<>();
+        places = new ArrayList<>();
+
         setState(0);
+    }
+
+    public LiveData<ArrayList<OverlayItem>> getOverlayItems() {
+        return overlayItems;
+    }
+
+    public MutableLiveData<ArrayList<MapItem>> getMapItems() {
+        return mapItems;
+    }
+
+    public MutableLiveData<ArrayList<String>> getCategories() {
+        return categories;
+    }
+
+    public LiveData<GeoPoint> getCenter() {return center;}
+
+    public MutableLiveData<Integer> getState() {
+        return state;
+    }
+
+    public MutableLiveData<Place> getMapSelectedPlace() {
+        return mapSelectedPlace;
     }
 
     public void setSearch(String data) {
@@ -65,22 +95,35 @@ public class MapViewModel extends ViewModel {
         getLocationFromName(data);
     }
 
-    public void setMapSelectedPlace(int position){
-        this.mapSelectedPlace.setValue(Objects.requireNonNull(this.getPlaces().getValue()).get(position));
+    public void setCenter(GeoPoint center){
+        this.center.setValue(center);
     }
 
     public void setState(Integer state){
-        if (eventCategories.size() == 0) {
-            fetchCategories("events");
-            fetchCategories("places");
-        }
-        if (state == 0){
-            categories.setValue(eventCategories);
+        if (state == 0) {
+            if (eventCategories.size() == 0){
+                fetchMapItems("events");
+                fetchCategories("events");
+            }else{
+                categories.setValue(eventCategories);
+                mapItems.setValue(events);
+            }
         }else{
-            categories.setValue(placeCategories);
+            if (placeCategories.size() == 0){
+                fetchMapItems("places");
+                fetchCategories("places");
+            }else{
+                categories.setValue(placeCategories);
+                mapItems.setValue(places);
+            }
         }
+
         this.state.setValue(state);
     }
+
+//    public void setMapSelectedPlace(int position){
+//        this.mapSelectedPlace.setValue(Objects.requireNonNull(places.get(position));
+//    }
 
     public void setItem(GeoPoint p){
         OverlayItem overlayItem = new OverlayItem(" ", "", new GeoPoint(p.getLatitude(), p.getLongitude()));
@@ -90,34 +133,6 @@ public class MapViewModel extends ViewModel {
         overlayItems.postValue(overlayItems.getValue());
     }
 
-    public void setCenter(GeoPoint center){
-        this.center.setValue(center);
-    }
-
-    public MutableLiveData<Place> getMapSelectedPlace() {
-        return mapSelectedPlace;
-    }
-
-    public MutableLiveData<ArrayList<String>> getCategories() {
-        return categories;
-    }
-
-    public LiveData<ArrayList<OverlayItem>> getOverlayItems() {
-        return overlayItems;
-    }
-
-    public MutableLiveData<Integer> getState() {
-        return state;
-    }
-
-    public LiveData<GeoPoint> getCenter() {
-        Log.d("asd", "getCenter: " + center.getValue());
-        return center;
-    }
-
-    public MutableLiveData<ArrayList<Place>> getPlaces() {
-        return places;
-    }
 
     public String getLocationName() {
         return locationName;
@@ -169,28 +184,36 @@ public class MapViewModel extends ViewModel {
         });
     }
 
-    public void fetchPlaces(){
-        apiService.getPlaces().enqueue(new Callback<List<Place>>() {
+
+    private void fetchMapItems(String type){
+        apiService.getMapItems(type,"longitude,latitude,category").enqueue(new Callback<List<MapItem>>() {
             @Override
-            public void onResponse(@NonNull Call<List<Place>> call, @NonNull Response<List<Place>> response) {
+            public void onResponse(@NonNull Call<List<MapItem>> call, @NonNull Response<List<MapItem>> response) {
                 if (response.isSuccessful()) {
                     Log.d("UserViewModel", "onResponse: " + response.body());
-                    List<Place> placesRes = response.body();
+                    List<MapItem> placesRes = response.body();
 
-                    places.postValue((ArrayList<Place>) placesRes);
+                    if (placesRes != null){
+                        if (Objects.equals(type, "events")) {
+                            events.addAll(placesRes);
+                        }else{
+                            places.addAll(placesRes);
+                        }
+                    }
+                    mapItems.postValue((ArrayList<MapItem>) placesRes);
                 } else {
                     Log.e(TAG, "fetchEvents request failed with code: " + response.code() +response.body());
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Place>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<MapItem>> call, @NonNull Throwable t) {
                 Log.e(TAG, "fetchEvents request failed with error: " + t.getMessage());
             }
         });
     }
 
-    public void fetchCategories(String type) {
+    private void fetchCategories(String type) {
         apiService.getCategories(type).enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
@@ -204,7 +227,7 @@ public class MapViewModel extends ViewModel {
                             placeCategories.addAll(categoriesResponse);
                         }
                     }
-                    categories.setValue((ArrayList<String>) categoriesResponse);
+                    categories.postValue((ArrayList<String>) categoriesResponse);
                 }
             }
 

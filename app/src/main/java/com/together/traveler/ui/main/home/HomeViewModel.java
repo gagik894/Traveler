@@ -74,7 +74,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void fetchEvents() {
-        apiService.getEvents().enqueue(new Callback<EventsResponse>() {
+        apiService.getEvents(null).enqueue(new Callback<EventsResponse>() {
             @Override
             public void onResponse(@NonNull Call<EventsResponse> call, @NonNull Response<EventsResponse> response) {
                 if (response.isSuccessful()) {
