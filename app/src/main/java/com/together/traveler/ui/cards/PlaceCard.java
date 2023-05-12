@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,13 +15,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.together.traveler.R;
-import com.together.traveler.databinding.FragmentEventCardBinding;
 import com.together.traveler.databinding.FragmentPlaceCardBinding;
-import com.together.traveler.ui.main.home.HomeViewModel;
 import com.together.traveler.ui.main.map.MapViewModel;
 import com.together.traveler.ui.place.PlaceViewModel;
-
-import org.osmdroid.views.MapView;
 
 
 public class PlaceCard extends Fragment {
@@ -59,7 +54,7 @@ public class PlaceCard extends Fragment {
             String eventImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", data.getImgId());
             Glide.with(requireContext()).load(eventImageUrl).into(eventImage);
             name.setText(data.getName());
-            phone.setText(data.getLocation());
+            phone.setText(data.getPhone());
             category.setText(data.getCategory());
             currentStatus.setText(isOpen? R.string.place_open: R.string.place_closed);
             currentStatus.setTextColor(isOpen? Color.GREEN : Color.RED);

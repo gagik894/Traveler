@@ -18,11 +18,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.concurrent.futures.CallbackToFutureAdapter;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -47,9 +49,12 @@ import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
@@ -131,11 +136,11 @@ public class MapFragment extends Fragment {
                     public boolean onItemSingleTapUp(final int position, final OverlayItem item) {
                         if (mapViewModel.getState().getValue() != null && mapViewModel.getState().getValue() == 0) {
                             placeContainerView.setVisibility(View.GONE);
-                            mapViewModel.setMapSelectedEventData(position);
+//                            mapViewModel.setMapSelectedEventData(position);
                             eventContainerView.setVisibility(View.VISIBLE);
                         }else{
                             eventContainerView.setVisibility(View.GONE);
-                            mapViewModel.setMapSelectedPlaceData(position);
+//                            mapViewModel.setMapSelectedPlaceData(position);
                             placeContainerView.setVisibility(View.VISIBLE);
                         }
                         return true;
@@ -166,6 +171,11 @@ public class MapFragment extends Fragment {
             }
 
         };
+
+        FolderOverlay eventMarkers = new FolderOverlay(ctx);
+        FolderOverlay placeMarkers = new FolderOverlay(ctx);
+        map.getOverlays().add(eventMarkers);
+        map.getOverlays().add(placeMarkers);
 
         MapEventsOverlay mEventOverlay = new MapEventsOverlay(ctx, mReceive);
         map.getOverlays().add(mLocationOverlay);
@@ -203,11 +213,24 @@ public class MapFragment extends Fragment {
         });
 
         mapViewModel.getMapItems().observe(getViewLifecycleOwner(), places -> {
-            MapItem mapItem;
-            mPointsOverlay.removeAllItems();
-            for (int i = 0; i < places.size(); i++) {
-                mapItem = places.get(i);
-                mPointsOverlay.addItem(new OverlayItem("", "", new GeoPoint(mapItem.getLatitude(), mapItem.getLongitude())));
+            eventMarkers.getItems().clear();
+            for (MapItem item: places){
+                Marker poiMarker = new Marker(map);
+                poiMarker.setTitle(item.getCategory());
+                poiMarker.setPosition(new GeoPoint(item.getLatitude(), item.getLongitude()));
+                poiMarker.setOnMarkerClickListener((marker, mapView) -> {
+                    if (mapViewModel.getState().getValue() != null && mapViewModel.getState().getValue() == 0) {
+                        placeContainerView.setVisibility(View.GONE);
+                        mapViewModel.setMapSelectedEventData(item.get_id());
+                        eventContainerView.setVisibility(View.VISIBLE);
+                    }else{
+                        eventContainerView.setVisibility(View.GONE);
+                        mapViewModel.setMapSelectedPlaceData(item.get_id());
+                        placeContainerView.setVisibility(View.VISIBLE);
+                    }
+                    return true;
+                });
+                eventMarkers.add(poiMarker);
             }
             map.invalidate();
         });

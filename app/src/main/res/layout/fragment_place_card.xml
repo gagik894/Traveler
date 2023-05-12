@@ -115,6 +115,7 @@
                 android:id="@+id/placeCardTvPhone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:autoLink="phone"
                 android:text="phone"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView"
                 app:layout_constraintStart_toEndOf="@+id/imageView"

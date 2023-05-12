@@ -97,12 +97,12 @@ public class MapViewModel extends ViewModel {
     }
 
 
-    public void setMapSelectedEventData(int position){
-        fetchEventData(events.get(position).get_id());
+    public void setMapSelectedEventData(String _id){
+        fetchEventData(_id);
     }
 
-    public void setMapSelectedPlaceData(int position){
-        fetchPlaceData(places.get(position).get_id());
+    public void setMapSelectedPlaceData(String _id){
+        fetchPlaceData(_id);
     }
 
     public void setSearch(String data) {
