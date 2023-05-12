@@ -77,6 +77,64 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:text="@string/add_phone"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/addPlaceEtPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:autofillHints=""
+            android:backgroundTint="@color/secondary_color"
+            android:hint="@string/add_enter_phone"
+            android:inputType="phone"
+            android:minHeight="48dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/add_web_page"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/addPlaceEtUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:autofillHints=""
+            android:backgroundTint="@color/secondary_color"
+            android:hint="@string/add_enter_url"
+            android:inputType="textUri"
+            android:minHeight="48dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/add_times"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/addPlaceEtTimes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:autofillHints=""
+            android:backgroundTint="@color/secondary_color"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/add_select_times"
+            android:inputType="textUri"
+            android:minHeight="48dp"
+            android:textSize="16sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="@string/add_select_tags"
             android:textSize="16sp" />
 

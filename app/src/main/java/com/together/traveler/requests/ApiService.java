@@ -84,6 +84,10 @@ public interface ApiService {
             @Part("location") RequestBody location,
             @Part("latitude") RequestBody latitude,
             @Part("longitude") RequestBody longitude,
-            @Part("category") RequestBody requestBodyCategory
+            @Part("category") RequestBody category,
+            @Part("phone") RequestBody phone,
+            @Part("url") RequestBody url,
+            @Part List<MultipartBody.Part> openingTimes,
+            @Part List<MultipartBody.Part> closingTimes
     );
 }

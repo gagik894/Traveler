@@ -49,20 +49,29 @@ public class PlaceViewModel extends ViewModel {
     public boolean isOpen() {
         Place place = this.placeData.getValue();
         String[] openingTimes = new String[7];
+        String[] closingTimes = new String[7];
         if (place != null) {
             openingTimes = place.getOpeningTimes();
+            closingTimes = place.getClosingTimes();
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m");
         LocalTime currentTime = LocalTime.now();
         DayOfWeek currentDayOfWeek = LocalDate.now().getDayOfWeek();
         int dayIndex = currentDayOfWeek.getValue() - 1;
-        if (openingTimes[dayIndex] == null) {
+
+        if (openingTimes[dayIndex] == null || closingTimes[dayIndex] == null) {
             return false;
         }
+
         LocalTime openingTime = LocalTime.parse(openingTimes[dayIndex], formatter);
-        return currentTime.isAfter(openingTime);
+        LocalTime closingTime = LocalTime.parse(closingTimes[dayIndex], formatter);
+
+        return currentTime.isAfter(openingTime) && currentTime.isBefore(closingTime);
+
 
     }
+
 
     public String getNextTime() {
         Place place = this.placeData.getValue();

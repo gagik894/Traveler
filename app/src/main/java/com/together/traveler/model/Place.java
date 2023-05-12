@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-
 public class Place implements Parcelable {
     private String name;
     private String location;
@@ -13,7 +11,7 @@ public class Place implements Parcelable {
     private String _id;
     private String description;
     private String phone;
-    private String link;
+    private String url;
     private Double longitude;
     private Double latitude;
     private float rating;
@@ -23,6 +21,22 @@ public class Place implements Parcelable {
     private boolean userOwned;
     private User userId;
     private String category;
+
+    public Place(){
+        this.name = "";
+        this.location = "";
+        this.latitude = null;
+        this.longitude = null;
+        this.description = "";
+        this.imageBitmap = null;
+        this.url = "";
+        this.phone = "";
+        this.openingTimes = new String[7];
+        this.closingTimes = new String[7];
+        this.category = "";
+        this.imgId = "";
+        this._id = "";
+    }
 
     public String getName() {
         return name;
@@ -72,12 +86,12 @@ public class Place implements Parcelable {
         this.phone = phone;
     }
 
-    public String getLink() {
-        return link;
+    public String getUrl() {
+        return url;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Double getLongitude() {
@@ -166,7 +180,7 @@ public class Place implements Parcelable {
         dest.writeString(this._id);
         dest.writeString(this.description);
         dest.writeString(this.phone);
-        dest.writeString(this.link);
+        dest.writeString(this.url);
         dest.writeValue(this.longitude);
         dest.writeValue(this.latitude);
         dest.writeFloat(this.rating);
@@ -185,7 +199,7 @@ public class Place implements Parcelable {
         this._id = source.readString();
         this.description = source.readString();
         this.phone = source.readString();
-        this.link = source.readString();
+        this.url = source.readString();
         this.longitude = (Double) source.readValue(Double.class.getClassLoader());
         this.latitude = (Double) source.readValue(Double.class.getClassLoader());
         this.rating = source.readFloat();
@@ -197,9 +211,6 @@ public class Place implements Parcelable {
         this.category = source.readString();
     }
 
-    public Place() {
-    }
-
     protected Place(Parcel in) {
         this.name = in.readString();
         this.location = in.readString();
@@ -207,7 +218,7 @@ public class Place implements Parcelable {
         this._id = in.readString();
         this.description = in.readString();
         this.phone = in.readString();
-        this.link = in.readString();
+        this.url = in.readString();
         this.longitude = (Double) in.readValue(Double.class.getClassLoader());
         this.latitude = (Double) in.readValue(Double.class.getClassLoader());
         this.rating = in.readFloat();

@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,18 +48,27 @@ public class AddPlaceViewModel extends ViewModel {
     }
 
 
-    public void dataChanged(String name, String location, String description) {
+    public void dataChanged(String name, String location, String description, String phone, String url) {
         Place current = data.getValue();
         Objects.requireNonNull(current).setName(name);
-        Objects.requireNonNull(current).setLocation(location);
-        Objects.requireNonNull(current).setDescription(description);
+        current.setLocation(location);
+        current.setDescription(description);
+        current.setPhone(phone);
+        current.setUrl(url);
         checkValid(current);
     }
-
 
     public void setEventImage(Bitmap image) {
         Place current = data.getValue();
         Objects.requireNonNull(current).setImageBitmap(image);
+        this.data.setValue(current);
+        checkValid(current);
+    }
+
+    public void setEventOpenTimes(String[] openingTimes, String[] closingTimes) {
+        Place current = data.getValue();
+        Objects.requireNonNull(current).setOpeningTimes(openingTimes);
+        Objects.requireNonNull(current).setClosingTimes(closingTimes);
         this.data.setValue(current);
         checkValid(current);
     }
@@ -79,16 +89,71 @@ public class AddPlaceViewModel extends ViewModel {
         checkValid(current);
     }
 
+
+
+    public MutableLiveData<ArrayList<String>> getCategories() {
+        return categories;
+    }
+
+    public LiveData<Place> getData() {
+        return data;
+    }
+
+    public MutableLiveData<Boolean> isValid() {
+        return isValid;
+    }
+
+    public boolean checkOpenTimes(Place current) {
+        return !Arrays.asList(current.getOpeningTimes()).contains(null)
+                && !Arrays.asList(current.getClosingTimes()).contains(null);
+    }
+
+    private void checkValid(Place current) {
+        isValid.setValue(!Objects.equals(current.getName(), "") && !Objects.equals(current.getLocation(), "")
+                && !Objects.equals(current.getDescription(), "") && !Objects.equals(current.getCategory(), "")
+                && !Objects.equals(current.getUrl(), "") && !Objects.equals(current.getPhone(), "")
+                && current.getImageBitmap() != null && checkOpenTimes(current));
+    }
+
+    private File saveBitmapToFile(Bitmap bitmap) {
+        Context context = AppContext.getContext();
+        File file = new File(context.getCacheDir(), "image.jpg");
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    private void fetchCategories() {
+        apiService.getCategories("places").enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
+                if (response.isSuccessful()) {
+                    List<String> categoriesResponse = response.body();
+                    categories.setValue((ArrayList<String>) categoriesResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
+                // Handle the error
+            }
+        });
+    }
+
     public void create() {
         Place event = data.getValue();
         if (event == null) {
-            // Handle error, event is null
             return;
         }
 
         File file = saveBitmapToFile(event.getImageBitmap());
         if (!file.exists()) {
-            // Handle error, file does not exist
             return;
         }
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
@@ -99,6 +164,24 @@ public class AddPlaceViewModel extends ViewModel {
         RequestBody requestBodyLatitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getLatitude()));
         RequestBody requestBodyLongitude = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getLongitude()));
         RequestBody requestBodyCategory = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getCategory()));
+        RequestBody requestBodyPhone = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getPhone()));
+        RequestBody requestBodyUrl= RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getUrl()));
+
+        String[] openingTimes = event.getOpeningTimes();
+        String[] closingTimes = event.getClosingTimes();
+
+        List<MultipartBody.Part> openingTimeParts = new ArrayList<>();
+        for (String openingTime : openingTimes) {
+            RequestBody openingTimeBody = RequestBody.create(MediaType.parse("text/plain"), openingTime);
+            MultipartBody.Part openingTimePart = MultipartBody.Part.createFormData("openingTimes[]", openingTime);
+            openingTimeParts.add(openingTimePart);
+        }
+        List<MultipartBody.Part> closingTimeParts = new ArrayList<>();
+        for (String closingTime : closingTimes) {
+            RequestBody closingTimeBody = RequestBody.create(MediaType.parse("text/plain"), closingTime);
+            MultipartBody.Part closingTimePart = MultipartBody.Part.createFormData("closingTimes[]", closingTime);
+            closingTimeParts.add(closingTimePart);
+        }
 
         if (apiService == null) {
             // Handle error, ApiService is null
@@ -112,7 +195,11 @@ public class AddPlaceViewModel extends ViewModel {
                 requestBodyLocation,
                 requestBodyLatitude,
                 requestBodyLongitude,
-                requestBodyCategory
+                requestBodyCategory,
+                requestBodyPhone,
+                requestBodyUrl,
+                openingTimeParts,
+                closingTimeParts
         );
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -133,52 +220,5 @@ public class AddPlaceViewModel extends ViewModel {
         });
     }
 
-    public MutableLiveData<ArrayList<String>> getCategories() {
-        return categories;
-    }
 
-    public LiveData<Place> getData() {
-        return data;
-    }
-
-    public MutableLiveData<Boolean> isValid() {
-        return isValid;
-    }
-
-    private void checkValid(Place current) {
-        isValid.setValue(!Objects.equals(current.getName(), "") && !Objects.equals(current.getLocation(), "")
-                && !Objects.equals(current.getDescription(), "") && !Objects.equals(current.getCategory(), "")
-                && current.getImageBitmap() != null);
-    }
-
-    private File saveBitmapToFile(Bitmap bitmap) {
-        Context context = AppContext.getContext();
-        File file = new File(context.getCacheDir(), "image.jpg");
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return file;
-    }
-
-    private void fetchCategories(){
-        apiService.getCategories("places").enqueue(new Callback<List<String>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
-                if (response.isSuccessful()) {
-                    List<String> categoriesResponse = response.body();
-                    categories.setValue((ArrayList<String>) categoriesResponse);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
-                // Handle the error
-            }
-        });
-    }
 }

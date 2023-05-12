@@ -156,7 +156,6 @@ public class MapDialog extends DialogFragment {
             mapController.animateTo(location);
             map.invalidate();
             Log.i(TAG, "onViewCreated: " + mapViewModel.getLocationName());
-//            Toast.makeText(ctx, mapViewModel.getLocationName().toString(), Toast.LENGTH_SHORT).show();
             if (listener != null && mapViewModel.getOverlayItems().getValue() != null) {
                 listener.onDialogResult(mapViewModel.getLocationName(), location);
             }

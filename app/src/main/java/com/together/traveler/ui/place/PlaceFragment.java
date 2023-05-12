@@ -25,10 +25,6 @@ import com.bumptech.glide.Glide;
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentPlaceBinding;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-
 public class PlaceFragment extends Fragment {
 
     private FragmentPlaceBinding binding;
@@ -95,7 +91,7 @@ public class PlaceFragment extends Fragment {
             nextStatus.setText(isOpen? R.string.place_closes : R.string.place_opens);
             nextTime.setText(placeViewModel.getNextTime());
             phone.setText(place.getPhone());
-            link.setText(place.getLink());
+            link.setText(place.getUrl());
 
             ViewTreeObserver vto = description.getViewTreeObserver();
             vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

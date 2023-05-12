@@ -61,6 +61,10 @@
     <string name="place_about">Description</string>
     <string name="place_location">Location</string>
     <string name="place_rate">Rate this place</string>
+    <string name="place_open">Open</string>
+    <string name="place_closed">Closed</string>
+    <string name="place_closes">Closes</string>
+    <string name="place_opens">Opens</string>
 
     <!--    event card-->
     <string name="event_card_image">Card event image</string>
@@ -104,6 +108,12 @@
     <string name="add_enter_tags">Enter a tag</string>
     <string name="add_submit">Submit</string>
     <string name="add_add_place">Add place</string>
+    <string name="add_phone">Phone</string>
+    <string name="add_enter_phone">Enter phone number</string>
+    <string name="add_web_page">Web page</string>
+    <string name="add_times">Open times</string>
+    <string name="add_select_times">Select open times</string>
+    <string name="add_enter_url">Enter web page\'s url</string>
 
     <!--    universal ticket-->
     <string name="utk_note">This ticket grants you access to all enrolled events.</string>
@@ -119,10 +129,19 @@
     <string name="scroll_up">Scroll up</string>
     <string name="pause_or_resume">Pause or Resume</string>
     <string name="restart">Restart</string>
-    <string name="place_open">Open</string>
-    <string name="place_closed">Closed</string>
-    <string name="place_closes">Closes</string>
-    <string name="place_opens">Opens</string>
+
+
+    <string name="sunday">Sunday</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="select_times_heading">Select open times</string>
+    <string name="select_opening_time">From</string>
+    <string name="select_closing_time">To</string>
+    <string name="add_select_all_open_times">Select all open times!</string>
 
 
 </resources>

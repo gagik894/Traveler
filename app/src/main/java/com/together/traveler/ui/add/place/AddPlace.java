@@ -4,7 +4,6 @@ import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -32,25 +31,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentAddPlaceBinding;
+import com.together.traveler.ui.add.place.times.SelectTimesDialog;
 import com.together.traveler.ui.main.MainActivity;
 import com.together.traveler.ui.main.map.MapDialog;
 import com.yalantis.ucrop.UCrop;
 
 import org.osmdroid.util.GeoPoint;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
-public class AddPlace extends Fragment implements MapDialog.MyDialogListener{
+public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogListener, MapDialog.MyDialogListener {
     private final String TAG = "AddPlace";
 
     private AddPlaceViewModel mViewModel;
     private EditText name;
     private EditText location;
     private EditText description;
+    private EditText phone;
+    private EditText url;
+    private EditText times;
     private ImageButton eventImage;
     private static final int SELECT_FILE = 202;
     private ArrayAdapter<String> adapter;
@@ -114,6 +119,9 @@ public class AddPlace extends Fragment implements MapDialog.MyDialogListener{
         location = binding.addPlaceEtLocation;
         description = binding.addPlaceEtDescription;
         eventImage = binding.addPlaceIbEventImage;
+        phone = binding.addPlaceEtPhone;
+        url = binding.addPlaceEtUrl;
+        times = binding.addPlaceEtTimes;
 
         adapter = new ArrayAdapter<>(
                 requireActivity(), android.R.layout.simple_spinner_item,
@@ -125,9 +133,15 @@ public class AddPlace extends Fragment implements MapDialog.MyDialogListener{
         name.addTextChangedListener(afterTextChangedListener);
         location.addTextChangedListener(afterTextChangedListener);
         description.addTextChangedListener(afterTextChangedListener);
+        phone.addTextChangedListener(afterTextChangedListener);
+        url.addTextChangedListener(afterTextChangedListener);
+        times.addTextChangedListener(afterTextChangedListener);
+
 
         location.setOnClickListener(this::showPopupView);
         eventImage.setOnClickListener(v -> selectImage());
+        times.setOnClickListener(this::showTimesPopupView);
+
         btnCreate.setOnClickListener(v -> {
             mViewModel.create();
             Intent switchActivityIntent = new Intent(requireActivity(), MainActivity.class);
@@ -159,31 +173,14 @@ public class AddPlace extends Fragment implements MapDialog.MyDialogListener{
         return root;
     }
 
-
-    @Override
-    public void onDialogResult(String result, GeoPoint geoPoint) {
-        Log.i(TAG, "onDialogResult: " + geoPoint.getLongitude());
-        location.setText(result);
-        mViewModel.setEventLocation(geoPoint.getLatitude(), geoPoint.getLongitude());
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i("asd", "onActivityResult: " + requestCode + resultCode + data);
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_FILE) {
-                Bitmap selectedImageBitmap = null;
                 Uri selectedImageUri = data.getData();
-                try {
-                    selectedImageBitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), selectedImageUri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (selectedImageBitmap != null) {
-                    Uri imageUri = getImageUri(requireContext(), selectedImageBitmap);
-                    startImageCropping(imageUri);
-                }
+                startImageCropping(selectedImageUri);
             } else {
                 Log.d(TAG, "onActivityResult: else");
             }
@@ -200,14 +197,6 @@ public class AddPlace extends Fragment implements MapDialog.MyDialogListener{
         imageCroppingActivityResultLauncher.launch(cropIntent);
     }
 
-    private Uri getImageUri(Context context, Bitmap bitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
-        return Uri.parse(path);
-    }
-
-
     private void selectImage() {
         String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
         requestPermissionLauncher.launch(permissions);
@@ -221,6 +210,11 @@ public class AddPlace extends Fragment implements MapDialog.MyDialogListener{
         popupFragment.show(getChildFragmentManager(), "popup_map");
     }
 
+    private void showTimesPopupView(View anchorView) {
+        SelectTimesDialog popupFragment = new SelectTimesDialog();
+        popupFragment.setListener(this);
+        popupFragment.show(getChildFragmentManager(), "popup_times");
+    }
     private final TextWatcher afterTextChangedListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -234,7 +228,28 @@ public class AddPlace extends Fragment implements MapDialog.MyDialogListener{
 
         @Override
         public void afterTextChanged(Editable s) {
-            mViewModel.dataChanged(name.getText().toString(), location.getText().toString(), description.getText().toString());
+            mViewModel.dataChanged(name.getText().toString(), location.getText().toString(), description.getText().toString(), phone.getText().toString(), url.getText().toString());
         }
     };
+
+    @Override
+    public void onDialogResult(String result, GeoPoint geoPoint) {
+        Log.i(TAG, "onDialogResult: " + geoPoint.getLongitude());
+        location.setText(result);
+        mViewModel.setEventLocation(geoPoint.getLatitude(), geoPoint.getLongitude());
+    }
+
+    @Override
+    public void onDialogResult(String[] openingTimes, String[] closingTimes) {
+        Log.i(TAG, "onDialogResult: " + Arrays.toString(openingTimes));
+        mViewModel.setEventOpenTimes(openingTimes, closingTimes);
+        boolean openTimesAdded = mViewModel.checkOpenTimes(Objects.requireNonNull(mViewModel.getData().getValue()));
+        if (openTimesAdded){
+            times.setText(String.format("%s, %s - %s, ...", getString(R.string.monday), openingTimes[0], closingTimes[0]));
+        }else{
+            times.setText(R.string.add_select_all_open_times);
+        }
+
+
+    }
 }
