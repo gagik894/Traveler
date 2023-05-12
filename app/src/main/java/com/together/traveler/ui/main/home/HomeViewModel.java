@@ -2,6 +2,7 @@ package com.together.traveler.ui.main.home;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Filter;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -27,6 +28,7 @@ public class HomeViewModel extends ViewModel {
     private final String TAG = "HomeViewModel";
 
     private final ArrayList<Event> allEvents;
+    private final ArrayList<Event> categoryFilteredEvents;
     private final MutableLiveData<ArrayList<Event>> filteredEvents;
     private final MutableLiveData<ArrayList<String>> categories;
     private final MutableLiveData<List<Integer>> selectedCategories;
@@ -34,10 +36,14 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<Event> mapSelectedEvent;
     private final MutableLiveData<Boolean> categoriesVisibility;
     private String userId;
+    private CharSequence constraint;
     private final ApiService apiService;
 
+
     public HomeViewModel() {
+        constraint = "";
         allEvents = new ArrayList<>();
+        categoryFilteredEvents = new ArrayList<>();
         filteredEvents = new MutableLiveData<>(new ArrayList<>());
         mapSelectedEvent = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
@@ -154,7 +160,9 @@ public class HomeViewModel extends ViewModel {
         if (allEvents != null) {
             List<Integer> selectedCategories = this.selectedCategories.getValue();
             if (selectedCategories == null || selectedCategories.size() == 0) {
-                HomeViewModel.this.filteredEvents.postValue(allEvents);
+                HomeViewModel.this.categoryFilteredEvents.clear();
+                HomeViewModel.this.categoryFilteredEvents.addAll(allEvents);
+                HomeViewModel.this.filterBySearchAndTags(this.constraint);
                 return;
             }
 
@@ -172,11 +180,49 @@ public class HomeViewModel extends ViewModel {
                     }
                 }
 
-                HomeViewModel.this.filteredEvents.postValue(filteredEvents);
+//                HomeViewModel.this.filteredEvents.postValue(filteredEvents);
+
+                HomeViewModel.this.categoryFilteredEvents.clear();
+                HomeViewModel.this.categoryFilteredEvents.addAll(filteredEvents);
+                HomeViewModel.this.filterBySearchAndTags(this.constraint);
+
             });
 
             executorService.shutdown();
         }
     }
 
+    public void filterBySearchAndTags(CharSequence constraint) {
+        this.constraint = constraint;
+        ArrayList<Event> allEvents = this.categoryFilteredEvents;
+        if (allEvents != null) {
+            if (constraint == null || constraint.length() == 0) {
+                HomeViewModel.this.filteredEvents.postValue(allEvents);
+                return;
+            }
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.submit(() -> {
+                ArrayList<Event> filteredEvents = new ArrayList<>();
+
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (Event event : allEvents) {
+                    if (event.getTitle().toLowerCase().contains(filterPattern)) {
+                        filteredEvents.add(event);
+                    }else{
+                        for (String tag: event.getTags()){
+                            if (tag.contains(filterPattern)){
+                                filteredEvents.add(event);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                HomeViewModel.this.filteredEvents.postValue(filteredEvents);
+            });
+
+            executorService.shutdown();
+        }
+    }
 }

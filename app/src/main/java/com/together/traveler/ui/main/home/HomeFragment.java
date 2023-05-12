@@ -4,14 +4,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
@@ -31,7 +37,7 @@ import com.together.traveler.model.Event;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment{
     private final String TAG = "HomeFragment";
 
     private FragmentHomeBinding binding;
@@ -68,6 +74,19 @@ public class HomeFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             searchView.setIconifiedByDefault(false);
         }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                homeViewModel.filterBySearchAndTags(newText);
+//                eventCardsAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
 
         eventCardsAdapter = new EventCardsAdapter(eventList, item -> {
             if (isAdded()) {
@@ -88,6 +107,7 @@ public class HomeFragment extends Fragment {
         filtersButton.setOnClickListener(v-> homeViewModel.changeCategoriesVisibility());
 
         homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), newEvents  -> {
+
             swipeRefreshLayout.setRefreshing(false);
             progressBar.setVisibility(View.GONE);
                 DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
@@ -118,7 +138,7 @@ public class HomeFragment extends Fragment {
                 diffResult.dispatchUpdatesTo(eventCardsAdapter);
                 eventList.clear();
                 eventList.addAll(newEvents);
-
+//                eventCardsAdapter.updateData(newEvents);
         });
 
         homeViewModel.getCategoriesVisibility().observe(getViewLifecycleOwner(), visible->{
