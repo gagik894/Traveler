@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -192,6 +193,15 @@ public class UserFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public void scrollUp(){
+        Log.i("asd", "scrollUp: " + rvCards);
+        rvCards.post(() -> rvCards.smoothScrollBy(0, -1000));
+    }
+    public void scrollDown(){
+        Log.i("asd", "scrollDown: " + rvCards);
+        rvCards.post(() -> rvCards.smoothScrollBy(0, 1000));
     }
 }
 

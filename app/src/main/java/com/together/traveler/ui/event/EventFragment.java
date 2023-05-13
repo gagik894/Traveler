@@ -29,6 +29,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
@@ -61,6 +62,8 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
     private FragmentEventBinding binding;
     private EventViewModel eventViewModel;
     private TicketDialog dialog;
+
+    private NestedScrollView scrollView;
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
@@ -75,6 +78,7 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
 
         binding = FragmentEventBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        scrollView = binding.eventNsv;
         final ImageView image = binding.eventIvImage;
         final TextView name = binding.ticketTvName;
         final TextView location = binding.eventTvLocation;
@@ -176,7 +180,7 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
                 }
             }
         });
-        backButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigateUp());
+        backButton.setOnClickListener(v->backPress());
         moreButton.setOnClickListener(v -> {
             if (description.getMaxLines() == maxLines) {
                 description.setMaxLines(Integer.MAX_VALUE);
@@ -375,5 +379,15 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
     @Override
     public void onImageLoaded() {
         saveTicketInDownloads();
+    }
+
+    public void scrollUp(){
+        scrollView.post(() -> scrollView.fullScroll(View.FOCUS_UP));
+    }
+    public void scrollDown(){
+        scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
+    }
+    public void backPress(){
+        NavHostFragment.findNavController(this).navigateUp();
     }
 }
