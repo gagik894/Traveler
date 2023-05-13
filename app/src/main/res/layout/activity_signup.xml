@@ -8,7 +8,7 @@
     android:background="@color/primary_color"
     android:maxWidth="448dp"
     android:orientation="vertical"
-    tools:context=".ui.login.SignupActivity">
+    tools:context=".ui.login.RegisterActivity">
 
     <ImageView
         android:id="@+id/signupIvLogo"
@@ -100,11 +100,32 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/signupEtEmail" />
 
+            <EditText
+                android:id="@+id/signupEtRPassword"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/signupEtPassword"
+                android:layout_marginTop="25dp"
+                android:autofillHints="@string/prompt_password"
+                android:background="@drawable/edit_text_background"
+                android:hint="@string/prompt_repeat_password"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:maxWidth="488dp"
+                android:minHeight="48dp"
+                android:paddingHorizontal="10dp"
+                android:selectAllOnFocus="true"
+                android:textColorHint="@color/hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/signupEtEmail" />
+
             <Button
                 android:id="@+id/signupBtnSignup"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:layout_below="@+id/signupEtPassword"
+                android:layout_below="@+id/signupEtRPassword"
                 android:layout_gravity="start"
                 android:layout_marginTop="25dp"
                 android:elevation="0dp"

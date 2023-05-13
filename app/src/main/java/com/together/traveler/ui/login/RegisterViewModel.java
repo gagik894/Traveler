@@ -1,23 +1,24 @@
 package com.together.traveler.ui.login;
 
+import android.util.Log;
+import android.util.Patterns;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import android.util.Patterns;
-
+import com.together.traveler.R;
 import com.together.traveler.data.LoginRepository;
 import com.together.traveler.data.Result;
-import com.together.traveler.R;
-import com.together.traveler.model.User;
 
-public class LoginViewModel extends ViewModel {
+public class RegisterViewModel extends ViewModel {
 
+    private final String TAG = "RegisterViewModel";
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     private LoginRepository loginRepository;
 
-    LoginViewModel(LoginRepository loginRepository) {
+    RegisterViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
     }
 
@@ -59,11 +60,15 @@ public class LoginViewModel extends ViewModel {
         thread.start();
     }
 
-    public void loginDataChanged(String email, String password) {
+    public void loginDataChanged(String email, String password, String rPassword) {
+        Log.i(TAG, "loginDataChanged: ");
         if (!isUserNameValid(email)) {
             loginFormState.setValue(new LoginFormState(R.string.invalid_username, null, null));
         } else if (!isPasswordValid(password)) {
             loginFormState.setValue(new LoginFormState(null, R.string.invalid_password, null));
+        } else if (!password.equals(rPassword)) {
+            loginFormState.setValue(new LoginFormState(null, null, R.string.not_same_password));
+            Log.i(TAG, "loginDataChanged: " + "no match");
         } else {
             loginFormState.setValue(new LoginFormState(true));
         }
