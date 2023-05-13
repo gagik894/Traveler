@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.together.traveler.R;
 import com.together.traveler.adapter.EventCardsAdapter;
 import com.together.traveler.databinding.FragmentUserBinding;
@@ -60,8 +62,13 @@ public class UserFragment extends Fragment {
         if (getArguments() != null) {
             if (getArguments().getString("userId") != null) {
                 userViewModel.setUserId(getArguments().getString("userId"));
+                BottomNavigationView bottomNavigationView =requireActivity().findViewById(R.id.nvMain);
+                MenuItem menuItem = bottomNavigationView.getMenu().findItem(R.id.homeFragment);
+                menuItem.setChecked(true);
+                menuItem.setChecked(true);
             }else{
                 userViewModel.setUserId("self");
+
             }
         }
 

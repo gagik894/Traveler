@@ -58,21 +58,26 @@ public class MainActivity extends AppCompatActivity {
         Log.i("asd", "onKeyDown: " + keyCode);
         if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
              scrollUp();
+            return true;
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
              scrollDown();
+            return true;
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
             switchMenu("right");
+            return true;
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
             switchMenu("left");
+            return true;
         } else if (keyCode == KeyEvent.KEYCODE_SPACE) {
             Intent switchActivityIntent = new Intent(this, AddActivity.class);
             startActivity(switchActivityIntent);
+            return true;
         }
-        return true;
+        return super.onKeyDown(keyCode, event);
     }
 
     private void scrollDown() {
-        Fragment fragment =  navHostFragment.getChildFragmentManager().getFragments().get(0);
+        Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
         if (fragment instanceof HomeFragment) {
             HomeFragment homeFragment = (HomeFragment) fragment;
             homeFragment.scrollDown();
@@ -106,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             eventFragment.backPress();
             return;
         }
-        int currentId =menuItems.indexOf(bottomNav.getSelectedItemId());
+        int currentId = menuItems.indexOf(bottomNav.getSelectedItemId());
         if(Objects.equals(side, "left")) {
             bottomNav.setSelectedItemId(menuItems.get((currentId+3)%4));
         }else{
@@ -114,9 +119,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//    }
 
 }

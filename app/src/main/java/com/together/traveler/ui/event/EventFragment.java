@@ -16,6 +16,8 @@ import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -37,6 +39,7 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.together.traveler.R;
@@ -374,6 +377,14 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
                 }
             }
         } );
+    }
+
+    @Override
+    public void onResume() {
+        BottomNavigationView bottomNavigationView =requireActivity().findViewById(R.id.nvMain);
+        MenuItem menuItem = bottomNavigationView.getMenu().findItem(R.id.homeFragment);
+        menuItem.setChecked(true);
+        super.onResume();
     }
 
     @Override
