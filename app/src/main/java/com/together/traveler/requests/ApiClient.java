@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.together.traveler.context.AppContext;
 
 import okhttp3.OkHttpClient;
@@ -15,6 +17,9 @@ public class ApiClient {
     private static String TAG = "ApiClient";
 
     private static Retrofit retrofit = null;
+    private static final Gson gson = new GsonBuilder()
+            .setLenient()
+            .create();
 
     public static Retrofit getRetrofitInstance() {
         Context context = AppContext.getContext();
@@ -37,7 +42,7 @@ public class ApiClient {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl("https://traveler-ynga.onrender.com/")
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(httpClient.build())
                     .build();
         }

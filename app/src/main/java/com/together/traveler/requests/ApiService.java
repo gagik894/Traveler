@@ -25,11 +25,11 @@ public interface ApiService {
     @GET("events")
     Call<EventsResponse> getEvents(@Query("fields") String fields);
 
-    @GET("places")
-    Call<List<Place>> getPlaces(@Query("fields") String fields);
-
     @GET("{type}")
     Call<List<MapItem>> getMapItems(@Path("type") String type, @Query("fields") String fields);
+
+    @GET("auth/check{param}/{value}")
+    Call<String> checkRegister(@Path("param") String param, @Path("value") String value);
 
     @GET("events/event/{id}")
     Call<Event> getEvent(@Path("id") String id, @Query("fields") String fields);

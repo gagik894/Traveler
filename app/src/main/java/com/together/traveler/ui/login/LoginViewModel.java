@@ -9,7 +9,6 @@ import android.util.Patterns;
 import com.together.traveler.data.LoginRepository;
 import com.together.traveler.data.Result;
 import com.together.traveler.R;
-import com.together.traveler.model.User;
 
 public class LoginViewModel extends ViewModel {
 
@@ -60,24 +59,24 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void loginDataChanged(String email, String password) {
-        if (!isUserNameValid(email)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null, null));
+        if (!isEmailValid(email)) {
+            loginFormState.setValue(new LoginFormState(null,R.string.invalid_email, null, null));
         } else if (!isPasswordValid(password)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_password, null));
+            loginFormState.setValue(new LoginFormState(null, null, R.string.invalid_password, null));
         } else {
             loginFormState.setValue(new LoginFormState(true));
         }
     }
 
     // A placeholder username validation check
-    private boolean isUserNameValid(String email) {
+    private boolean isEmailValid(String email) {
         if (email == null) {
             return false;
         }
         if (email.contains("@")) {
             return Patterns.EMAIL_ADDRESS.matcher(email).matches();
         } else {
-            return !email.trim().isEmpty();
+            return false;
         }
     }
 
