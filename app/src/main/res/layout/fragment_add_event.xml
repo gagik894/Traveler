@@ -7,228 +7,312 @@
     android:layout_height="wrap_content"
     tools:context=".ui.add.event.AddEvent">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:id="@+id/linearLayout3">
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_title"
-            android:textSize="16sp" />
+        <ImageButton
+            android:id="@+id/addIbEventImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/event_placeholder"
+            android:contentDescription="@string/add_event_photo"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_conversion_absoluteHeight="285dp"
+            tools:layout_conversion_absoluteWidth="379dp" />
+
 
         <EditText
             android:id="@+id/addEtTitle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:autofillHints=""
-            android:backgroundTint="@color/secondary_color"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="28dp"
+            android:background="@android:color/transparent"
             android:hint="@string/add_enter_title"
-            android:inputType="text"
+            android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_location"
-            android:textSize="16sp" />
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/imageView11"
+            app:layout_constraintTop_toBottomOf="@+id/addIbEventImage"
+            tools:layout_conversion_absoluteHeight="48dp"
+            tools:layout_conversion_absoluteWidth="49dp"
+            android:autofillHints="@string/add_enter_title" />
 
         <EditText
             android:id="@+id/addEtLocation"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
             android:autofillHints=""
+            android:background="@android:color/transparent"
             android:backgroundTint="@color/secondary_color"
             android:focusable="false"
             android:hint="@string/add_enter_location"
             android:inputType="text"
             android:minHeight="48dp"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/addEtDescription"
+            app:layout_constraintTop_toBottomOf="@+id/addEtDescription"
+            tools:layout_conversion_absoluteHeight="48dp"
+            tools:layout_conversion_absoluteWidth="379dp" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/textView19"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="5dp"
             android:text="@string/add_start_date_and_time"
-            android:textSize="16sp" />
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/addEtLocation"
+            app:layout_constraintTop_toBottomOf="@+id/addEtLocation"
+            tools:layout_conversion_absoluteHeight="22dp"
+            tools:layout_conversion_absoluteWidth="379dp" />
 
         <EditText
             android:id="@+id/addEtStartDate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="-5dp"
             android:autofillHints=""
+            android:background="@android:color/transparent"
             android:backgroundTint="@color/secondary_color"
             android:clickable="true"
             android:focusable="false"
             android:hint="@string/add_select_start_date_and_time"
             android:inputType="datetime"
             android:minHeight="48dp"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView19"
+            app:layout_constraintTop_toBottomOf="@+id/textView19"
+            tools:layout_conversion_absoluteHeight="48dp"
+            tools:layout_conversion_absoluteWidth="379dp" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/textView21"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:text="@string/add_end_date_and_time"
-            android:textSize="16sp" />
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/addEtTicketsCount"
+            app:layout_constraintTop_toBottomOf="@+id/addEtStartDate"
+            tools:layout_conversion_absoluteHeight="22dp"
+            tools:layout_conversion_absoluteWidth="379dp" />
 
         <EditText
             android:id="@+id/addEtEndDate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="-5dp"
             android:autofillHints=""
+            android:background="@android:color/transparent"
             android:backgroundTint="@color/secondary_color"
             android:clickable="true"
             android:focusable="false"
             android:hint="@string/add_select_end_date_and_time"
             android:inputType="datetime"
             android:minHeight="48dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_description"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView21"
+            app:layout_constraintTop_toBottomOf="@+id/textView21"
+            tools:layout_conversion_absoluteHeight="48dp"
+            tools:layout_conversion_absoluteWidth="379dp" />
 
         <EditText
             android:id="@+id/addEtDescription"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
             android:autofillHints=""
+            android:background="@android:color/transparent"
             android:backgroundTint="@color/secondary_color"
             android:hint="@string/add_enter_description"
             android:inputType="textMultiLine"
             android:minHeight="48dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_number_of_tickets"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/addEtTitle"
+            app:layout_constraintTop_toBottomOf="@+id/addEtTitle"
+            tools:layout_conversion_absoluteHeight="48dp"
+            tools:layout_conversion_absoluteWidth="379dp" />
 
         <EditText
             android:id="@+id/addEtTicketsCount"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="-5dp"
             android:autofillHints=""
+            android:background="@android:color/transparent"
             android:backgroundTint="@color/secondary_color"
             android:hint="@string/add_enter_number_of_tickets"
             android:inputType="number"
             android:minHeight="48dp"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/addEtStartDate"
+            app:layout_constraintTop_toBottomOf="@+id/textView27"
+            tools:layout_conversion_absoluteHeight="48dp"
+            tools:layout_conversion_absoluteWidth="379dp" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/textView25"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_select_tags"
-            android:textSize="16sp" />
+            android:layout_marginTop="5dp"
+            android:text="@string/add_select_category"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/addEtTicketsCount"
+            app:layout_constraintTop_toBottomOf="@+id/addEtTicketsCount"
+            tools:layout_conversion_absoluteHeight="22dp"
+            tools:layout_conversion_absoluteWidth="379dp" />
+
+        <TextView
+            android:id="@+id/textView27"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/add_select_tickets"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/addEtEndDate"
+            app:layout_constraintTop_toBottomOf="@+id/addEtEndDate"
+            tools:layout_conversion_absoluteHeight="22dp"
+            tools:layout_conversion_absoluteWidth="379dp" />
 
         <Spinner
             android:id="@+id/addTagSpinner"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="-5dp"
             android:contentDescription="@string/add_select_tags"
             android:minHeight="48dp"
             android:prompt="@string/add_select_tags"
-            android:spinnerMode="dropdown" />
+            android:spinnerMode="dropdown"
+            app:layout_constraintStart_toStartOf="@+id/textView25"
+            app:layout_constraintTop_toBottomOf="@+id/textView25"
+            tools:layout_conversion_absoluteHeight="48dp"
+            tools:layout_conversion_absoluteWidth="379dp" />
 
-        <TextView
-            android:layout_width="match_parent"
+
+        <EditText
+            android:id="@+id/addEtNewTag"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_add_tags"
-            android:textSize="16sp" />
+            android:autofillHints=""
+            android:background="@android:color/transparent"
+            android:hint="@string/add_enter_tags"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView25"
+            app:layout_constraintTop_toBottomOf="@+id/addTagSpinner"
+            tools:layout_conversion_absoluteHeight="48dp"
+            tools:layout_conversion_absoluteWidth="289dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/addBtnAddTag"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/addEtNewTag"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autofillHints=""
-                android:hint="@string/add_enter_tags"
-                android:inputType="text"
-                android:minHeight="48dp"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/addBtnAddTag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_submit"
-                android:textSize="14sp" />
-
-        </LinearLayout>
+            android:layout_marginStart="10dp"
+            android:text="@string/add_submit"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/addEtNewTag"
+            app:layout_constraintStart_toEndOf="@+id/addEtNewTag"
+            app:layout_constraintTop_toTopOf="@+id/addEtNewTag"
+            tools:layout_conversion_absoluteHeight="48dp"
+            tools:layout_conversion_absoluteWidth="91dp" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroup"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/addEtNewTag"
+            app:layout_constraintTop_toBottomOf="@+id/addEtNewTag"
             app:singleLine="false"
-            android:layout_marginBottom="24dp">
+            tools:layout_conversion_absoluteHeight="0dp"
+            tools:layout_conversion_absoluteWidth="379dp">
 
 
         </com.google.android.material.chip.ChipGroup>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_upload_photo"
-            android:textSize="16sp" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageButton
-                android:id="@+id/addIbEventImage"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="24dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/event_placeholder"
-                android:contentDescription="@string/add_event_photo"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="w,4:3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <Button
             android:id="@+id/addBtnCreate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:minHeight="48dp"
             android:text="@string/add_create_event"
-            android:textSize="16sp" />
-    </LinearLayout>
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chipGroup"
+            tools:layout_conversion_absoluteHeight="48dp"
+            tools:layout_conversion_absoluteWidth="161dp" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/location"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/addEtLocation"
+            android:contentDescription="@string/location_icon" />
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView25"
+            android:contentDescription="@string/category_icon"/>
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/calendar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView19"
+            android:contentDescription="@string/calendar_icon"/>
+
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_baseline_text_fields"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/addEtTitle"
+            android:contentDescription="@string/text_icon"/>
+
+        <ImageView
+            android:id="@+id/imageView14"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_baseline_ticket"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView27"
+            android:contentDescription="@string/ticket_icon"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

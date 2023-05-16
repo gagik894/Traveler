@@ -97,16 +97,12 @@
     <string name="title_activity_verify">VerifyActivity</string>
 
     <!--    add event-->
-    <string name="add_title">Title</string>
-    <string name="add_location">Location</string>
-    <string name="add_start_date_and_time">Start Date and Time</string>
-    <string name="add_end_date_and_time">End Date and Time</string>
-    <string name="add_description">Description</string>
-    <string name="add_number_of_tickets">Number of Tickets</string>
+    <string name="add_start_date_and_time">Event starts</string>
+    <string name="add_end_date_and_time">Event ends</string>
     <string name="add_enter_title">Enter title</string>
     <string name="add_enter_location">Select location</string>
-    <string name="add_select_start_date_and_time">Select start date and time</string>
-    <string name="add_select_end_date_and_time">Select end date and time</string>
+    <string name="add_select_start_date_and_time">Select start date</string>
+    <string name="add_select_end_date_and_time">Select end date</string>
     <string name="add_enter_description">Enter description</string>
     <string name="add_enter_number_of_tickets">Enter number of tickets</string>
     <string name="add_event_photo">Event photo</string>
@@ -115,9 +111,10 @@
     <string name="add_select_photo">Select Photo</string>
     <string name="add_capture_photo">Capture Photo</string>
     <string name="add_photo_permission_rationale">We need permission to access your device\'s camera and gallery to add a photo to your event.</string>
-    <string name="add_select_tags">Select a category</string>
-    <string name="add_add_tags">Add tags (optional)</string>
-    <string name="add_enter_tags">Enter a tag</string>
+    <string name="add_select_category">Category</string>
+    <string name="add_select_tickets">Tickets</string>
+    <string name="add_select_tags">Tags</string>
+    <string name="add_enter_tags">Add tags (optional)</string>
     <string name="add_submit">Submit</string>
     <string name="add_add_place">Add place</string>
     <string name="add_phone">Phone</string>
@@ -157,6 +154,8 @@
     <string name="select_opening_time">From</string>
     <string name="select_closing_time">To</string>
     <string name="add_select_all_open_times">Select all open times!</string>
+    <string name="text_icon">Text</string>
+    <string name="ticket_icon">Ticket</string>
 
 
 </resources>

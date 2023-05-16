@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="@string/add_title"
+            android:text="@string/add_add_place"
             android:textSize="16sp" />
 
         <EditText
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="@string/add_location"
+            android:text="@string/add_add_place"
             android:textSize="16sp" />
 
         <EditText
@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="@string/add_description"
+            android:text="@string/add_add_place"
             android:textSize="16sp" />
 
         <EditText
