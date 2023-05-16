@@ -39,23 +39,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="30dp"
+            android:autofillHints="@string/add_enter_title"
             android:background="@android:color/transparent"
             android:hint="@string/add_enter_title"
-            android:inputType="textPersonName"
+            android:inputType="textPersonName|textCapSentences"
             android:minHeight="48dp"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/imageView11"
             app:layout_constraintTop_toBottomOf="@+id/addIbEventImage"
             tools:layout_conversion_absoluteHeight="48dp"
-            tools:layout_conversion_absoluteWidth="49dp"
-            android:autofillHints="@string/add_enter_title" />
+            tools:layout_conversion_absoluteWidth="49dp" />
 
         <EditText
             android:id="@+id/addEtLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:autofillHints=""
             android:background="@android:color/transparent"
             android:backgroundTint="@color/secondary_color"
@@ -138,7 +139,7 @@
             android:background="@android:color/transparent"
             android:backgroundTint="@color/secondary_color"
             android:hint="@string/add_enter_description"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapSentences"
             android:minHeight="48dp"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/addEtTitle"
@@ -263,56 +264,51 @@
             android:id="@+id/imageView8"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
+            android:contentDescription="@string/location_icon"
             android:src="@drawable/location"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/addEtLocation"
-            android:contentDescription="@string/location_icon" />
+            app:layout_constraintStart_toStartOf="@+id/imageView11"
+            app:layout_constraintTop_toTopOf="@+id/addEtLocation" />
 
         <ImageView
             android:id="@+id/imageView9"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
+            android:contentDescription="@string/category_icon"
             android:src="@drawable/category"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView25"
-            android:contentDescription="@string/category_icon"/>
+            app:layout_constraintStart_toStartOf="@+id/imageView14"
+            app:layout_constraintTop_toTopOf="@+id/textView25" />
 
         <ImageView
             android:id="@+id/imageView10"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
+            android:contentDescription="@string/calendar_icon"
             android:src="@drawable/calendar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView19"
-            android:contentDescription="@string/calendar_icon"/>
+            app:layout_constraintStart_toStartOf="@+id/imageView8"
+            app:layout_constraintTop_toTopOf="@+id/textView19" />
 
         <ImageView
             android:id="@+id/imageView11"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
+            android:contentDescription="@string/text_icon"
             android:src="@drawable/ic_baseline_text_fields"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/addEtTitle"
-            android:contentDescription="@string/text_icon"/>
+            app:layout_constraintTop_toTopOf="@+id/addEtTitle" />
 
         <ImageView
             android:id="@+id/imageView14"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
+            android:contentDescription="@string/ticket_icon"
             android:src="@drawable/ic_baseline_ticket"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView27"
-            android:contentDescription="@string/ticket_icon"/>
+            app:layout_constraintStart_toStartOf="@+id/imageView10"
+            app:layout_constraintTop_toTopOf="@+id/textView27" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

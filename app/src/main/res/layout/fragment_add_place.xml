@@ -7,183 +7,213 @@
     android:layout_height="wrap_content"
     tools:context=".ui.add.place.AddPlace">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:orientation="vertical"
         android:padding="16dp">
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_add_place"
-            android:textSize="16sp" />
+        <ImageButton
+            android:id="@+id/addPlaceIbEventImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/event_placeholder"
+            android:contentDescription="@string/add_event_photo"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <EditText
             android:id="@+id/addPlaceEtName"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
             android:autofillHints=""
+            android:background="@android:color/transparent"
             android:backgroundTint="@color/secondary_color"
             android:hint="@string/add_enter_title"
-            android:inputType="text"
+            android:inputType="textPersonName|text"
+            android:maxLines="3"
             android:minHeight="48dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_add_place"
-            android:textSize="16sp" />
+            android:scrollHorizontally="false"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView12"
+            app:layout_constraintTop_toBottomOf="@+id/addPlaceIbEventImage" />
 
         <EditText
             android:id="@+id/addPlaceEtLocation"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="10dp"
             android:autofillHints=""
+            android:background="@color/colorTransparent"
             android:backgroundTint="@color/secondary_color"
             android:focusable="false"
             android:hint="@string/add_enter_location"
             android:inputType="text"
             android:minHeight="48dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_add_place"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/addPlaceEtDescription"
+            app:layout_constraintTop_toBottomOf="@+id/addPlaceEtDescription" />
 
         <EditText
             android:id="@+id/addPlaceEtDescription"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
             android:autofillHints=""
+            android:background="@color/colorTransparent"
             android:backgroundTint="@color/secondary_color"
             android:hint="@string/add_enter_description"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapSentences"
             android:minHeight="48dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_phone"
-            android:textSize="16sp" />
+            android:singleLine="false"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/addPlaceEtName"
+            app:layout_constraintTop_toBottomOf="@+id/addPlaceEtName" />
 
         <EditText
             android:id="@+id/addPlaceEtPhone"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="5dp"
             android:autofillHints=""
+            android:background="@color/colorTransparent"
             android:backgroundTint="@color/secondary_color"
+            android:digits="0123456789+"
             android:hint="@string/add_enter_phone"
             android:inputType="phone"
             android:minHeight="48dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_web_page"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/addPlaceEtUrl"
+            app:layout_constraintTop_toBottomOf="@+id/addPlaceEtUrl" />
 
         <EditText
             android:id="@+id/addPlaceEtUrl"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="5dp"
             android:autofillHints=""
+            android:background="@color/colorTransparent"
             android:backgroundTint="@color/secondary_color"
             android:hint="@string/add_enter_url"
             android:inputType="textUri"
             android:minHeight="48dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_times"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/addPlaceEtTimes"
+            app:layout_constraintTop_toBottomOf="@+id/addPlaceEtTimes" />
 
         <EditText
             android:id="@+id/addPlaceEtTimes"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="5dp"
             android:autofillHints=""
+            android:background="@color/colorTransparent"
             android:backgroundTint="@color/secondary_color"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:hint="@string/add_select_times"
             android:inputType="textUri"
             android:minHeight="48dp"
-            android:textSize="16sp" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_select_tags"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/addPlaceEtLocation"
+            app:layout_constraintTop_toBottomOf="@+id/addPlaceEtLocation" />
 
         <Spinner
             android:id="@+id/addPlaceTagSpinner"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="5dp"
             android:contentDescription="@string/add_select_tags"
             android:minHeight="48dp"
             android:prompt="@string/add_select_tags"
             android:spinnerMode="dropdown"
+            app:layout_constraintStart_toStartOf="@+id/addPlaceEtPhone"
+            app:layout_constraintTop_toBottomOf="@+id/addPlaceEtPhone"
             tools:ignore="DuplicateSpeakableTextCheck" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/add_upload_photo"
-            android:textSize="16sp" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageButton
-                android:id="@+id/addPlaceIbEventImage"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="24dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/event_placeholder"
-                android:contentDescription="@string/add_event_photo"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="w,4:3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <Button
             android:id="@+id/addPlaceBtnCreate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:minHeight="48dp"
             android:text="@string/add_add_place"
-            android:textSize="16sp" />
-    </LinearLayout>
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addPlaceTagSpinner" />
+
+        <ImageView
+            android:id="@+id/imageView12"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_baseline_text_fields"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/addPlaceEtName"
+            android:contentDescription="@string/text_icon" />
+
+        <ImageView
+            android:id="@+id/imageView15"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/location"
+            app:layout_constraintStart_toStartOf="@+id/imageView12"
+            app:layout_constraintTop_toTopOf="@+id/addPlaceEtLocation"
+            android:contentDescription="@string/location_icon"/>
+
+        <ImageView
+            android:id="@+id/imageView16"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/calendar"
+            app:layout_constraintStart_toStartOf="@+id/imageView15"
+            app:layout_constraintTop_toTopOf="@+id/addPlaceEtTimes"
+            android:contentDescription="@string/calendar_icon"/>
+
+        <ImageView
+            android:id="@+id/imageView17"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_baseline_phone"
+            app:layout_constraintStart_toStartOf="@+id/imageView18"
+            app:layout_constraintTop_toTopOf="@+id/addPlaceEtPhone"
+            android:contentDescription="@string/phone_icon"/>
+
+        <ImageView
+            android:id="@+id/imageView18"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_baseline_link"
+            app:layout_constraintStart_toStartOf="@+id/imageView16"
+            app:layout_constraintTop_toTopOf="@+id/addPlaceEtUrl"
+            android:contentDescription="@string/link_icon"/>
+
+        <ImageView
+            android:id="@+id/imageView19"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/category"
+            app:layout_constraintStart_toStartOf="@+id/imageView17"
+            app:layout_constraintTop_toTopOf="@+id/addPlaceTagSpinner"
+            android:contentDescription="@string/category_icon"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
