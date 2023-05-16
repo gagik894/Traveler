@@ -36,6 +36,10 @@
             android:exported="false"
             android:label="@string/title_activity_signup" />
         <activity
+            android:name=".ui.login.VerifyActivity"
+            android:exported="false"
+            android:label="@string/title_activity_verify" />
+        <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true">
             <intent-filter>

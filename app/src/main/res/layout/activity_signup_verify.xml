@@ -8,10 +8,10 @@
     android:background="@color/primary_color"
     android:maxWidth="448dp"
     android:orientation="vertical"
-    tools:context=".ui.login.RegisterActivity">
+    tools:context=".ui.login.VerifyActivity">
 
     <ImageView
-        android:id="@+id/signupIvLogo"
+        android:id="@+id/verifyIvLogo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2.5"
@@ -20,7 +20,7 @@
         app:srcCompat="@drawable/logo" />
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/signupViewBottom"
+        android:id="@+id/verifyViewBottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -33,23 +33,34 @@
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerTopSize35dp">
 
         <RelativeLayout
-            android:id="@+id/signupRlBottom"
+            android:id="@+id/verifyRlBottom"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0"
             android:paddingHorizontal="10dp">
 
 
-            <EditText
-                android:id="@+id/signupEtUsername"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:text="@string/enter_sec_code"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/verifyEtSecCode"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/textView6"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
-                android:autofillHints="@string/prompt_username"
+                android:autofillHints=""
                 android:background="@drawable/edit_text_background"
-                android:hint="@string/prompt_username"
-                android:inputType="textPersonName"
+                android:hint="@string/prompt_sec_code"
+                android:inputType="number"
                 android:maxWidth="488dp"
                 android:minHeight="48dp"
                 android:paddingHorizontal="10dp"
@@ -58,71 +69,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/signupEtEmail"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_below="@+id/signupEtUsername"
-                android:layout_marginTop="25dp"
-                android:autofillHints="@string/prompt_email"
-                android:background="@drawable/edit_text_background"
-                android:hint="@string/prompt_email"
-                android:inputType="textEmailAddress"
-                android:maxWidth="488dp"
-                android:minHeight="48dp"
-                android:paddingHorizontal="10dp"
-                android:selectAllOnFocus="true"
-                android:textColorHint="@color/hint"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/signupEtPassword"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_below="@+id/signupEtEmail"
-                android:layout_marginTop="25dp"
-                android:autofillHints="@string/prompt_password"
-                android:background="@drawable/edit_text_background"
-                android:hint="@string/prompt_password"
-                android:inputType="textPassword"
-                android:maxWidth="488dp"
-                android:minHeight="48dp"
-                android:paddingHorizontal="10dp"
-                android:selectAllOnFocus="true"
-                android:textColorHint="@color/hint"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/signupEtEmail" />
-
-            <EditText
-                android:id="@+id/signupEtRPassword"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_below="@+id/signupEtPassword"
-                android:layout_marginTop="25dp"
-                android:autofillHints="@string/prompt_password"
-                android:background="@drawable/edit_text_background"
-                android:hint="@string/prompt_repeat_password"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:maxWidth="488dp"
-                android:minHeight="48dp"
-                android:paddingHorizontal="10dp"
-                android:selectAllOnFocus="true"
-                android:textColorHint="@color/hint"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/signupEtEmail" />
 
             <Button
-                android:id="@+id/signupBtnSignup"
+                android:id="@+id/verifyBtnSignup"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:layout_below="@+id/signupEtRPassword"
+                android:layout_below="@+id/verifyEtSecCode"
+                android:layout_centerHorizontal="true"
                 android:layout_gravity="start"
                 android:layout_marginTop="25dp"
                 android:elevation="0dp"
@@ -132,18 +85,15 @@
                 android:translationZ="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.437"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/signupEtPassword"
-                app:layout_constraintVertical_bias="0.134" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <ProgressBar
                 android:id="@+id/signupPbLoading"
                 style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Inverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/signupBtnSignup"
-                android:layout_alignBottom="@+id/signupBtnSignup"
+                android:layout_alignTop="@+id/verifyBtnSignup"
+                android:layout_alignBottom="@+id/verifyBtnSignup"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="8dp"
                 android:scaleX="0.7"
@@ -152,6 +102,14 @@
                 android:translationZ="10dp"
                 android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/verifyTvResend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/verifyBtnSignup"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="@string/not_get_code" />
             <View
                 android:id="@+id/view"
                 android:layout_width="match_parent"
@@ -165,13 +123,13 @@
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/signupTvLogin"
+                android:layout_above="@+id/verifyTvLogin"
                 android:layout_alignParentStart="false"
                 android:layout_centerHorizontal="true"
                 android:text="@string/have_account" />
 
             <TextView
-                android:id="@+id/signupTvLogin"
+                android:id="@+id/verifyTvLogin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="false"

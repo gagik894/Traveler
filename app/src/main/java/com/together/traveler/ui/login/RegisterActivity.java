@@ -26,9 +26,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.together.traveler.R;
 import com.together.traveler.databinding.ActivitySignupBinding;
-import com.together.traveler.ui.main.MainActivity;
+import com.together.traveler.model.User;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -39,7 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ActivitySignupBinding binding;
     private CardView BottomView;
     private RelativeLayout BottomRelativeLayout;
-    private final String Tag = "asd";
+    private final String Tag = "RegisterActivity";
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -75,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.signupEtPassword;
         final EditText usernameEditText = binding.signupEtUsername;
         final EditText rPasswordEditText = binding.signupEtRPassword;
-        final Button loginButton = binding.signupBtnSignup;
+        final Button nextButton = binding.signupBtnSignup;
         final ProgressBar loadingProgressBar = binding.signupPbLoading;
         final TextView toLoginButton = binding.signupTvLogin;
         BottomView = binding.signupViewBottom;
@@ -85,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
             if (loginFormState == null) {
                 return;
             }
-            loginButton.setEnabled(loginFormState.isDataValid());
+            nextButton.setEnabled(loginFormState.isDataValid());
             if (loginFormState.getUsernameError() != null) {
                 usernameEditText.setError(getString(loginFormState.getUsernameError()));
             }
@@ -100,23 +99,16 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        registerViewModel.getLoginResult().observe(this, loginResult -> {
-            if (loginResult == null) {
+        registerViewModel.getSecCode().observe(this, secCode -> {
+            if (secCode == null) {
                 return;
             }
             loadingProgressBar.setVisibility(View.GONE);
-            loginButton.setEnabled(true);
-            if (loginResult.getError() != null) {
-                showLoginFailed(loginResult.getError());
-                return;
-            }
-            if (loginResult.getSuccess() != null) {
-                updateUiWithUser(loginResult.getSuccess());
-            }
+            nextButton.setEnabled(true);
+            updateUiWithUser(secCode, usernameEditText.getText().toString(), emailEditText.getText().toString(),
+                    passwordEditText.getText().toString());
             setResult(Activity.RESULT_OK);
 
-            //Complete and destroy login activity once successful
-            finish();
         });
 
         toLoginButton.setOnClickListener(v->{
@@ -158,7 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                registerViewModel.loginDataChanged(usernameEditText.getText().toString(), emailEditText.getText().toString(),
+                registerViewModel.signupDataChanged(usernameEditText.getText().toString(), emailEditText.getText().toString(),
                         passwordEditText.getText().toString(), rPasswordEditText.getText().toString());
             }
         };
@@ -173,23 +165,24 @@ public class RegisterActivity extends AppCompatActivity {
         rPasswordEditText.addTextChangedListener(afterTextChangedListener);
         usernameEditText.setFilters(new InputFilter[] { noSpaceAndSpecialCharFilter });
         rPasswordEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                registerViewModel.signup(usernameEditText.getText().toString(),emailEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+            if (actionId == EditorInfo.IME_ACTION_DONE &&
+                    registerViewModel.getLoginFormState().getValue() != null &&
+                    registerViewModel.getLoginFormState().getValue().isDataValid()) {
+                registerViewModel.fetchVerificationCode(emailEditText.getText().toString());
             }
             return false;
         });
 
-        loginButton.setOnClickListener(v -> {
+        nextButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            loginButton.setEnabled(false);
-            registerViewModel.signup(usernameEditText.getText().toString(), emailEditText.getText().toString(),
-                    passwordEditText.getText().toString());
+            nextButton.setEnabled(false);
+            registerViewModel.fetchVerificationCode(emailEditText.getText().toString());
         });
 
         usernameEditText.setOnFocusChangeListener((view, b) -> changeView(b));
         emailEditText.setOnFocusChangeListener((view, b) -> changeView(b));
         passwordEditText.setOnFocusChangeListener((view, b) -> changeView(b));
+        rPasswordEditText.setOnFocusChangeListener((view, b) -> changeView(b));
     }
 
     private void changeView(boolean b) {
@@ -213,11 +206,18 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getAuth_token();
-        Intent switchActivityIntent = new Intent(this, MainActivity.class);
+
+    private void updateUiWithUser(String secCode, String username, String email, String password) {
+        Bundle bundle = new Bundle();
+        bundle.putString("secCode", secCode);
+        bundle.putString("username", username);
+        bundle.putString("email", email);
+        bundle.putString("password", password);
+
+        Intent switchActivityIntent = new Intent(this, VerifyActivity.class);
+        switchActivityIntent.putExtra("extras", bundle);
+
         startActivity(switchActivityIntent);
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
@@ -228,7 +228,7 @@ public class RegisterActivity extends AppCompatActivity {
     private class CheckTextWatcher implements TextWatcher {
         private final String parameter;
         private final Timer timer;
-        private final long DELAY = 1000;
+        private final long DELAY = 700;
         private TimerTask timerTask;
 
         public CheckTextWatcher(String parameter) {
@@ -255,7 +255,7 @@ public class RegisterActivity extends AppCompatActivity {
             timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    registerViewModel.check(s, parameter);
+                    registerViewModel.fetchCheck(s, parameter);
                 }
             };
 

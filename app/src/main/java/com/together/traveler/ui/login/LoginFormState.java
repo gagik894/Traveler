@@ -14,6 +14,8 @@ class LoginFormState {
     private Integer passwordError;
     @Nullable
     private Integer repeatPasswordError;
+    @Nullable
+    private Integer secCodeError;
     private boolean isDataValid;
 
     LoginFormState(@Nullable Integer usernameError, @Nullable Integer emailError, @Nullable Integer passwordError, @Nullable Integer repeatPasswordError) {
@@ -29,7 +31,13 @@ class LoginFormState {
         this.emailError = null;
         this.passwordError = null;
         this.repeatPasswordError = null;
+        this.secCodeError = null;
         this.isDataValid = isDataValid;
+    }
+
+    LoginFormState(@Nullable Integer secCodeError) {
+        this.secCodeError = secCodeError;
+        this.isDataValid = false;
     }
 
     @Nullable
@@ -49,7 +57,10 @@ class LoginFormState {
         return repeatPasswordError;
     }
 
-
+    @Nullable
+    public Integer getSecCodeError() {
+        return secCodeError;
+    }
 
     boolean isDataValid() {
         return isDataValid;

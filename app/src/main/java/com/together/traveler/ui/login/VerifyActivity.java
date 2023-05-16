@@ -20,21 +20,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.together.traveler.databinding.ActivitySignupVerifyBinding;
+import com.together.traveler.model.User;
 import com.together.traveler.ui.main.MainActivity;
-import com.together.traveler.context.AppContext;
-import com.together.traveler.databinding.ActivityLoginBinding;
 
-public class LoginActivity extends AppCompatActivity {
-
-    private LoginViewModel loginViewModel;
+public class VerifyActivity extends AppCompatActivity {
+    private RegisterViewModel registerViewModel;
+    private ActivitySignupVerifyBinding binding;
     private CardView BottomView;
     private RelativeLayout BottomRelativeLayout;
-    private final String TAG = "asd";
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -54,51 +55,49 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
         super.onCreate(savedInstanceState);
-        AppContext.init(this);
-        ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
+
+        binding = ActivitySignupVerifyBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        registerViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
+                .get(RegisterViewModel.class);
 
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
-
-        if(loginViewModel.isLoggedIn()){
-            startActivity(new Intent(this, MainActivity.class));
-            Log.i(TAG, "onCreate: change");
-            finish();
-        }
-        final EditText emailEditText = binding.loginEtEmail;
-        final EditText passwordEditText = binding.loginEtPassword;
-        final Button loginButton = binding.loginBtnlogin;
-        final ProgressBar loadingProgressBar = binding.loginPbLoading;
-        final TextView toSignupButton = binding.loginTvSignup;
-        BottomView = binding.loginViewBottom;
-        BottomRelativeLayout = binding.loginRlBottom;
+        Bundle bundle = getIntent().getBundleExtra("extras");
+        String username = bundle.getString("username");
+        String email = bundle.getString("email");
+        String password = bundle.getString("password");
+        String secCode = bundle.getString("secCode");
+        registerViewModel.setUser(new User(username, email, password));
+        registerViewModel.setSecCode(secCode);
 
 
-        loginViewModel.getLoginFormState().observe(this, loginFormState -> {
-            if (loginFormState == null) {
+        final EditText secCodeEditText = binding.verifyEtSecCode;
+        final Button signupButton = binding.verifyBtnSignup;
+        final ProgressBar loadingProgressBar = binding.signupPbLoading;
+        final TextView toLoginButton = binding.verifyTvLogin;
+        BottomView = binding.verifyViewBottom;
+        BottomRelativeLayout = binding.verifyRlBottom;
+
+        registerViewModel.getVerifyFormState().observe(this, verifyFormState -> {
+            if (verifyFormState == null) {
                 return;
             }
-            loginButton.setEnabled(loginFormState.isDataValid());
-            if (loginFormState.getEmailError() != null) {
-                emailEditText.setError(getString(loginFormState.getEmailError()));
-            }
-            if (loginFormState.getPasswordError() != null) {
-                passwordEditText.setError(getString(loginFormState.getPasswordError()));
+            signupButton.setEnabled(verifyFormState.isDataValid());
+            if (verifyFormState.getSecCodeError() != null) {
+                secCodeEditText.setError(getString(verifyFormState.getSecCodeError()));
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, loginResult -> {
+        registerViewModel.getSignupResult().observe(this, loginResult -> {
             if (loginResult == null) {
                 return;
             }
             loadingProgressBar.setVisibility(View.GONE);
-            loginButton.setEnabled(true);
+            signupButton.setEnabled(true);
             if (loginResult.getError() != null) {
                 showLoginFailed(loginResult.getError());
                 return;
@@ -110,11 +109,6 @@ public class LoginActivity extends AppCompatActivity {
 
             //Complete and destroy login activity once successful
             finish();
-        });
-
-        toSignupButton.setOnClickListener(v->{
-            Intent switchActivityIntent = new Intent(this, RegisterActivity.class);
-            startActivity(switchActivityIntent);
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -130,46 +124,41 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(emailEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                registerViewModel.verifyDataChanged(secCodeEditText.getText().toString());
             }
         };
-        emailEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE&&
-                    loginViewModel.getLoginFormState().getValue() != null &&
-                    loginViewModel.getLoginFormState().getValue().isDataValid()) {
-                loginViewModel.login(emailEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+
+        secCodeEditText.addTextChangedListener(afterTextChangedListener);
+        secCodeEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                registerViewModel.signup();
             }
             return false;
         });
 
-        loginButton.setOnClickListener(v -> {
+        signupButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            loginButton.setEnabled(false);
-            loginViewModel.login(emailEditText.getText().toString(),
-                    passwordEditText.getText().toString());
-
+            signupButton.setEnabled(false);
+            registerViewModel.signup();
+        });
+        toLoginButton.setOnClickListener(v->{
+            Intent switchActivityIntent = new Intent(this, LoginActivity.class);
+            startActivity(switchActivityIntent);
         });
 
 
-        emailEditText.setOnFocusChangeListener((view, b) -> changeView(b));
-        passwordEditText.setOnFocusChangeListener((view, b) -> changeView(b));
-
+        secCodeEditText.setOnFocusChangeListener((view, b) -> changeView(b));
     }
-
 
     private void changeView(boolean b) {
         assert BottomView != null;
         assert BottomRelativeLayout != null;
 
-        LoginActivity.this.runOnUiThread(() -> {
+        VerifyActivity.this.runOnUiThread(() -> {
             LinearLayout.LayoutParams param0 = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT,
-                    0);
+                    0.5f);
             LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -177,28 +166,18 @@ public class LoginActivity extends AppCompatActivity {
 
             if (b) {
                 BottomView.setLayoutParams(param0);
-                BottomRelativeLayout.setLayoutParams(param1);
             } else {
                 BottomView.setLayoutParams(param1);
-                BottomRelativeLayout.setLayoutParams(param0);
             }
         });
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
-        try {
-            Log.d(TAG, "updateUiWithUser: ");
-            Intent switchActivityIntent = new Intent(this, MainActivity.class);
-            startActivity(switchActivityIntent);
-        } catch (Exception e) {
-            Log.e(TAG, "updateUiWithUser: ", e);
-        }
-
+        Intent switchActivityIntent = new Intent(this, MainActivity.class);
+        startActivity(switchActivityIntent);
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
-
 }
-

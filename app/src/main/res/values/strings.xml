@@ -22,7 +22,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="forgot_password">Forgot your password? <font color="#FF3700B3">get help here</font></string>
+    <string name="forgot_password">Forgot your password? <font color="#FF3700B3">Get help here</font></string>
     <string name="dont_have_account">Don\'t have an account?</string>
 
     <!--    signup-->
@@ -45,6 +45,12 @@
     <string name="not_same_password">Passwords must be same</string>
     <string name="login_failed">"Login failed"</string>
     <string name="sign_up">Sign Up.</string>
+
+    <!--    verify-->
+    <string name="enter_sec_code">Enter the code we sent to your email.</string>
+    <string name="prompt_sec_code">Security Code</string>
+    <string name="not_get_code">Didn\'t get the code? <font color="#FF3700B3">Resend it</font></string>
+    <string name="invalid_sec_code">Wrong Security Code</string>
 
     <!--    event-->
     <string name="event_read_more">more</string>
@@ -88,6 +94,7 @@
     <string name="nav_ticket">ticket</string>
     <string name="nav_home">home</string>
     <string name="title_activity_signup">SignupActivity</string>
+    <string name="title_activity_verify">VerifyActivity</string>
 
     <!--    add event-->
     <string name="add_title">Title</string>

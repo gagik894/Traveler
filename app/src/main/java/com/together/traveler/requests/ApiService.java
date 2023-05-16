@@ -28,9 +28,6 @@ public interface ApiService {
     @GET("{type}")
     Call<List<MapItem>> getMapItems(@Path("type") String type, @Query("fields") String fields);
 
-    @GET("auth/check{param}/{value}")
-    Call<String> checkRegister(@Path("param") String param, @Path("value") String value);
-
     @GET("events/event/{id}")
     Call<Event> getEvent(@Path("id") String id, @Query("fields") String fields);
 
@@ -60,6 +57,11 @@ public interface ApiService {
     @POST("events/checkTicket")
     Call<CheckTicketResponse> checkTicket(@Body RequestBody requestBody);
 
+    @POST("auth/check{param}/")
+    Call<String> checkRegister(@Path("param") String param, @Body RequestBody requestBody);
+
+    @POST("auth/sendVerificationCode")
+    Call<ResponseBody> getVerificationCode(@Body RequestBody requestBody);
 
     @Multipart
     @POST("events/add/event")

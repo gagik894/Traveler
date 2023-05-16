@@ -12,15 +12,17 @@ public class User implements Parcelable {
     private String username;
     private String _id;
     private String location;
+    private String password;
     private float rating;
     private ArrayList<Event> upcomingEvents = null;
     private ArrayList<Event> savedEvents = null;
     private ArrayList<Event> userEvents = null;
 
-    public User(String avatar, String username, String location, float rating, ArrayList<Event> upcomingEvents, ArrayList<Event> savedEvents, ArrayList<Event> userEvents) {
+    public User(String avatar, String username, String location, String password, float rating, ArrayList<Event> upcomingEvents, ArrayList<Event> savedEvents, ArrayList<Event> userEvents) {
         this.avatar = avatar;
         this.username = username;
         this.location = location;
+        this.password = password;
         this.rating = rating;
         this.upcomingEvents = upcomingEvents;
         this.savedEvents = savedEvents;
@@ -34,15 +36,19 @@ public class User implements Parcelable {
         this.rating = rating;
     }
 
-    public User(String _id, String email, String username) {
-        this.email = email;
+    public User(String username, String email, String password) {
         this.username = username;
-        this._id = _id;
+        this.email = email;
+        this.password = password;
     }
 
     public User(String _id, String email) {
         this.email = email;
         this._id = _id;
+    }
+
+    public User() {
+
     }
 
     public String toString() {
@@ -75,6 +81,10 @@ public class User implements Parcelable {
         return location;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public float getRating() {
         return rating;
     }
@@ -95,6 +105,18 @@ public class User implements Parcelable {
         return userEvents;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 
     @Override
     public int describeContents() {
@@ -108,6 +130,7 @@ public class User implements Parcelable {
         dest.writeString(this.username);
         dest.writeString(this._id);
         dest.writeString(this.location);
+        dest.writeString(this.password);
         dest.writeFloat(this.rating);
         dest.writeTypedList(this.upcomingEvents);
         dest.writeTypedList(this.savedEvents);
@@ -120,6 +143,7 @@ public class User implements Parcelable {
         this.username = source.readString();
         this._id = source.readString();
         this.location = source.readString();
+        this.password = source.readString();
         this.rating = source.readFloat();
         this.upcomingEvents = source.createTypedArrayList(Event.CREATOR);
         this.savedEvents = source.createTypedArrayList(Event.CREATOR);
@@ -132,6 +156,7 @@ public class User implements Parcelable {
         this.username = in.readString();
         this._id = in.readString();
         this.location = in.readString();
+        this.password = in.readString();
         this.rating = in.readFloat();
         this.upcomingEvents = in.createTypedArrayList(Event.CREATOR);
         this.savedEvents = in.createTypedArrayList(Event.CREATOR);
