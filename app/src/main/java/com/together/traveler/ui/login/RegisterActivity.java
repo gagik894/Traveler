@@ -11,6 +11,7 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -39,23 +40,8 @@ public class RegisterActivity extends AppCompatActivity {
     private CardView BottomView;
     private RelativeLayout BottomRelativeLayout;
     private final String Tag = "RegisterActivity";
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if (v instanceof EditText) {
-                Rect outRect = new Rect();
-                v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                    v.clearFocus();
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-            }
-        }
-        return super.dispatchTouchEvent(event);
-    }
+    private EditText emailEditText;
+    private EditText passwordEditText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,13 +51,38 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivitySignupBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        final View activityRootView = binding.getRoot();
+        setContentView(activityRootView);
+
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            private boolean wasOpened;
+
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                activityRootView.getWindowVisibleDisplayFrame(r);
+                int screenHeight = activityRootView.getRootView().getHeight();
+                int keypadHeight = screenHeight - r.bottom;
+                boolean isOpen = keypadHeight > screenHeight * 0.15;
+                if (isOpen != wasOpened) {
+                    wasOpened = isOpen;
+                    if (isOpen) {
+                        // keyboard is opened
+                    } else {
+                        View v = getCurrentFocus();
+                        if (v instanceof EditText) {
+                            v.clearFocus();
+                        }
+                    }
+                }
+            }
+        });
 
         registerViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(RegisterViewModel.class);
 
-        final EditText emailEditText = binding.signupEtEmail;
-        final EditText passwordEditText = binding.signupEtPassword;
+        emailEditText = binding.signupEtEmail;
+        passwordEditText = binding.signupEtPassword;
         final EditText usernameEditText = binding.signupEtUsername;
         final EditText rPasswordEditText = binding.signupEtRPassword;
         final Button nextButton = binding.signupBtnSignup;

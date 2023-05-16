@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -25,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.together.traveler.ui.main.MainActivity;
 import com.together.traveler.context.AppContext;
 import com.together.traveler.databinding.ActivityLoginBinding;
@@ -36,22 +38,6 @@ public class LoginActivity extends AppCompatActivity {
     private RelativeLayout BottomRelativeLayout;
     private final String TAG = "asd";
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if (v instanceof EditText) {
-                Rect outRect = new Rect();
-                v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                    v.clearFocus();
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-            }
-        }
-        return super.dispatchTouchEvent(event);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +47,32 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         AppContext.init(this);
         ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        final View activityRootView = binding.getRoot();
+        setContentView(activityRootView);
+
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            private boolean wasOpened;
+
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                activityRootView.getWindowVisibleDisplayFrame(r);
+                int screenHeight = activityRootView.getRootView().getHeight();
+                int keypadHeight = screenHeight - r.bottom;
+                boolean isOpen = keypadHeight > screenHeight * 0.15;
+                if (isOpen != wasOpened) {
+                    wasOpened = isOpen;
+                    if (isOpen) {
+                        // keyboard is opened
+                    } else {
+                        View v = getCurrentFocus();
+                        if (v instanceof EditText) {
+                            v.clearFocus();
+                        }
+                    }
+                }
+            }
+        });
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
@@ -71,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             Log.i(TAG, "onCreate: change");
             finish();
         }
-        final EditText emailEditText = binding.loginEtEmail;
+        final TextInputEditText emailEditText = binding.loginEtEmail;
         final EditText passwordEditText = binding.loginEtPassword;
         final Button loginButton = binding.loginBtnlogin;
         final ProgressBar loadingProgressBar = binding.loginPbLoading;

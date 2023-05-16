@@ -36,95 +36,114 @@
             android:id="@+id/signupRlBottom"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0"
             android:paddingHorizontal="10dp">
 
 
-            <EditText
-                android:id="@+id/signupEtUsername"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/signupTfUsername"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="30dp"
-                android:autofillHints="@string/prompt_username"
-                android:background="@drawable/edit_text_background"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:hint="@string/prompt_username"
-                android:inputType="textPersonName"
                 android:maxWidth="488dp"
                 android:minHeight="48dp"
-                android:paddingHorizontal="10dp"
                 android:selectAllOnFocus="true"
                 android:textColorHint="@color/hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <EditText
-                android:id="@+id/signupEtEmail"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/signupEtUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textPersonName" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/signupTfEmail"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_below="@+id/signupEtUsername"
-                android:layout_marginTop="25dp"
-                android:autofillHints="@string/prompt_email"
-                android:background="@drawable/edit_text_background"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/signupTfUsername"
+                android:layout_marginTop="10dp"
                 android:hint="@string/prompt_email"
-                android:inputType="textEmailAddress"
                 android:maxWidth="488dp"
                 android:minHeight="48dp"
-                android:paddingHorizontal="10dp"
                 android:selectAllOnFocus="true"
                 android:textColorHint="@color/hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/signupTfUsername">
 
-            <EditText
-                android:id="@+id/signupEtPassword"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/signupEtEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textEmailAddress" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/signupTfPassword"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_below="@+id/signupEtEmail"
-                android:layout_marginTop="25dp"
-                android:autofillHints="@string/prompt_password"
-                android:background="@drawable/edit_text_background"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/signupTfEmail"
+                android:layout_marginTop="10dp"
                 android:hint="@string/prompt_password"
-                android:inputType="textPassword"
                 android:maxWidth="488dp"
                 android:minHeight="48dp"
-                android:paddingHorizontal="10dp"
                 android:selectAllOnFocus="true"
                 android:textColorHint="@color/hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/signupEtEmail" />
+                app:layout_constraintTop_toBottomOf="@+id/signupTfEmail">
 
-            <EditText
-                android:id="@+id/signupEtRPassword"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/signupEtPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textPassword" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/signupTfRPassword"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_below="@+id/signupEtPassword"
-                android:layout_marginTop="25dp"
-                android:autofillHints="@string/prompt_password"
-                android:background="@drawable/edit_text_background"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/signupTfPassword"
+                android:layout_marginTop="10dp"
                 android:hint="@string/prompt_repeat_password"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
                 android:maxWidth="488dp"
                 android:minHeight="48dp"
-                android:paddingHorizontal="10dp"
                 android:selectAllOnFocus="true"
                 android:textColorHint="@color/hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/signupEtEmail" />
+                app:layout_constraintTop_toBottomOf="@+id/signupTfPassword">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/signupEtRPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textPassword" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <Button
                 android:id="@+id/signupBtnSignup"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:layout_below="@+id/signupEtRPassword"
+                android:layout_below="@+id/signupTfRPassword"
                 android:layout_gravity="start"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:elevation="0dp"
                 android:enabled="false"
                 android:maxWidth="488dp"
@@ -132,10 +151,10 @@
                 android:translationZ="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.437"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/signupEtPassword"
-                app:layout_constraintVertical_bias="0.134" />
+                app:layout_constraintTop_toBottomOf="@+id/signupTfRPassword"
+                app:layout_constraintVertical_bias="0" />
 
             <ProgressBar
                 android:id="@+id/signupPbLoading"
@@ -168,6 +187,7 @@
                 android:layout_above="@+id/signupTvLogin"
                 android:layout_alignParentStart="false"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="0dp"
                 android:text="@string/have_account" />
 
             <TextView

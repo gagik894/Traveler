@@ -67,54 +67,62 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-
-                <EditText
-                    android:id="@+id/loginEtEmail"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/loginTfEmail"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="30dp"
                     android:autofillHints="@string/prompt_email"
-                    android:background="@drawable/edit_text_background"
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
                     android:maxWidth="488dp"
                     android:minHeight="48dp"
-                    android:paddingHorizontal="10dp"
                     android:selectAllOnFocus="true"
                     android:textColorHint="@color/hint"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/loginEtEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textEmailAddress"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/loginEtPassword"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/loginTfPassword"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:layout_below="@+id/loginEtEmail"
-                    android:layout_marginTop="25dp"
-                    android:autofillHints="@string/prompt_password"
-                    android:background="@drawable/edit_text_background"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/loginTfEmail"
+                    android:layout_marginTop="10dp"
                     android:hint="@string/prompt_password"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionDone"
-                    android:inputType="textPassword"
                     android:maxWidth="488dp"
                     android:minHeight="48dp"
-                    android:paddingHorizontal="10dp"
                     android:selectAllOnFocus="true"
                     android:textColorHint="@color/hint"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/loginEtEmail" />
+                    app:layout_constraintTop_toBottomOf="@+id/loginTfEmail">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/loginEtPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:imeActionLabel="@string/action_sign_in_short"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
                     android:id="@+id/loginBtnlogin"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:layout_below="@+id/loginEtPassword"
+                    android:layout_below="@+id/loginTfPassword"
                     android:layout_gravity="start"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="15dp"
                     android:elevation="0dp"
                     android:enabled="false"
                     android:maxWidth="488dp"
@@ -124,7 +132,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.437"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/loginEtPassword"
+                    app:layout_constraintTop_toBottomOf="@+id/loginTfPassword"
                     app:layout_constraintVertical_bias="0.134" />
 
                 <ProgressBar
