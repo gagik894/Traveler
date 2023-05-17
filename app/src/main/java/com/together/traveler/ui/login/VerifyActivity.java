@@ -173,8 +173,12 @@ public class VerifyActivity extends AppCompatActivity {
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
-        Intent switchActivityIntent = new Intent(this, MainActivity.class);
-        startActivity(switchActivityIntent);
+        try {
+            Intent switchActivityIntent = new Intent(this, MainActivity.class);
+            startActivity(switchActivityIntent);
+        } catch (Exception e) {
+            Log.e("TAG", "updateUiWithUser: ", e);
+        }
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {

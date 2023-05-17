@@ -30,22 +30,18 @@ public class ApiClient {
         String authToken = sharedPreferences.getString("auth_token", null);
         Log.i(TAG, "getRetrofitInstance: " + authToken);
         if (authToken != null) {
-            // add the AuthenticationInterceptor to the OkHttpClient
-            httpClient.addInterceptor(new AuthenticationInterceptor(authToken));
+            httpClient.addInterceptor(new AuthenticationInterceptor());
         }
-
-        // add a logging interceptor to the OkHttpClient
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         httpClient.addInterceptor(loggingInterceptor);
 
-        if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl("https://traveler-ynga.onrender.com/")
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(httpClient.build())
                     .build();
-        }
+
 
         return retrofit;
     }
