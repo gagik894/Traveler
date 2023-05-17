@@ -35,6 +35,7 @@ public class HomeViewModel extends ViewModel {
 
     private final MutableLiveData<Event> mapSelectedEvent;
     private final MutableLiveData<Boolean> categoriesVisibility;
+    private final MutableLiveData<Boolean> loading;
     private String userId;
     private CharSequence constraint;
     private final ApiService apiService;
@@ -49,11 +50,11 @@ public class HomeViewModel extends ViewModel {
         categories = new MutableLiveData<>(new ArrayList<>());
         selectedCategories = new MutableLiveData<>(new ArrayList<>());
         categoriesVisibility = new MutableLiveData<>(false);
+        loading = new MutableLiveData<>(false);
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         fetchEvents();
         fetchCategories();
     }
-
 
     public void changeCategoriesVisibility() {
         this.categoriesVisibility.setValue(Boolean.FALSE.equals(this.categoriesVisibility.getValue()));
@@ -75,11 +76,16 @@ public class HomeViewModel extends ViewModel {
         return categoriesVisibility;
     }
 
+    public MutableLiveData<Boolean> getLoading() {
+        return loading;
+    }
+
     public MutableLiveData<List<Integer>> getSelectedCategories() {
         return selectedCategories;
     }
 
     public void fetchEvents() {
+        loading.setValue(true);
         apiService.getEvents(null).enqueue(new Callback<EventsResponse>() {
             @Override
             public void onResponse(@NonNull Call<EventsResponse> call, @NonNull Response<EventsResponse> response) {
@@ -94,6 +100,7 @@ public class HomeViewModel extends ViewModel {
                         HomeViewModel.this.allEvents.addAll(events);
                         userId = eventsResponse != null ? eventsResponse.getUserId() : null;
                         HomeViewModel.this.filterEventsByCategory();
+                        loading.postValue(false);
                     });
                 } else {
                     Log.e(TAG, "fetchEvents request failed with code: " + response.code() + response.body());
@@ -193,6 +200,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void filterBySearchAndTags(CharSequence constraint) {
+        loading.postValue(true);
         this.constraint = constraint;
         ArrayList<Event> allEvents = this.categoryFilteredEvents;
         if (allEvents != null) {
@@ -207,19 +215,27 @@ public class HomeViewModel extends ViewModel {
 
                 String filterPattern = constraint.toString().toLowerCase().trim();
                 for (Event event : allEvents) {
+                    boolean eventAdded = false;
                     if (event.getTitle().toLowerCase().contains(filterPattern)) {
                         filteredEvents.add(event);
-                    }else{
-                        for (String tag: event.getTags()){
-                            if (tag.contains(filterPattern)){
+                        eventAdded = true;
+                    } else {
+                        for (String tag : event.getTags()) {
+                            if (tag.contains(filterPattern)) {
                                 filteredEvents.add(event);
+                                eventAdded = true;
                                 break;
                             }
                         }
                     }
+                    if (!eventAdded && event.getDescription().toLowerCase().contains(filterPattern)) {
+                        filteredEvents.add(event);
+                    }
                 }
 
+
                 HomeViewModel.this.filteredEvents.postValue(filteredEvents);
+                loading.postValue(false);
             });
 
             executorService.shutdown();

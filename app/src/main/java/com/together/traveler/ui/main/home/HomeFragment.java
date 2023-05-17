@@ -109,7 +109,6 @@ public class HomeFragment extends Fragment{
         homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), newEvents  -> {
 
             swipeRefreshLayout.setRefreshing(false);
-            progressBar.setVisibility(View.GONE);
                 DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
                     @Override
                     public int getOldListSize() {
@@ -164,6 +163,8 @@ public class HomeFragment extends Fragment{
                 chip.setChecked(true);
             }
         });
+
+        homeViewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> progressBar.setVisibility(isLoading? View.VISIBLE : View.GONE));
     }
 
     @Override
