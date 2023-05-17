@@ -136,7 +136,6 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
             }
 
             if (data.getTags().size() > 0){
-                Toast.makeText(requireContext(), data.getTags().toString(), Toast.LENGTH_SHORT).show();
                 tags.setVisibility(View.VISIBLE);
                 chipGroup.removeAllViews();
                 for (int i = 0; i < data.getTags().size(); i++) {

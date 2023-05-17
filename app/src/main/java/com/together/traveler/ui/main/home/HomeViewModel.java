@@ -1,5 +1,7 @@
 package com.together.traveler.ui.main.home;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Filter;
@@ -14,8 +16,14 @@ import com.together.traveler.model.EventsResponse;
 import com.together.traveler.requests.ApiClient;
 import com.together.traveler.requests.ApiService;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,6 +40,7 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<Event>> filteredEvents;
     private final MutableLiveData<ArrayList<String>> categories;
     private final MutableLiveData<List<Integer>> selectedCategories;
+    private final MutableLiveData<String> locationName;
 
     private final MutableLiveData<Event> mapSelectedEvent;
     private final MutableLiveData<Boolean> categoriesVisibility;
@@ -51,9 +60,11 @@ public class HomeViewModel extends ViewModel {
         selectedCategories = new MutableLiveData<>(new ArrayList<>());
         categoriesVisibility = new MutableLiveData<>(false);
         loading = new MutableLiveData<>(false);
+        locationName = new MutableLiveData<>();
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         fetchEvents();
         fetchCategories();
+        getLocation();
     }
 
     public void changeCategoriesVisibility() {
@@ -84,8 +95,12 @@ public class HomeViewModel extends ViewModel {
         return selectedCategories;
     }
 
+    public MutableLiveData<String> getLocationName() {
+        return locationName;
+    }
+
     public void fetchEvents() {
-        loading.setValue(true);
+        loading.postValue(true);
         apiService.getEvents(null).enqueue(new Callback<EventsResponse>() {
             @Override
             public void onResponse(@NonNull Call<EventsResponse> call, @NonNull Response<EventsResponse> response) {
@@ -240,5 +255,28 @@ public class HomeViewModel extends ViewModel {
 
             executorService.shutdown();
         }
+    }
+
+    private void getLocation() {
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.submit(() -> {
+                URL url = null;
+                try {
+                    url = new URL("https://ipapi.co/city/");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                BufferedReader reader = null;
+                String cityName = null;
+                try {
+                    reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                    cityName = reader.readLine();
+                    locationName.postValue(cityName);
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            executorService.shutdown();
     }
 }

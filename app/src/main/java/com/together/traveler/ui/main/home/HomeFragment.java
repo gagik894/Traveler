@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -48,6 +49,7 @@ public class HomeFragment extends Fragment{
     private ImageButton filtersButton;
     private ChipGroup chipGroup;
     private EventCardsAdapter eventCardsAdapter;
+    private FragmentContainerView locationFragment;
     private final List<Event> eventList = new ArrayList<>();
 
     @Override
@@ -62,7 +64,7 @@ public class HomeFragment extends Fragment{
         progressBar = binding.homePb;
         filtersButton = binding.homeBtnFilters;
         chipGroup = binding.homeChgCategories;
-
+        locationFragment = binding.fragmentContainerView;
         return root;
     }
 
@@ -88,6 +90,20 @@ public class HomeFragment extends Fragment{
             }
         });
 
+        rvCards.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    // Scrolling up
+                    locationFragment.animate().translationY(locationFragment.getHeight()).setDuration(300);
+                    locationFragment.animate().alpha(0.0f).setDuration(300);
+                } else {
+                    // Scrolling down
+                    locationFragment.animate().translationY(0).setDuration(300);
+                    locationFragment.animate().alpha(1.0f).setDuration(300);
+                }
+            }
+        });
         eventCardsAdapter = new EventCardsAdapter(eventList, item -> {
             if (isAdded()) {
                 NavDirections action = HomeFragmentDirections.actionHomeFragmentToEventFragment(item, homeViewModel.getUserId());
@@ -104,6 +120,7 @@ public class HomeFragment extends Fragment{
             thread.start();
         });
 
+        locationFragment.setOnClickListener(v-> Toast.makeText(requireContext(), "Soon", Toast.LENGTH_SHORT).show());
         filtersButton.setOnClickListener(v-> homeViewModel.changeCategoriesVisibility());
 
         homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), newEvents  -> {
@@ -181,4 +198,6 @@ public class HomeFragment extends Fragment{
         Log.i("asd", "scrollDown: " + rvCards);
         rvCards.post(() -> rvCards.smoothScrollBy(0, 1000));
     }
+
+
 }

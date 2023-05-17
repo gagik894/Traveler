@@ -85,8 +85,8 @@
     <!--    user-->
     <string name="user_profile_image">Profile image</string>
     <string name="user_my_events">MY EVENTS</string>
-    <string name="user_saved">FAVORITES</string>
-    <string name="user_upcoming">UPCOMING</string>
+    <string name="user_saved">MY FAVORITES</string>
+    <string name="user_upcoming">MY TICKETS</string>
     <string name="user_events">EVENTS</string>
 
     <!--    navigation-->
