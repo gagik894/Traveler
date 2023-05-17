@@ -3,6 +3,7 @@ package com.together.traveler.requests;
 import com.together.traveler.model.CheckTicketResponse;
 import com.together.traveler.model.Event;
 import com.together.traveler.model.EventsResponse;
+import com.together.traveler.model.LoginResponse;
 import com.together.traveler.model.MapItem;
 import com.together.traveler.model.Place;
 import com.together.traveler.model.User;
@@ -56,6 +57,9 @@ public interface ApiService {
 
     @POST("events/checkTicket")
     Call<CheckTicketResponse> checkTicket(@Body RequestBody requestBody);
+
+    @POST("auth/{type}")
+    Call<LoginResponse> auth(@Path("type") String type, @Body RequestBody requestBody);
 
     @POST("auth/check{param}/")
     Call<String> checkRegister(@Path("param") String param, @Body RequestBody requestBody);

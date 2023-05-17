@@ -86,7 +86,8 @@ public class RegisterViewModel extends ViewModel {
                 String data = ((Result.Success<String>) result).getData();
                 signUpResult.postValue(new LoginResult(new LoggedInUserView(data)));
             } else {
-                signUpResult.postValue(new LoginResult(R.string.login_failed));
+                String data = ((Result.Error) result).getError();
+                signUpResult.postValue(new LoginResult(data));
             }
         });
         thread.start();

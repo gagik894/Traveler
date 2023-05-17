@@ -23,7 +23,7 @@ public class AuthenticationInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Context context = AppContext.getContext();
         SharedPreferences sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
-        String authToken = sharedPreferences.getString("auth_token", null);
+        String authToken = sharedPreferences.getString("auth_token", "");
         Log.i("auth", "intercept: " + authToken);
         Request request = chain.request();
         Request.Builder builder = request.newBuilder()

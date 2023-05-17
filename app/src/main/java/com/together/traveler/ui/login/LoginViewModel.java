@@ -37,7 +37,8 @@ public class LoginViewModel extends ViewModel {
                 String data = ((Result.Success<String>) result).getData();
                 loginResult.postValue(new LoginResult(new LoggedInUserView(data)));
             } else {
-                loginResult.postValue(new LoginResult(R.string.login_failed));
+                String data = ((Result.Error) result).getError();
+                loginResult.postValue(new LoginResult(data));
             }
         });
         thread.start();
@@ -52,7 +53,8 @@ public class LoginViewModel extends ViewModel {
                 String data = ((Result.Success<String>) result).getData();
                 loginResult.postValue(new LoginResult(new LoggedInUserView(data)));
             } else {
-                loginResult.postValue(new LoginResult(R.string.login_failed));
+                String data = ((Result.Error) result).getError();
+                loginResult.postValue(new LoginResult(data));
             }
         });
         thread.start();
