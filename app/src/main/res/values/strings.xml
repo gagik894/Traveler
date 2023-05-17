@@ -64,6 +64,8 @@
     <string name="event_about">About</string>
     <string name="event_location">Location</string>
     <string name="event_tags">Tags</string>
+    <string name="event_alert_title">Add event to calendar?</string>
+    <string name="event_alert_message">Do you want to add this event to your calendar and save the ticket in downloads?</string>
 
     <!--    place-->
     <string name="place_read_more">more</string>
@@ -83,7 +85,7 @@
     <!--    user-->
     <string name="user_profile_image">Profile image</string>
     <string name="user_my_events">MY EVENTS</string>
-    <string name="user_saved">SAVED</string>
+    <string name="user_saved">FAVORITES</string>
     <string name="user_upcoming">UPCOMING</string>
     <string name="user_events">EVENTS</string>
 

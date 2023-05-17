@@ -67,13 +67,15 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
     private TicketDialog dialog;
 
     private NestedScrollView scrollView;
-    private final ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
+    private final ActivityResultLauncher<String[]> requestMultiplePermissionsLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                if (result.getOrDefault(Manifest.permission.READ_CALENDAR, false) && result.getOrDefault(Manifest.permission.WRITE_CALENDAR, false)) {
                     alertSaveInCalendar();
                 } else {
+                    // At least one of the permissions is not granted
                 }
             });
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -221,16 +223,14 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
             alertSaveInCalendar();
         } else {
             // Request permission
-            requestPermissionLauncher.launch(Manifest.permission.WRITE_CALENDAR);
-            requestPermissionLauncher.launch(Manifest.permission.READ_CALENDAR);
+            requestMultiplePermissionsLauncher.launch(new String[]{Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR});
         }
-
     }
 
     private void alertSaveInCalendar() {
         new AlertDialog.Builder(getContext())
-                .setTitle("Add event to calendar?")
-                .setMessage("Do you want to add this event to your calendar and save the ticket?")
+                .setTitle(R.string.event_alert_title)
+                .setMessage(R.string.event_alert_message)
                 .setPositiveButton("Yes", (dialog, which) -> {
                     saveEventInCalendar();
                     callDialogWithListener();
