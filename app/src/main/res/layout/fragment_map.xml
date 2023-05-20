@@ -83,6 +83,35 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:layout="@layout/fragment_event_card" />
 
+    <Button
+        android:id="@+id/mapBtnOk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#99FFFFFF"
+        android:hapticFeedbackEnabled="false"
+        android:text="Ok"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/mapBtnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@color/colorTransparent"
+        android:hapticFeedbackEnabled="false"
+        android:text="Cancel"
+        android:textColor="@color/primary_color"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
+        app:layout_constraintEnd_toStartOf="@+id/mapBtnOk" />
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="0dp"

@@ -291,5 +291,20 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
             mViewModel.dataChanged(title.getText().toString(), location.getText().toString(), description.getText().toString(), Integer.parseInt(String.valueOf(ticketsCount.getText()).equals("") ? String.valueOf(0) : String.valueOf(ticketsCount.getText())));
         }
     };
+    private final TextWatcher TagsTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // ignore
+        }
 
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // ignore
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+//            mViewModel.;
+        }
+    };
 }

@@ -1,7 +1,10 @@
 package com.together.traveler.ui.main.map;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -56,6 +59,28 @@ public class MapDialog extends DialogFragment {
     private Timer timer = new Timer();
     private MyDialogListener listener;
 
+
+
+//    @NonNull
+//    @Override
+//    public Dialog onCreateDialog(Bundle savedInstanceState) {
+//        Log.i(TAG, "onCreateDialog: ");
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        LayoutInflater inflater = getActivity().getLayoutInflater();
+//        View view = inflater.inflate(R.layout.fragment_map, null);
+//
+//        // Set the view for the dialog
+//        builder.setView(view);
+//        builder.setPositiveButton("Ok", (dialog, id) -> {
+//
+//                })
+//                .setNegativeButton("Cancel", (dialog, id) -> {
+//                    dialog.dismiss();
+//                });
+//        // Create the AlertDialog object and return it
+//        return builder.create();
+//    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +88,7 @@ public class MapDialog extends DialogFragment {
 
     @Override
     public void onStart() {
+        Log.i(TAG, "onStart: ");
         super.onStart();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -80,22 +106,24 @@ public class MapDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        Log.i(TAG, "onCreateView: ");
         binding = FragmentMapBinding.inflate(inflater, container, false);
         mapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
-        Objects.requireNonNull(getDialog()).setTitle("popup_map");
+
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        Log.i(TAG, "onViewCreated: ");
         final Context ctx = getContext();
         final GeoPoint startPoint = new GeoPoint(40.740295, 44.865835);
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         ImageButton onCenterButton = binding.mapBtnCenterOnLocation;
         Button eventsButton = binding.mapBtnEvents;
         Button placesButton = binding.mapBtnPlaces;
+        Button okBtn = binding.mapBtnOk;
         locationSearch = binding.mapEtLocation;
         map = requireView().findViewById(R.id.map);
         mapController = map.getController();
@@ -140,7 +168,7 @@ public class MapDialog extends DialogFragment {
 
         onCenterButton.setOnClickListener(v -> centerOnLocation(18));
         locationSearch.addTextChangedListener(afterTextChangedListener);
-
+        okBtn.setOnClickListener(v->dismiss());
 
 
         mapViewModel.getCenter().observe(getViewLifecycleOwner(), location->{
@@ -158,6 +186,7 @@ public class MapDialog extends DialogFragment {
             Log.i(TAG, "onViewCreated: " + mapViewModel.getLocationName());
             if (listener != null && mapViewModel.getOverlayItems().getValue() != null) {
                 listener.onDialogResult(mapViewModel.getLocationName(), location);
+                okBtn.setVisibility(View.VISIBLE);
             }
         });
 
