@@ -146,6 +146,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         endDateAndTime.addTextChangedListener(afterTextChangedListener);
         description.addTextChangedListener(afterTextChangedListener);
         ticketsCount.addTextChangedListener(afterTextChangedListener);
+        newTag.addTextChangedListener(tagsTextWatcher);
 
         location.setOnClickListener(this::showPopupView);
         startDateAndTime.setOnClickListener(v -> showDateTimePicker(true));
@@ -192,6 +193,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         });
 
         mViewModel.isValid().observe(getViewLifecycleOwner(), btnCreate::setEnabled);
+        mViewModel.getIsTagValid().observe(getViewLifecycleOwner(), addTag::setEnabled);
         mViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             ArrayList<String> categoriesList = new ArrayList<>(categories);
             adapter.clear();
@@ -291,7 +293,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
             mViewModel.dataChanged(title.getText().toString(), location.getText().toString(), description.getText().toString(), Integer.parseInt(String.valueOf(ticketsCount.getText()).equals("") ? String.valueOf(0) : String.valueOf(ticketsCount.getText())));
         }
     };
-    private final TextWatcher TagsTextWatcher = new TextWatcher() {
+    private final TextWatcher tagsTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             // ignore
@@ -304,7 +306,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
 
         @Override
         public void afterTextChanged(Editable s) {
-//            mViewModel.;
+            mViewModel.checkTag(s.toString());
         }
     };
 }

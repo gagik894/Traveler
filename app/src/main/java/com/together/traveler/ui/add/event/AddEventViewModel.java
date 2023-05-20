@@ -34,6 +34,7 @@ public class AddEventViewModel extends ViewModel {
 
     private final MutableLiveData<Event> data;
     private final MutableLiveData<ArrayList<String>> categories;
+    private final MutableLiveData<Boolean> isTagValid;
     private final MutableLiveData<Boolean> isValid;
     private final ApiService apiService;
 
@@ -41,6 +42,7 @@ public class AddEventViewModel extends ViewModel {
         data = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
         isValid = new MutableLiveData<>(false);
+        isTagValid = new MutableLiveData<>(false);
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         this.data.setValue(new Event());
         fetchCategories();
@@ -88,7 +90,13 @@ public class AddEventViewModel extends ViewModel {
         this.data.setValue(current);
         checkValid(current);
     }
-
+    public void checkTag(String tag) {
+        if (tag.length()>0) {
+            isTagValid.setValue(true);
+        }else{
+            isTagValid.setValue(false);
+        }
+    }
     public void create() {
         Event event = data.getValue();
         if (event == null) {
@@ -172,6 +180,10 @@ public class AddEventViewModel extends ViewModel {
 
     public MutableLiveData<Boolean> isValid() {
         return isValid;
+    }
+
+    public MutableLiveData<Boolean> getIsTagValid() {
+        return isTagValid;
     }
 
     public void addTag(String tag) {
