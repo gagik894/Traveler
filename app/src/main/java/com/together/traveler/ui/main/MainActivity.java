@@ -19,6 +19,7 @@ import com.together.traveler.model.Event;
 import com.together.traveler.ui.add.AddActivity;
 import com.together.traveler.R;
 import com.together.traveler.ui.event.EventFragment;
+import com.together.traveler.ui.main.bottomSheet.AddBottomSheet;
 import com.together.traveler.ui.main.home.HomeFragment;
 import com.together.traveler.ui.main.user.UserFragment;
 
@@ -48,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
             NavigationUI.setupWithNavController(bottomNav, navController);
         }
         addButton.setOnClickListener(v -> {
-            Intent switchActivityIntent = new Intent(this, AddActivity.class);
-            startActivity(switchActivityIntent);
+            AddBottomSheet bottomSheet = new AddBottomSheet();
+            bottomSheet.show(getSupportFragmentManager(), "bottomSheet");
         });
     }
 

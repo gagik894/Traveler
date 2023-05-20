@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/DHomeLocationEtLocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:hint="@string/home_search"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/DHomeLocationBtnNearby"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorTransparent"
+            android:drawableLeft="@drawable/my_location"
+            android:text="@string/home_show_nearby"
+            android:textColor="@color/secondary_color"
+            app:layout_constraintStart_toStartOf="@+id/DHomeLocationEtLocation"
+            app:layout_constraintTop_toBottomOf="@+id/DHomeLocationEtLocation" />
+
+        <Button
+            android:id="@+id/DHomeLocationBtnAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorTransparent"
+            android:drawableLeft="@drawable/ic_baseline_select_all"
+            android:text="@string/home_show_all"
+            android:textColor="@color/secondary_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/DHomeLocationBtnNearby"
+            app:layout_constraintTop_toBottomOf="@+id/DHomeLocationBtnNearby" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

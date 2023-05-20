@@ -1,15 +1,15 @@
 package com.together.traveler.ui.main.home;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
@@ -92,7 +91,7 @@ public class HomeFragment extends Fragment{
 
         rvCards.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
                     // Scrolling up
                     locationFragment.animate().translationY(locationFragment.getHeight()).setDuration(300);
@@ -116,11 +115,11 @@ public class HomeFragment extends Fragment{
 
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            Thread thread = new Thread(homeViewModel::fetchEvents);
+            Thread thread = new Thread(homeViewModel::fetch);
             thread.start();
         });
 
-        locationFragment.setOnClickListener(v-> Toast.makeText(requireContext(), "Soon", Toast.LENGTH_SHORT).show());
+        locationFragment.setOnClickListener(v-> showSelectLocation());
         filtersButton.setOnClickListener(v-> homeViewModel.changeCategoriesVisibility());
 
         homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), newEvents  -> {
@@ -197,6 +196,34 @@ public class HomeFragment extends Fragment{
     public void scrollDown(){
         Log.i("asd", "scrollDown: " + rvCards);
         rvCards.post(() -> rvCards.smoothScrollBy(0, 1000));
+    }
+
+    private void showSelectLocation(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.dialog_home_location, null);
+        builder.setView(dialogLayout);
+        EditText locationSearch = dialogLayout.findViewById(R.id.DHomeLocationEtLocation);
+        Button allBtn = dialogLayout.findViewById(R.id.DHomeLocationBtnAll);
+        Button nearbyBtn = dialogLayout.findViewById(R.id.DHomeLocationBtnNearby);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            homeViewModel.setLocationName(locationSearch.getText().toString());
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        allBtn.setOnClickListener(v->{
+            homeViewModel.setLocationName("");
+            dialog.dismiss();
+        });
+        nearbyBtn.setOnClickListener(v->{
+            homeViewModel.fetchLocation();
+            dialog.dismiss();
+        });
     }
 
 

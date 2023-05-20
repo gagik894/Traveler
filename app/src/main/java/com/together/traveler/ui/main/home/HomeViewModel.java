@@ -1,10 +1,7 @@
 package com.together.traveler.ui.main.home;
 
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Filter;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -23,7 +20,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -41,8 +37,6 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<String>> categories;
     private final MutableLiveData<List<Integer>> selectedCategories;
     private final MutableLiveData<String> locationName;
-
-    private final MutableLiveData<Event> mapSelectedEvent;
     private final MutableLiveData<Boolean> categoriesVisibility;
     private final MutableLiveData<Boolean> loading;
     private String userId;
@@ -55,24 +49,23 @@ public class HomeViewModel extends ViewModel {
         allEvents = new ArrayList<>();
         categoryFilteredEvents = new ArrayList<>();
         filteredEvents = new MutableLiveData<>(new ArrayList<>());
-        mapSelectedEvent = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
         selectedCategories = new MutableLiveData<>(new ArrayList<>());
         categoriesVisibility = new MutableLiveData<>(false);
         loading = new MutableLiveData<>(false);
         locationName = new MutableLiveData<>();
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
-        fetchEvents();
         fetchCategories();
-        getLocation();
+        fetchLocation();
     }
 
     public void changeCategoriesVisibility() {
         this.categoriesVisibility.setValue(Boolean.FALSE.equals(this.categoriesVisibility.getValue()));
     }
 
-    public void setMapSelectedEvent(int position){
-        this.mapSelectedEvent.setValue(Objects.requireNonNull(this.getAllEvents().getValue()).get(position));
+    public void setLocationName(String locationName){
+        this.locationName.postValue(locationName);
+        fetchEvents(locationName);
     }
 
     public LiveData<ArrayList<Event>> getAllEvents() {
@@ -99,9 +92,13 @@ public class HomeViewModel extends ViewModel {
         return locationName;
     }
 
-    public void fetchEvents() {
+    public void fetch(){
+        fetchEvents(locationName.getValue());
+    }
+
+    private void fetchEvents(String location) {
         loading.postValue(true);
-        apiService.getEvents(null).enqueue(new Callback<EventsResponse>() {
+        apiService.getEvents(null, location).enqueue(new Callback<EventsResponse>() {
             @Override
             public void onResponse(@NonNull Call<EventsResponse> call, @NonNull Response<EventsResponse> response) {
                 if (response.isSuccessful()) {
@@ -151,10 +148,6 @@ public class HomeViewModel extends ViewModel {
 
     public String getUserId() {
         return userId;
-    }
-
-    public MutableLiveData<Event> getMapSelectedEvent() {
-        return mapSelectedEvent;
     }
 
     @Override
@@ -257,7 +250,7 @@ public class HomeViewModel extends ViewModel {
         }
     }
 
-    private void getLocation() {
+    public void fetchLocation() {
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             executorService.submit(() -> {
                 URL url = null;
@@ -269,9 +262,9 @@ public class HomeViewModel extends ViewModel {
                 BufferedReader reader = null;
                 String cityName = null;
                 try {
-                    reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                    reader = new BufferedReader(new InputStreamReader(url != null ? url.openStream() : null));
                     cityName = reader.readLine();
-                    locationName.postValue(cityName);
+                    setLocationName(cityName);
                     reader.close();
                 } catch (IOException e) {
                     e.printStackTrace();

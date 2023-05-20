@@ -24,7 +24,7 @@ import retrofit2.http.Query;
 
 public interface ApiService {
     @GET("events")
-    Call<EventsResponse> getEvents(@Query("fields") String fields);
+    Call<EventsResponse> getEvents(@Query("fields") String fields, @Query("location") String location);
 
     @GET("{type}")
     Call<List<MapItem>> getMapItems(@Path("type") String type, @Query("fields") String fields);

@@ -1,4 +1,4 @@
-package com.together.traveler.ui.event;
+package com.together.traveler.ui.event.ticket;
 
 import android.app.Dialog;
 import android.content.Context;

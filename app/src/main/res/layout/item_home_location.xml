@@ -38,6 +38,19 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="TextView" />
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/imageView21"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:srcCompat="@android:drawable/arrow_down_float" />
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>

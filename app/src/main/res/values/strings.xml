@@ -52,6 +52,11 @@
     <string name="not_get_code">Didn\'t get the code? <font color="#FF3700B3">Resend it</font></string>
     <string name="invalid_sec_code">Wrong Security Code</string>
 
+    <!--    main-->
+    <string name="main_bottom_dialog_btn_event">Event</string>
+    <string name="main_bottom_dialog_btn_place">Place</string>
+    <string name="main_bottom_dialog_text">What would you like to add?</string>
+
     <!--    event-->
     <string name="event_read_more">more</string>
     <string name="event_read_less">less</string>
@@ -144,6 +149,10 @@
     <string name="restart">Restart</string>
     <string name="open_add">Open add</string>
 
+    <!--    home location dialog-->
+    <string name="home_search">Find events in</string>
+    <string name="home_show_all">Show all events</string>
+    <string name="home_show_nearby">Show nearby events</string>
 
     <string name="sunday">Sunday</string>
     <string name="monday">Monday</string>

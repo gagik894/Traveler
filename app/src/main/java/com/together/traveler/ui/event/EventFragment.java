@@ -16,7 +16,6 @@ import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +44,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentEventBinding;
 import com.together.traveler.model.Event;
+import com.together.traveler.ui.event.ticket.TicketDialog;
 
 import java.io.File;
 import java.io.FileInputStream;
