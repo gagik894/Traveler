@@ -38,6 +38,7 @@ public class AddEventViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isValid;
     private final ApiService apiService;
 
+
     public AddEventViewModel() {
         data = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
@@ -58,15 +59,13 @@ public class AddEventViewModel extends ViewModel {
         checkValid(current);
     }
 
-    public void setStartDateAndTime(String date, String time) {
-        String startDate = String.format("%s, %s", date, time);
-        Objects.requireNonNull(data.getValue()).setStartDate(startDate);
+    public void setStartDateAndTime(String dateTimeString) {
+        Objects.requireNonNull(data.getValue()).setStartDate(dateTimeString);
         this.data.setValue(data.getValue());
     }
 
-    public void setEndDateAndTime(String date, String time) {
-        String endDate = String.format("%s, %s", date, time);
-        Objects.requireNonNull(data.getValue()).setEndDate(endDate);
+    public void setEndDateAndTime(String dateTimeString) {
+        Objects.requireNonNull(data.getValue()).setEndDate(dateTimeString);
         this.data.setValue(data.getValue());
     }
 
@@ -91,7 +90,7 @@ public class AddEventViewModel extends ViewModel {
         checkValid(current);
     }
     public void checkTag(String tag) {
-        if (tag.length()>0) {
+        if (tag.trim().length()>0) {
             isTagValid.setValue(true);
         }else{
             isTagValid.setValue(false);
@@ -166,10 +165,6 @@ public class AddEventViewModel extends ViewModel {
         });
     }
 
-
-
-
-
     public MutableLiveData<ArrayList<String>> getCategories() {
         return categories;
     }
@@ -186,12 +181,19 @@ public class AddEventViewModel extends ViewModel {
         return isTagValid;
     }
 
+    public String getStart(){
+        return Objects.requireNonNull(this.data.getValue()).getStartDate();
+    }
+
+    public String getEnd(){
+        return Objects.requireNonNull(this.data.getValue()).getEndDate();
+    }
+
     public void addTag(String tag) {
         ArrayList<String> currentTags = (ArrayList<String>) Objects.requireNonNull(data.getValue()).getTags();
         if (currentTags != null) {
-            currentTags.add(tag);
+            currentTags.add(tag.trim());
         }
-        Log.i(TAG, "addTag: " +currentTags.toString());
         this.data.getValue().setTags(currentTags);
         Log.i(TAG, "addTag: " +this.data.getValue().getTags());
         this.data.setValue(this.data.getValue());
@@ -202,7 +204,6 @@ public class AddEventViewModel extends ViewModel {
         if (currentTags != null) {
             currentTags.remove(tag);
         }
-        Log.i(TAG, "deleteTag: " +currentTags.toString());
         this.data.getValue().setTags(currentTags);
         Log.i(TAG, "deleteTag: " +this.data.getValue().getTags());
         this.data.setValue(this.data.getValue());

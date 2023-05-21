@@ -4,7 +4,9 @@ import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -22,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -36,6 +39,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.noowenz.customdatetimepicker.CustomDateTimePicker;
+import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentAddEventBinding;
 import com.together.traveler.ui.main.MainActivity;
 import com.together.traveler.ui.main.map.MapDialog;
@@ -46,9 +50,14 @@ import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
     private final String TAG = "AddEvent";
@@ -149,8 +158,14 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         newTag.addTextChangedListener(tagsTextWatcher);
 
         location.setOnClickListener(this::showPopupView);
-        startDateAndTime.setOnClickListener(v -> showDateTimePicker(true));
-        endDateAndTime.setOnClickListener(v -> showDateTimePicker(false));
+        startDateAndTime.setOnClickListener(v -> showDatePicker(true));
+        endDateAndTime.setOnClickListener(v ->{
+            if (mViewModel.getStart().length() > 0){
+                showDatePicker(false);
+            }else{
+                Toast.makeText(requireContext(), R.string.select_start_date_first, Toast.LENGTH_SHORT).show();
+            }
+        });
         eventImage.setOnClickListener(v -> selectImage());
         btnCreate.setOnClickListener(v -> {
             mViewModel.create();
@@ -249,32 +264,71 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         popupFragment.show(getChildFragmentManager(), "popup_map");
     }
 
-    private void showDateTimePicker(boolean start) {
-        new CustomDateTimePicker(requireActivity(), new CustomDateTimePicker.ICustomDateTimeListener() {
-            @Override
-            public void onSet(@NotNull Dialog dialog, @NotNull Calendar calendar,
-                              @NotNull Date fullDate, int year, @NotNull String monthFullName,
-                              @NotNull String monthShortName, int monthNumber, int day,
-                              @NotNull String weekDayFullName, @NotNull String weekDayShortName,
-                              int hour24, int hour12, int min, int sec, @NotNull String AM_PM) {
-                Toast.makeText(requireContext(), "Date and time selected!", Toast.LENGTH_SHORT).show();
-                String date = monthShortName + " " + day;
-                String time = hour24 + ":" + min;
-                if (start) {
-                    mViewModel.setStartDateAndTime(date, time);
-                    startDateAndTime.setText(String.format("%s %s", date, time));
-                } else {
-                    mViewModel.setEndDateAndTime(date, time);
-                    endDateAndTime.setText(String.format("%s %s", date, time));
-                }
-                Log.i(TAG, "onSet: " + date + " " + time);
-            }
+    private void showDatePicker(boolean isStartDate){
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
 
-            @Override
-            public void onCancel() {
-                Toast.makeText(requireContext(), "Date and Time selection is cancelled", Toast.LENGTH_SHORT).show();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), (view, year1, monthOfYear, dayOfMonth1) -> {
+            Calendar selectedDate = Calendar.getInstance();
+            selectedDate.set(year1, monthOfYear, dayOfMonth1);
+
+            TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(), (view1, hourOfDay1, minute1) -> {
+                Calendar selectedTime = Calendar.getInstance();
+                selectedTime.set(year1, monthOfYear, dayOfMonth1, hourOfDay1, minute1);
+                if (isStartDate) {
+                    if (selectedTime.getTimeInMillis() < System.currentTimeMillis()) {
+                        Toast.makeText(requireContext(), R.string.select_future_date, Toast.LENGTH_SHORT).show();
+                    } else {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+                        String dateTimeString = dateFormat.format(selectedTime.getTime());
+                        mViewModel.setStartDateAndTime(dateTimeString);
+                        startDateAndTime.setText(dateTimeString);
+                    }
+                } else {
+                    Date date = convertToDate(mViewModel.getStart());
+                    if (selectedTime.getTimeInMillis() < date.getTime()) {
+                        Toast.makeText(requireContext(), R.string.end_must_be_after_start, Toast.LENGTH_SHORT).show();
+                    } else {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+                        String dateTimeString = dateFormat.format(selectedTime.getTime());
+                        mViewModel.setEndDateAndTime(dateTimeString);
+                        endDateAndTime.setText(dateTimeString);
+                    }
+                }
+                if (selectedTime.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
+                    view1.setCurrentHour(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+                    view1.setCurrentMinute(Calendar.getInstance().get(Calendar.MINUTE));
+                }
+            }, hourOfDay, minute, true);
+
+            timePickerDialog.show();
+        }, year, month, dayOfMonth);
+
+        datePickerDialog.show();
+        if (isStartDate) {
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        }
+        else {
+            Date date = convertToDate(mViewModel.getStart());
+            if (date != null) {
+                datePickerDialog.getDatePicker().setMinDate(date.getTime());
             }
-        }).showDialog();
+        }
+    }
+
+    private Date convertToDate(String dateTimeString){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateTimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 
     private final TextWatcher afterTextChangedListener = new TextWatcher() {

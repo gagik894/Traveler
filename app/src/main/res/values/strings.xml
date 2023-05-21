@@ -83,6 +83,7 @@
     <string name="place_closed">Closed</string>
     <string name="place_closes">Closes</string>
     <string name="place_opens">Opens</string>
+    <string name="place_always_open">Always open</string>
 
     <!--    event card-->
     <string name="event_card_image">Card event image</string>
@@ -130,6 +131,11 @@
     <string name="add_times">Open times</string>
     <string name="add_select_times">Select open times</string>
     <string name="add_enter_url">Enter web page\'s url</string>
+    <!--    add event toasts-->
+    <string name="end_must_be_after_start">The end time should be after the start time.</string>
+    <string name="select_future_date">Please select a future date.</string>
+    <string name="select_start_date_first">Please select the start date first.</string>
+
 
     <!--    universal ticket-->
     <string name="utk_note">This ticket grants you access to all enrolled events.</string>
