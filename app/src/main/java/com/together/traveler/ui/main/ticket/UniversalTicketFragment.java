@@ -46,7 +46,7 @@ public class UniversalTicketFragment extends Fragment {
         final QRCodeWriter qrCodeWriter = new QRCodeWriter();
         int qrCodeSize = 1000;
 
-        userViewModel.getData().observe(getViewLifecycleOwner(), data->{
+        userViewModel.getUser().observe(getViewLifecycleOwner(), data->{
             String imageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", data.getAvatar());
             username.setText(data.getUsername());
             Glide.with(requireContext()).load(imageUrl).into(userImage);

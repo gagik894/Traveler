@@ -1,25 +1,25 @@
 <resources>
-    <string name="app_name">Traveler</string>
+    <string name="app_name" translatable="false">Traveler</string>
 
     <!--    icons, buttons-->
-    <string name="logo">Logo</string>
-    <string name="calendar_icon">Calendar</string>
-    <string name="location_icon">Location</string>
-    <string name="settings_icon">Settings</string>
-    <string name="category_icon">Category</string>
-    <string name="btn_show_filters">Filters</string>
-    <string name="star_icon">Star</string>
-    <string name="btn_add">Add</string>
-    <string name="btn_center_on_location">CenterOnLocation</string>
-    <string name="btn_back">Back</string>
-    <string name="btn_save">Save</string>
-    <string name="qr">Qr</string>
-    <string name="phone_icon">phone</string>
-    <string name="link_icon">link</string>
+    <string name="logo" translatable="false">Logo</string>
+    <string name="calendar_icon" translatable="false">Calendar</string>
+    <string name="location_icon" translatable="false">Location</string>
+    <string name="settings_icon" translatable="false">Settings</string>
+    <string name="category_icon" translatable="false">Category</string>
+    <string name="btn_show_filters" translatable="false">Filters</string>
+    <string name="star_icon" translatable="false">Star</string>
+    <string name="btn_add" translatable="false">Add</string>
+    <string name="btn_center_on_location" translatable="false">CenterOnLocation</string>
+    <string name="btn_back" translatable="false">Back</string>
+    <string name="btn_save" translatable="false">Save</string>
+    <string name="qr" translatable="false">Qr</string>
+    <string name="phone_icon" translatable="false">phone</string>
+    <string name="link_icon" translatable="false">link</string>
 
 
     <!--    login-->
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login" translatable="false">LoginActivity</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="forgot_password">Forgot your password? <font color="#FF3700B3">Get help here</font></string>
@@ -173,6 +173,26 @@
     <string name="add_select_all_open_times">Select all open times!</string>
     <string name="text_icon">Text</string>
     <string name="ticket_icon">Ticket</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!--    settings-->
+    <string name="settings_delete_confirm_title">Confirm account deletion</string>
+    <string name="settings_delete_confirm_message">Are you sure want to delete your account?</string>
+
+    <!-- Preferences -->
+    <string name="pref_title_logout_button">Logout</string>
+    <string name="pref_title_admin_page_button">Admin page</string>
+    <string name="default_language">English</string>
+    <string name="pref_title_change_username_button">Change username</string>
+    <string name="pref_key_change_password_button">prefBtnPassword</string>
+    <string name="pref_title_change_password_button">Change Password</string>
+    <string name="pref_title_push_switch">Push notifications</string>
+    <string name="pref_summary_push_switch">Enable push notifications</string>
+    <string name="pref_summary_languages_list">Select your language</string>
+    <string name="pref_title_languages_list">Language</string>
+    <string name="pref_title_theme_switch">Dark mode</string>
+    <string name="pref_summary_theme_switch">Enable dark mode</string>
+    <string name="pref_title_delete_button">Delete account</string>
 
 
 </resources>

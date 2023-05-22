@@ -21,7 +21,7 @@ public class UserViewModel extends ViewModel {
 
     private final String TAG = "UserViewModel";
 
-    private final MutableLiveData<User> data;
+    private final MutableLiveData<User> user;
     private final MutableLiveData<Integer> state;
     private final MutableLiveData<Boolean> selfPage;
     private boolean firstFetch;
@@ -29,7 +29,7 @@ public class UserViewModel extends ViewModel {
     private final ApiService apiService;
 
     public UserViewModel() {
-        data = new MutableLiveData<>();
+        user = new MutableLiveData<>();
         state = new MutableLiveData<>();
         selfPage = new MutableLiveData<>(true);
         firstFetch = true;
@@ -44,7 +44,7 @@ public class UserViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     Log.d("UserViewModel", "onResponse: " + response.body());
                     User user = response.body();
-                    data.postValue(user);
+                    UserViewModel.this.user.postValue(user);
 
                     if (Boolean.FALSE.equals(selfPage.getValue())) {
                         state.postValue(2);
@@ -80,16 +80,16 @@ public class UserViewModel extends ViewModel {
         return selfPage;
     }
 
-    public LiveData<User> getData() {
-        return data;
+    public LiveData<User> getUser() {
+        return user;
     }
 
     public void setState(int state) {
         this.state.setValue(state);
     }
 
-    public void setData(User data) {
-        this.data.setValue(data);
+    public void setUser(User user) {
+        this.user.setValue(user);
     }
 
     public void setUserId(String userId) {

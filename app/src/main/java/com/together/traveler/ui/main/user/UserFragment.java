@@ -1,8 +1,6 @@
 package com.together.traveler.ui.main.user;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,11 +27,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.together.traveler.R;
+import com.together.traveler.SettingsActivity;
 import com.together.traveler.adapter.EventCardsAdapter;
 import com.together.traveler.databinding.FragmentUserBinding;
 import com.together.traveler.model.Event;
-import com.together.traveler.ui.login.LoginActivity;
-import com.together.traveler.ui.main.home.HomeFragmentDirections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +110,7 @@ public class UserFragment extends Fragment {
             }
         });
 
-        userViewModel.getData().observe(getViewLifecycleOwner(), data ->{
+        userViewModel.getUser().observe(getViewLifecycleOwner(), data ->{
             swipeRefreshLayout.setRefreshing(false);
             progressBar.setVisibility(View.GONE);
             username.setText(data.getUsername());
@@ -127,19 +124,19 @@ public class UserFragment extends Fragment {
             myEventsButton.setTextColor(textColor);
 
             List<Event> newEvents = new ArrayList<>();
-            if (state != null &&  userViewModel.getData().getValue() != null) {
+            if (state != null &&  userViewModel.getUser().getValue() != null) {
                 switch (state) {
                     case 0:
                         upcomingButton.setTextColor(orangeColor);
-                        newEvents = userViewModel.getData().getValue().getUpcomingEvents();
+                        newEvents = userViewModel.getUser().getValue().getUpcomingEvents();
                         break;
                     case 1:
                         savedButton.setTextColor(orangeColor);
-                        newEvents = userViewModel.getData().getValue().getSavedEvents();
+                        newEvents = userViewModel.getUser().getValue().getSavedEvents();
                         break;
                     case 2:
                         myEventsButton.setTextColor(orangeColor);
-                        newEvents = userViewModel.getData().getValue().getUserEvents();
+                        newEvents = userViewModel.getUser().getValue().getUserEvents();
                         break;
                 }
             }
@@ -181,13 +178,9 @@ public class UserFragment extends Fragment {
         savedButton.setOnClickListener(v -> userViewModel.setState(1));
         myEventsButton.setOnClickListener(v -> userViewModel.setState(2));
         settingsButton.setOnClickListener(v-> {
-            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.clear();
-            editor.apply();
-            requireActivity().finish();
-            startActivity(new Intent(requireActivity(), LoginActivity.class));
-
+            Intent switchActivityIntent = new Intent(requireActivity(), SettingsActivity.class);
+            switchActivityIntent.putExtra("admin", userViewModel.getUser().getValue() != null && userViewModel.getUser().getValue().isAdmin());
+            startActivity(switchActivityIntent);
         });
         swipeRefreshLayout.setOnRefreshListener(() -> {
             Thread thread = new Thread(userViewModel::fetchUser);

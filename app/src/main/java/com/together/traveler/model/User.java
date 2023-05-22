@@ -17,6 +17,7 @@ public class User implements Parcelable {
     private ArrayList<Event> upcomingEvents = null;
     private ArrayList<Event> savedEvents = null;
     private ArrayList<Event> userEvents = null;
+    private boolean admin = false;
 
     public User(String avatar, String username, String location, String password, float rating, ArrayList<Event> upcomingEvents, ArrayList<Event> savedEvents, ArrayList<Event> userEvents) {
         this.avatar = avatar;
@@ -62,6 +63,7 @@ public class User implements Parcelable {
                 ", upcomingEvents=" + upcomingEvents +
                 ", savedEvents=" + savedEvents +
                 ", userEvents=" + userEvents +
+                ", admin=" + admin +
                 '}';
     }
 
@@ -105,6 +107,10 @@ public class User implements Parcelable {
         return userEvents;
     }
 
+    public boolean isAdmin() {
+        return admin;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -116,7 +122,6 @@ public class User implements Parcelable {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     @Override
     public int describeContents() {
@@ -135,6 +140,7 @@ public class User implements Parcelable {
         dest.writeTypedList(this.upcomingEvents);
         dest.writeTypedList(this.savedEvents);
         dest.writeTypedList(this.userEvents);
+        dest.writeByte(this.admin ? (byte) 1 : (byte) 0);
     }
 
     public void readFromParcel(Parcel source) {
@@ -148,6 +154,7 @@ public class User implements Parcelable {
         this.upcomingEvents = source.createTypedArrayList(Event.CREATOR);
         this.savedEvents = source.createTypedArrayList(Event.CREATOR);
         this.userEvents = source.createTypedArrayList(Event.CREATOR);
+        this.admin = source.readByte() != 0;
     }
 
     protected User(Parcel in) {
@@ -161,6 +168,7 @@ public class User implements Parcelable {
         this.upcomingEvents = in.createTypedArrayList(Event.CREATOR);
         this.savedEvents = in.createTypedArrayList(Event.CREATOR);
         this.userEvents = in.createTypedArrayList(Event.CREATOR);
+        this.admin = in.readByte() != 0;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
