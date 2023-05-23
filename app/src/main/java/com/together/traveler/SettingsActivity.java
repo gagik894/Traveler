@@ -67,12 +67,8 @@ public class SettingsActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setTitle(R.string.settings_delete_confirm_title);
             builder.setMessage(R.string.settings_delete_confirm_message);
-            builder.setPositiveButton("Yes", (dialog, which) -> {
-                Toast.makeText(requireContext(), "soon", Toast.LENGTH_SHORT).show();
-            });
-            builder.setNegativeButton("No", (dialog, which) -> {
-                Toast.makeText(requireContext(), "soon", Toast.LENGTH_SHORT).show();
-            });
+            builder.setPositiveButton("Yes", (dialog, which) -> Toast.makeText(requireContext(), "soon", Toast.LENGTH_SHORT).show());
+            builder.setNegativeButton("No", (dialog, which) -> Toast.makeText(requireContext(), "soon", Toast.LENGTH_SHORT).show());
             AlertDialog dialog = builder.create();
             dialog.show();
 

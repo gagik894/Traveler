@@ -213,6 +213,7 @@ public class HomeViewModel extends ViewModel {
         ArrayList<Event> allEvents = this.categoryFilteredEvents;
         if (allEvents != null) {
             if (constraint == null || constraint.length() == 0) {
+                HomeViewModel.this.loading.postValue(false);
                 HomeViewModel.this.filteredEvents.postValue(allEvents);
                 return;
             }
@@ -240,14 +241,16 @@ public class HomeViewModel extends ViewModel {
                         filteredEvents.add(event);
                     }
                 }
-
-
+                Log.i(TAG, "filterBySearchAndTags: false ");
+                HomeViewModel.this.loading.postValue(false);
                 HomeViewModel.this.filteredEvents.postValue(filteredEvents);
-                loading.postValue(false);
+
             });
 
             executorService.shutdown();
         }
+
+
     }
 
     public void fetchLocation() {
@@ -259,8 +262,8 @@ public class HomeViewModel extends ViewModel {
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-                BufferedReader reader = null;
-                String cityName = null;
+                BufferedReader reader;
+                String cityName;
                 try {
                     reader = new BufferedReader(new InputStreamReader(url != null ? url.openStream() : null));
                     cityName = reader.readLine();
