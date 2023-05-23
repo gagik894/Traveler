@@ -26,10 +26,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".AdminActivity"
+            android:exported="false"
+            android:label="@string/title_activity_admin"
+            android:theme="@style/Theme.Traveler" />
+        <activity
             android:name=".SettingsActivity"
             android:exported="false"
-            android:parentActivityName=".ui.main.MainActivity"
-            android:label="@string/title_activity_settings">
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".ui.main.MainActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

@@ -44,6 +44,10 @@ public class SettingsActivity extends AppCompatActivity {
 
             if (adminBtn != null) {
                 adminBtn.setVisible(isAdmin);
+                adminBtn.setOnPreferenceClickListener(v->{
+                    startActivity(new Intent(requireActivity(), AdminActivity.class));
+                    return true;
+                });
             }
             if (logoutBtn != null) {
                 logoutBtn.setOnPreferenceClickListener(v->{

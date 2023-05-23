@@ -1,12 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Theme">
-        <SwitchPreferenceCompat
-            android:key="prefSwtTheme"
-            android:title="@string/pref_title_theme_switch"
-            android:summary="@string/pref_summary_theme_switch"
-            android:defaultValue="false" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="Language">
+    <PreferenceCategory android:title="@string/pref_category_title_languages">
         <ListPreference
             android:key="prefListLanguages"
             android:title="@string/pref_title_languages_list"
@@ -15,14 +8,14 @@
             android:entryValues="@array/language_values"
             android:defaultValue="@string/default_language" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Notifications">
+    <PreferenceCategory android:title="@string/pref_category_title_notifications">
         <SwitchPreferenceCompat
             android:key="prefSwtPush"
             android:title="@string/pref_title_push_switch"
             android:summary="@string/pref_summary_push_switch"
             android:defaultValue="true" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Account">
+    <PreferenceCategory android:title="@string/pref_category_title_account">
         <PreferenceScreen
             android:key="prefBtnUsername"
             android:title="@string/pref_title_change_username_button">
@@ -32,7 +25,13 @@
             android:title="@string/pref_title_change_password_button">
         </PreferenceScreen>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Authentication">
+    <PreferenceCategory android:title="@string/pref_category_title_danger_zone">
+        <PreferenceScreen
+            android:key="prefBtnDelete"
+            android:title="@string/pref_title_delete_button">
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_title_auth">
         <PreferenceScreen
             android:key="prefBtnAdmin"
             android:title="@string/pref_title_admin_page_button">
@@ -40,12 +39,6 @@
         <PreferenceScreen
             android:key="prefBtnLogout"
             android:title="@string/pref_title_logout_button">
-        </PreferenceScreen>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="Danger zone">
-        <PreferenceScreen
-            android:key="prefBtnDelete"
-            android:title="@string/pref_title_delete_button">
         </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>
