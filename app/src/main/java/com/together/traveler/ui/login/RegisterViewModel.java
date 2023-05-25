@@ -13,8 +13,8 @@ import com.together.traveler.R;
 import com.together.traveler.data.LoginRepository;
 import com.together.traveler.data.Result;
 import com.together.traveler.model.User;
-import com.together.traveler.requests.ApiClient;
-import com.together.traveler.requests.ApiService;
+import com.together.traveler.web.ApiClient;
+import com.together.traveler.web.ApiService;
 
 import org.json.JSONException;
 import org.json.JSONObject;

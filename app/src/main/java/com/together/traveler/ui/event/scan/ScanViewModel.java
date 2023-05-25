@@ -7,8 +7,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.together.traveler.model.CheckTicketResponse;
-import com.together.traveler.requests.ApiClient;
-import com.together.traveler.requests.ApiService;
+import com.together.traveler.web.ApiClient;
+import com.together.traveler.web.ApiService;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.together.traveler.model.Event;
 import com.together.traveler.model.EventsResponse;
-import com.together.traveler.requests.ApiClient;
-import com.together.traveler.requests.ApiService;
+import com.together.traveler.web.ApiClient;
+import com.together.traveler.web.ApiService;
 
 import java.io.BufferedReader;
 import java.io.IOException;

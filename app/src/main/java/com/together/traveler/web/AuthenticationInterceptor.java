@@ -1,4 +1,4 @@
-package com.together.traveler.requests;
+package com.together.traveler.web;
 
 import android.content.Context;
 import android.content.SharedPreferences;

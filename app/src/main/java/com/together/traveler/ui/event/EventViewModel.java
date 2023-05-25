@@ -9,8 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.together.traveler.model.Event;
-import com.together.traveler.requests.ApiClient;
-import com.together.traveler.requests.ApiService;
+import com.together.traveler.web.ApiClient;
+import com.together.traveler.web.ApiService;
 
 import retrofit2.Call;
 import retrofit2.Callback;

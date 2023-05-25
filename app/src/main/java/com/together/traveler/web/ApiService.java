@@ -1,4 +1,4 @@
-package com.together.traveler.requests;
+package com.together.traveler.web;
 
 import com.together.traveler.model.CheckTicketResponse;
 import com.together.traveler.model.Event;
@@ -15,8 +15,10 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
@@ -34,6 +36,9 @@ public interface ApiService {
 
     @GET("places/place/{id}")
     Call<Place> getPlace(@Path("id") String id, @Query("fields") String fields);
+
+    @GET("admin/places")
+    Call<List<Place>> getAdminPlaces();
 
     @GET("events/profile/{userId}")
     Call<User> getUser(
@@ -55,6 +60,14 @@ public interface ApiService {
             @Path("type") String type
     );
 
+    @PATCH("admin/places/verify/{id}")
+    Call<String> verifyAdminPlace(
+            @Path("id") String id
+    );
+    @DELETE("admin/places/delete/{id}")
+    Call<String> deleteAdminPlace(
+            @Path("id") String id
+    );
     @POST("events/checkTicket")
     Call<CheckTicketResponse> checkTicket(@Body RequestBody requestBody);
 

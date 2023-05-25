@@ -19,6 +19,7 @@ public class Place implements Parcelable {
     private String[] openingTimes;
     private String[] closingTimes;
     private boolean userOwned;
+    private boolean alwaysOpen;
     private User userId;
     private String category;
 
@@ -33,6 +34,7 @@ public class Place implements Parcelable {
         this.phone = "";
         this.openingTimes = new String[7];
         this.closingTimes = new String[7];
+        this.alwaysOpen = false;
         this.category = "";
         this.imgId = "";
         this._id = "";
@@ -166,6 +168,13 @@ public class Place implements Parcelable {
         this.category = category;
     }
 
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
+    public void setAlwaysOpen(boolean alwaysOpen) {
+        this.alwaysOpen = alwaysOpen;
+    }
 
     @Override
     public int describeContents() {
@@ -188,6 +197,7 @@ public class Place implements Parcelable {
         dest.writeStringArray(this.openingTimes);
         dest.writeStringArray(this.closingTimes);
         dest.writeByte(this.userOwned ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.alwaysOpen ? (byte) 1 : (byte) 0);
         dest.writeParcelable(this.userId, flags);
         dest.writeString(this.category);
     }
@@ -207,6 +217,7 @@ public class Place implements Parcelable {
         this.openingTimes = source.createStringArray();
         this.closingTimes = source.createStringArray();
         this.userOwned = source.readByte() != 0;
+        this.alwaysOpen = source.readByte() != 0;
         this.userId = source.readParcelable(User.class.getClassLoader());
         this.category = source.readString();
     }
@@ -226,6 +237,7 @@ public class Place implements Parcelable {
         this.openingTimes = in.createStringArray();
         this.closingTimes = in.createStringArray();
         this.userOwned = in.readByte() != 0;
+        this.alwaysOpen = in.readByte() != 0;
         this.userId = in.readParcelable(User.class.getClassLoader());
         this.category = in.readString();
     }

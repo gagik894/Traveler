@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 
+import com.together.traveler.ui.admin.AdminActivity;
+import com.together.traveler.ui.admin.AdminActivityKt;
 import com.together.traveler.ui.login.LoginActivity;
 
 public class SettingsActivity extends AppCompatActivity {

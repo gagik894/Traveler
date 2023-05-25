@@ -1,39 +1,18 @@
 package com.together.traveler.data;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.together.traveler.model.Event;
-import com.together.traveler.model.EventsResponse;
 import com.together.traveler.model.LoginResponse;
-import com.together.traveler.model.User;
-import com.together.traveler.requests.ApiClient;
-import com.together.traveler.requests.ApiService;
-import com.together.traveler.ui.main.home.HomeViewModel;
+import com.together.traveler.web.ApiClient;
+import com.together.traveler.web.ApiService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
