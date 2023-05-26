@@ -47,6 +47,9 @@ public class PlaceViewModel extends ViewModel {
 
     public boolean isOpen() {
         Place place = this.placeData.getValue();
+        if (this.placeData.getValue().isAlwaysOpen()){
+            return true;
+        }
         String[] openingTimes = new String[7];
         String[] closingTimes = new String[7];
         if (place != null) {
@@ -67,15 +70,15 @@ public class PlaceViewModel extends ViewModel {
         LocalTime closingTime = LocalTime.parse(closingTimes[dayIndex], formatter);
 
         return currentTime.isAfter(openingTime) && currentTime.isBefore(closingTime);
-
-
     }
-
 
     public String getNextTime() {
         Place place = this.placeData.getValue();
         if (place == null) {
             return null;
+        }
+        if (this.placeData.getValue().isAlwaysOpen()){
+            return "Never";
         }
         if (this.isOpen()) {
             return place.getClosingTimes()[dayIndex];

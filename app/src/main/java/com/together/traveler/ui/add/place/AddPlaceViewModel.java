@@ -9,6 +9,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+import com.together.traveler.R;
 import com.together.traveler.context.AppContext;
 import com.together.traveler.model.Place;
 import com.together.traveler.web.ApiClient;
@@ -32,13 +36,14 @@ import retrofit2.Response;
 
 public class AddPlaceViewModel extends ViewModel {
     private final String TAG = "AddPlaceViewModel";
-
+    private final MutableLiveData<AddPlaceFormState> formState;
     private final MutableLiveData<Place> data;
     private final MutableLiveData<ArrayList<String>> categories;
     private final MutableLiveData<Boolean> isValid;
     private final ApiService apiService;
 
     public AddPlaceViewModel() {
+        formState = new MutableLiveData<>();
         data = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
         isValid = new MutableLiveData<>(false);
@@ -104,19 +109,55 @@ public class AddPlaceViewModel extends ViewModel {
         return isValid;
     }
 
-    public boolean checkOpenTimes(Place current) {
+    public MutableLiveData<AddPlaceFormState> getFormState() {
+        return formState;
+    }
+
+    public boolean areOpenTimesValid(Place current) {
         if (current.isAlwaysOpen()){
             return true;
         }
         return !Arrays.asList(current.getOpeningTimes()).contains(null)
                 && !Arrays.asList(current.getClosingTimes()).contains(null);
     }
+    public boolean isUrlValid(Place current) {
+        if (current.getUrl().trim().length() == 0){
+            return true;
+        }
+        return current.getUrl().contains(".");
+    }
+
+    public boolean isPhoneValid(Place current) {
+        if (current.getPhone().length() == 0){
+            return true;
+        }
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        try {
+            Phonenumber.PhoneNumber numberProto = phoneUtil.parse(current.getPhone(), null);
+            return phoneUtil.isValidNumber(numberProto);
+        } catch (NumberParseException e) {
+            return false;
+        }
+    }
 
     private void checkValid(Place current) {
-        isValid.setValue(!Objects.equals(current.getName(), "") && !Objects.equals(current.getLocation(), "")
-                && !Objects.equals(current.getDescription(), "") && !Objects.equals(current.getCategory(), "")
-                && !Objects.equals(current.getUrl(), "") && !Objects.equals(current.getPhone(), "")
-                && current.getImageBitmap() != null && checkOpenTimes(current));
+        if (current.getName().trim().length() < 5){
+            formState.setValue(new AddPlaceFormState(R.string.invalid_name,null,null,null,null,null,null ));
+        }else if(current.getDescription().trim().length() < 10){
+            formState.setValue(new AddPlaceFormState(null,R.string.invalid_description,null,null,null,null,null ));
+        }else if(Objects.equals(current.getLocation(), "")){
+            formState.setValue(new AddPlaceFormState(null,null,R.string.invalid_location,null,null,null,null ));
+        }else if(!areOpenTimesValid(current)) {
+            formState.setValue(new AddPlaceFormState(null,null,null,R.string.invalid_dates,null,null,null ));
+        }else if(!isUrlValid(current)){
+            formState.setValue(new AddPlaceFormState(null,null,null,null,R.string.invalid_url,null,null ));
+        }else if(!isPhoneValid(current)){
+            formState.setValue(new AddPlaceFormState(null,null,null,null,null,R.string.invalid_phone,null ));
+        }else if (current.getImageBitmap() == null){
+            formState.setValue(new AddPlaceFormState(null,null,null,null,null,null,R.string.invalid_image ));
+        }else{
+            formState.setValue(new AddPlaceFormState(true));
+        }
     }
 
     private File saveBitmapToFile(Bitmap bitmap) {

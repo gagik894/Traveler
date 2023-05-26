@@ -168,7 +168,24 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
             adapter.addAll(categoriesList);
             adapter.notifyDataSetChanged();
         });
-
+        mViewModel.getFormState().observe(getViewLifecycleOwner(), data->{
+            if (data == null){
+                return;
+            }
+            if (data.getTitleError() != null) {
+                name.setError(getString(data.getTitleError()));
+            }
+            if (data.getDescriptionError() != null) {
+                description.setError(getString(data.getDescriptionError()));
+            }
+            if (data.getUrlError() != null) {
+                url.setError(getString(data.getUrlError()));
+            }
+            if (data.getPhoneError() != null) {
+                phone.setError(getString(data.getPhoneError()));
+            }
+            btnCreate.setEnabled(data.isDataValid());
+        });
 
         return root;
     }
@@ -246,7 +263,7 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
         if (Objects.requireNonNull(mViewModel.getData().getValue()).isAlwaysOpen()){
             times.setText(R.string.place_always_open);
         }else{
-            boolean openTimesAdded = mViewModel.checkOpenTimes(Objects.requireNonNull(mViewModel.getData().getValue()));
+            boolean openTimesAdded = mViewModel.areOpenTimesValid(Objects.requireNonNull(mViewModel.getData().getValue()));
             if (openTimesAdded){
                 times.setText(String.format("%s, %s - %s, ...", getString(R.string.monday), openingTimes[0], closingTimes[0]));
             }else{
