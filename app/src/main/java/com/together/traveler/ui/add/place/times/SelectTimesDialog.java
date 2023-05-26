@@ -3,19 +3,27 @@ package com.together.traveler.ui.add.place.times;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.together.traveler.R;
 import com.together.traveler.databinding.DialogSelectTimesBinding;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class SelectTimesDialog extends DialogFragment {
@@ -90,10 +98,24 @@ public class SelectTimesDialog extends DialogFragment {
             openingTimesEt[i].setOnClickListener(v->{
                 TimePickerDialog timePickerDialog = new TimePickerDialog(ctx,
                         (view1, hourOfDay, minute) -> {
-                            openingTimes[index] = String.format("%s:%s", hourOfDay, minute);
-                            openingTimesEt[index].setText(String.format("%s:%s", hourOfDay, minute));
-                            if (index == 0 && allNullExceptFirst(true)){
-                                setAllTimes(true);
+                            if (openingTimes[index] != null){
+                                Date time = convertToTime(openingTimes[index]);
+                                Date selectedTime = convertToTime(String.format("%s:%s", hourOfDay, minute));
+                                if (selectedTime.getTime() > time.getTime()) {
+                                    Toast.makeText(requireContext(), R.string.end_must_be_after_start, Toast.LENGTH_SHORT).show();
+                                }else{
+                                    openingTimes[index] = String.format("%s:%s", hourOfDay, minute);
+                                    openingTimesEt[index].setText(String.format("%s:%s", hourOfDay, minute));
+                                    if (index == 0 && allNullExceptFirst(true)){
+                                        setAllTimes(true);
+                                    }
+                                }
+                            }else{
+                                openingTimes[index] = String.format("%s:%s", hourOfDay, minute);
+                                openingTimesEt[index].setText(String.format("%s:%s", hourOfDay, minute));
+                                if (index == 0 && allNullExceptFirst(true)){
+                                    setAllTimes(true);
+                                }
                             }
                         }, hour, minute, true);
                 timePickerDialog.show();
@@ -101,10 +123,24 @@ public class SelectTimesDialog extends DialogFragment {
             closingTimesEt[i].setOnClickListener(v->{
                 TimePickerDialog timePickerDialog = new TimePickerDialog(ctx,
                         (view1, hourOfDay, minute) -> {
-                            closingTimes[index] = String.format("%s:%s", hourOfDay, minute);
-                            closingTimesEt[index].setText(String.format("%s:%s", hourOfDay, minute));
-                            if (index == 0 && allNullExceptFirst(false)){
-                                setAllTimes(false);
+                            if (openingTimes[index] != null){
+                                Date time = convertToTime(openingTimes[index]);
+                                Date selectedTime = convertToTime(String.format("%s:%s", hourOfDay, minute));
+                                if (selectedTime.getTime() < time.getTime()) {
+                                    Toast.makeText(requireContext(), R.string.end_must_be_after_start, Toast.LENGTH_SHORT).show();
+                                }else{
+                                    closingTimes[index] = String.format("%s:%s", hourOfDay, minute);
+                                    closingTimesEt[index].setText(String.format("%s:%s", hourOfDay, minute));
+                                    if (index == 0 && allNullExceptFirst(false)){
+                                        setAllTimes(false);
+                                    }
+                                }
+                            }else{
+                                closingTimes[index] = String.format("%s:%s", hourOfDay, minute);
+                                closingTimesEt[index].setText(String.format("%s:%s", hourOfDay, minute));
+                                if (index == 0 && allNullExceptFirst(false)){
+                                    setAllTimes(false);
+                                }
                             }
                         }, hour, minute, true);
                 timePickerDialog.show();
@@ -140,7 +176,16 @@ public class SelectTimesDialog extends DialogFragment {
         });
     }
 
-
+    private Date convertToTime(String TimeString){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
+        Date date = null;
+        try {
+            date = dateFormat.parse(TimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
     @Override
     public void onResume() {
         super.onResume();
