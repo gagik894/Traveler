@@ -18,6 +18,7 @@ public class Place implements Parcelable {
     private Bitmap imageBitmap;
     private String[] openingTimes;
     private String[] closingTimes;
+    private boolean[] isClosed;
     private boolean userOwned;
     private boolean alwaysOpen;
     private User userId;
@@ -34,6 +35,7 @@ public class Place implements Parcelable {
         this.phone = "";
         this.openingTimes = new String[7];
         this.closingTimes = new String[7];
+        this.isClosed = new boolean[7];
         this.alwaysOpen = false;
         this.category = "";
         this.imgId = "";
@@ -144,12 +146,28 @@ public class Place implements Parcelable {
         this.closingTimes = closingTimes;
     }
 
+    public boolean[] getIsClosed() {
+        return isClosed;
+    }
+
+    public void setIsClosed(boolean[] isClosed) {
+        this.isClosed = isClosed;
+    }
+
     public boolean isUserOwned() {
         return userOwned;
     }
 
     public void setUserOwned(boolean userOwned) {
         this.userOwned = userOwned;
+    }
+
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
+    public void setAlwaysOpen(boolean alwaysOpen) {
+        this.alwaysOpen = alwaysOpen;
     }
 
     public User getUserId() {
@@ -168,13 +186,6 @@ public class Place implements Parcelable {
         this.category = category;
     }
 
-    public boolean isAlwaysOpen() {
-        return alwaysOpen;
-    }
-
-    public void setAlwaysOpen(boolean alwaysOpen) {
-        this.alwaysOpen = alwaysOpen;
-    }
 
     @Override
     public int describeContents() {
@@ -196,6 +207,7 @@ public class Place implements Parcelable {
         dest.writeParcelable(this.imageBitmap, flags);
         dest.writeStringArray(this.openingTimes);
         dest.writeStringArray(this.closingTimes);
+        dest.writeBooleanArray(this.isClosed);
         dest.writeByte(this.userOwned ? (byte) 1 : (byte) 0);
         dest.writeByte(this.alwaysOpen ? (byte) 1 : (byte) 0);
         dest.writeParcelable(this.userId, flags);
@@ -216,6 +228,7 @@ public class Place implements Parcelable {
         this.imageBitmap = source.readParcelable(Bitmap.class.getClassLoader());
         this.openingTimes = source.createStringArray();
         this.closingTimes = source.createStringArray();
+        this.isClosed = source.createBooleanArray();
         this.userOwned = source.readByte() != 0;
         this.alwaysOpen = source.readByte() != 0;
         this.userId = source.readParcelable(User.class.getClassLoader());
@@ -236,6 +249,7 @@ public class Place implements Parcelable {
         this.imageBitmap = in.readParcelable(Bitmap.class.getClassLoader());
         this.openingTimes = in.createStringArray();
         this.closingTimes = in.createStringArray();
+        this.isClosed = in.createBooleanArray();
         this.userOwned = in.readByte() != 0;
         this.alwaysOpen = in.readByte() != 0;
         this.userId = in.readParcelable(User.class.getClassLoader());

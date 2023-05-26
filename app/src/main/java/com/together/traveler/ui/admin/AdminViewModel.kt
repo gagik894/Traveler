@@ -6,6 +6,12 @@ import androidx.lifecycle.ViewModel
 import com.together.traveler.model.Place
 import com.together.traveler.web.ApiClient
 import com.together.traveler.web.ApiService
+import kotlinx.coroutines.flow.MutableStateFlow
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,16 +21,24 @@ class AdminViewModel : ViewModel() {
     private val apiService: ApiService = ApiClient.getRetrofitInstance().create(ApiService::class.java)
     private val _placesData: MutableLiveData<List<Place>?> = MutableLiveData()
     private val _selectedPlaceData: MutableLiveData<Place> = MutableLiveData()
+    private val _placeCategories: MutableLiveData<List<String>?> = MutableLiveData()
+    private val _eventCategories: MutableLiveData<List<String>?> = MutableLiveData()
 
     val placesData: MutableLiveData<List<Place>?> = _placesData
     val selectedPlaceData: MutableLiveData<Place> = _selectedPlaceData
-        get() {
-            Log.d("admin", ": getter")
-            return field
-        }
+    val placeCategories: MutableLiveData<List<String>?> = _placeCategories
+    val eventCategories: MutableLiveData<List<String>?> = _eventCategories
+
+    private val deletedPlaceCategories = ArrayList<String>()
+    private val deletedEventCategories = ArrayList<String>()
+    private val addedPlaceCategories = ArrayList<String>()
+    private val addedEventCategories = ArrayList<String>()
+
+    val loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     init {
         fetchPlace()
+        fetchCategories()
     }
 
     fun setSelectedPlaceData(place: Place){
@@ -44,6 +58,75 @@ class AdminViewModel : ViewModel() {
 
         })
     }
+    private fun fetchCategories(){
+        apiService.getCategories("events").enqueue(object : Callback<List<String>> {
+            override fun onResponse(call: Call<List<String>>, response: Response<List<String>>) {
+                if (response.isSuccessful)
+                    _eventCategories.postValue(response.body())
+            }
+
+            override fun onFailure(call: Call<List<String>>, t: Throwable) {
+                Log.e(TAG, "onFailure: ", t)
+            }
+
+        })
+        apiService.getCategories("places").enqueue(object : Callback<List<String>> {
+            override fun onResponse(call: Call<List<String>>, response: Response<List<String>>) {
+                Log.d("Admin", "onResponse: " + response.body())
+                if (response.isSuccessful)
+                    _placeCategories.postValue(response.body())
+            }
+
+            override fun onFailure(call: Call<List<String>>, t: Throwable) {
+                Log.e(TAG, "onFailure: ", t)
+            }
+
+        })
+    }
+
+    fun deleteCategory(name:String, type: String){
+        if (type == "event"){
+            val updatedList = _eventCategories.value?.filter { it != name }
+            _eventCategories.value = updatedList
+            deletedEventCategories.add(name)
+        }else{
+            val updatedList = _placeCategories.value?.filter { it != name }
+            _placeCategories.value = updatedList
+            deletedPlaceCategories.add(name)
+        }
+    }
+
+    fun addCategory(name:String, type: String){
+        if (type == "event"){
+            val updatedList = _eventCategories.value?.plus(name)
+            _eventCategories.value = updatedList
+            addedEventCategories.add(name)
+        }else{
+            val updatedList = _placeCategories.value?.plus(name)
+            _placeCategories.value = updatedList
+            addedPlaceCategories.add(name)
+        }
+    }
+
+    fun submitCategories(type: String){
+        if (type == "event"){
+            if (addedEventCategories.size>0){
+                fetchAddCategories("events")
+            }
+            if (deletedEventCategories.size>0){
+                fetchDeleteCategories("events")
+            }
+        }else{
+            if (addedPlaceCategories.size>0){
+                fetchAddCategories("places")
+            }
+            if (deletedPlaceCategories.size>0){
+                Log.i(TAG, "submitCategories: $deletedPlaceCategories")
+                fetchDeleteCategories("places")
+            }
+        }
+    }
+
     fun verifyPlace(id: String){
         Log.i(TAG, "verifyPlace: ")
         apiService.verifyAdminPlace(id).enqueue(object : Callback<String> {
@@ -75,6 +158,79 @@ class AdminViewModel : ViewModel() {
                 Log.e(TAG, "onFailure: ", t)
             }
 
+        })
+    }
+
+    private fun fetchAddCategories(type: String){
+        val json = JSONObject()
+        try {
+            if (type == "events") {
+                json.put("categories", addedEventCategories)
+            }else{
+                json.put("categories", addedPlaceCategories)
+            }
+
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        Log.i("admin", "fetchAddCategories: " + json.toString())
+        val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
+        loading.value = true
+        apiService.addAdminCategories(type, requestBody).enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.d("Admin", "onResponse: " + response.body())
+                if (response.isSuccessful){
+                    if (type == "events") {
+                        addedEventCategories.clear()
+                    }else{
+                        addedPlaceCategories.clear()
+                    }
+                    fetchCategories()
+                }
+                loading.value = false
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e(TAG, "onFailure: ", t)
+                loading.value = false
+            }
+
+        })
+    }
+    private fun fetchDeleteCategories(type: String){
+        Log.i(TAG, "fetchDeleteCategories: ${deletedEventCategories.toString()}")
+        val json = JSONObject()
+        try {
+            if (type == "events") {
+                json.put("categories", deletedEventCategories)
+            }else{
+                json.put("categories", deletedPlaceCategories)
+            }
+
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        Log.d("admin", "fetchDeleteCategories: "+json.toString())
+        val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
+        loading.value = true
+        apiService.deleteAdminCategories(type, requestBody).enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.d("Admin", "onResponse: " + response.body())
+                if (response.isSuccessful){
+                    if (type == "events") {
+                        deletedEventCategories.clear()
+                    }else{
+                       deletedPlaceCategories.clear()
+                    }
+                    fetchCategories()
+                }
+                loading.value = false
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e(TAG, "onFailure: ", t)
+                loading.value = false
+            }
         })
     }
 }

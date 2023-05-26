@@ -175,6 +175,10 @@
     <string name="ticket_icon">Ticket</string>
     <string name="title_activity_settings">Settings</string>
 
+<!--    dialog-->
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">Ok</string>
+
     <!--    settings-->
     <string name="settings_delete_confirm_title">Confirm account deletion</string>
     <string name="settings_delete_confirm_message">Are you sure want to delete your account?</string>

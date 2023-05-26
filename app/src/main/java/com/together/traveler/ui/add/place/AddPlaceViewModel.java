@@ -65,8 +65,9 @@ public class AddPlaceViewModel extends ViewModel {
         checkValid(current);
     }
 
-    public void setEventOpenTimes(String[] openingTimes, String[] closingTimes) {
+    public void setEventOpenTimes(String[] openingTimes, String[] closingTimes, boolean isAlwaysOpen) {
         Place current = data.getValue();
+        Objects.requireNonNull(current).setAlwaysOpen(isAlwaysOpen);
         Objects.requireNonNull(current).setOpeningTimes(openingTimes);
         Objects.requireNonNull(current).setClosingTimes(closingTimes);
         this.data.setValue(current);
@@ -104,6 +105,9 @@ public class AddPlaceViewModel extends ViewModel {
     }
 
     public boolean checkOpenTimes(Place current) {
+        if (current.isAlwaysOpen()){
+            return true;
+        }
         return !Arrays.asList(current.getOpeningTimes()).contains(null)
                 && !Arrays.asList(current.getClosingTimes()).contains(null);
     }
@@ -166,21 +170,25 @@ public class AddPlaceViewModel extends ViewModel {
         RequestBody requestBodyCategory = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getCategory()));
         RequestBody requestBodyPhone = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getPhone()));
         RequestBody requestBodyUrl= RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.getUrl()));
+        RequestBody requestBodyAlwaysOpen= RequestBody.create(MediaType.parse("text/plain"), String.valueOf(event.isAlwaysOpen()));
 
         String[] openingTimes = event.getOpeningTimes();
         String[] closingTimes = event.getClosingTimes();
-
-        List<MultipartBody.Part> openingTimeParts = new ArrayList<>();
-        for (String openingTime : openingTimes) {
-            RequestBody openingTimeBody = RequestBody.create(MediaType.parse("text/plain"), openingTime);
-            MultipartBody.Part openingTimePart = MultipartBody.Part.createFormData("openingTimes[]", openingTime);
-            openingTimeParts.add(openingTimePart);
-        }
-        List<MultipartBody.Part> closingTimeParts = new ArrayList<>();
-        for (String closingTime : closingTimes) {
-            RequestBody closingTimeBody = RequestBody.create(MediaType.parse("text/plain"), closingTime);
-            MultipartBody.Part closingTimePart = MultipartBody.Part.createFormData("closingTimes[]", closingTime);
-            closingTimeParts.add(closingTimePart);
+        List<MultipartBody.Part> openingTimeParts = null;
+        List<MultipartBody.Part> closingTimeParts = null;
+        if (!event.isAlwaysOpen()) {
+            openingTimeParts = new ArrayList<>();
+            for (String openingTime : openingTimes) {
+                RequestBody openingTimeBody = RequestBody.create(MediaType.parse("text/plain"), openingTime);
+                MultipartBody.Part openingTimePart = MultipartBody.Part.createFormData("openingTimes[]", openingTime);
+                openingTimeParts.add(openingTimePart);
+            }
+            closingTimeParts = new ArrayList<>();
+            for (String closingTime : closingTimes) {
+                RequestBody closingTimeBody = RequestBody.create(MediaType.parse("text/plain"), closingTime);
+                MultipartBody.Part closingTimePart = MultipartBody.Part.createFormData("closingTimes[]", closingTime);
+                closingTimeParts.add(closingTimePart);
+            }
         }
 
         if (apiService == null) {
@@ -198,6 +206,7 @@ public class AddPlaceViewModel extends ViewModel {
                 requestBodyCategory,
                 requestBodyPhone,
                 requestBodyUrl,
+                requestBodyAlwaysOpen,
                 openingTimeParts,
                 closingTimeParts
         );

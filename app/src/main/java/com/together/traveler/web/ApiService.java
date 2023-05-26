@@ -8,6 +8,8 @@ import com.together.traveler.model.MapItem;
 import com.together.traveler.model.Place;
 import com.together.traveler.model.User;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 import okhttp3.MultipartBody;
@@ -68,6 +70,14 @@ public interface ApiService {
     Call<String> deleteAdminPlace(
             @Path("id") String id
     );
+    @PATCH("admin/{type}/categories/add/")
+    Call<String> addAdminCategories(
+            @Path("type") String type, @Body RequestBody requestBody
+    );
+    @PATCH("admin/{type}/categories/remove/")
+    Call<String> deleteAdminCategories(
+            @Path("type") String type, @Body RequestBody requestBody
+    );
     @POST("events/checkTicket")
     Call<CheckTicketResponse> checkTicket(@Body RequestBody requestBody);
 
@@ -106,7 +116,8 @@ public interface ApiService {
             @Part("category") RequestBody category,
             @Part("phone") RequestBody phone,
             @Part("url") RequestBody url,
-            @Part List<MultipartBody.Part> openingTimes,
-            @Part List<MultipartBody.Part> closingTimes
+            @Part("alwaysOpen") RequestBody requestBodyAlwaysOpen,
+            @Nullable @Part List<MultipartBody.Part> openingTimes,
+            @Nullable @Part List<MultipartBody.Part> closingTimes
     );
 }
