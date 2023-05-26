@@ -207,7 +207,6 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
             }
         });
 
-        mViewModel.isValid().observe(getViewLifecycleOwner(), btnCreate::setEnabled);
         mViewModel.getIsTagValid().observe(getViewLifecycleOwner(), addTag::setEnabled);
         mViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             ArrayList<String> categoriesList = new ArrayList<>(categories);
@@ -215,7 +214,33 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
             adapter.addAll(categoriesList);
             adapter.notifyDataSetChanged();
         });
-
+        mViewModel.getFormState().observe(getViewLifecycleOwner(), data->{
+            if (data == null){
+                return;
+            }
+            location.setError(null);
+            startDateAndTime.setError(null);
+            endDateAndTime.setError(null);
+            if (data.getTitleError() != null) {
+                title.setError(getString(data.getTitleError()));
+            }
+            if (data.getDescriptionError() != null) {
+                description.setError(getString(data.getDescriptionError()));
+            }
+            if (data.getLocationError() != null) {
+                location.setError(getString(data.getLocationError()));
+            }
+            if (data.getStartDateError() != null) {
+                startDateAndTime.setError(getString(data.getStartDateError()));
+            }
+            if (data.getEndDateError() != null) {
+                endDateAndTime.setError(getString(data.getEndDateError()));
+            }
+            if (data.getTicketsError() != null) {
+                ticketsCount.setError(getString(data.getTicketsError()));
+            }
+            btnCreate.setEnabled(data.isDataValid());
+        });
         return root;
     }
 

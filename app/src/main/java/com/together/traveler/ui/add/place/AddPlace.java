@@ -172,11 +172,20 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
             if (data == null){
                 return;
             }
+            location.setError(null);
+            times.setError(null);
+
             if (data.getTitleError() != null) {
                 name.setError(getString(data.getTitleError()));
             }
             if (data.getDescriptionError() != null) {
                 description.setError(getString(data.getDescriptionError()));
+            }
+            if (data.getLocationError() != null) {
+                location.setError(getString(data.getLocationError()));
+            }
+            if (data.getOpenTimesError() != null) {
+                times.setError(getString(data.getOpenTimesError()));
             }
             if (data.getUrlError() != null) {
                 url.setError(getString(data.getUrlError()));

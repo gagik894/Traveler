@@ -39,7 +39,7 @@
             android:autofillHints=""
             android:background="@android:color/transparent"
             android:backgroundTint="@color/secondary_color"
-            android:hint="@string/add_enter_title"
+            android:hint="@string/add_enter_name"
             android:inputType="textPersonName|text"
             android:maxLines="3"
             android:minHeight="48dp"

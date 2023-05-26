@@ -108,6 +108,7 @@
     <string name="add_start_date_and_time">Event starts</string>
     <string name="add_end_date_and_time">Event ends</string>
     <string name="add_enter_title">Enter title</string>
+    <string name="add_enter_name">Enter Name</string>
     <string name="add_enter_location">Select location</string>
     <string name="add_select_start_date_and_time">Select start date</string>
     <string name="add_select_end_date_and_time">Select end date</string>
@@ -133,12 +134,16 @@
     <string name="add_enter_url">Enter web page\'s url(optional)</string>
     <!--    add errors-->
     <string name="invalid_name">Name must be more then 5 characters</string>
+    <string name="invalid_title">Title must be more then 5 characters</string>
     <string name="invalid_description">Description must be more then 10 characters</string>
     <string name="invalid_location">Location is required</string>
     <string name="invalid_dates">Open times are required</string>
     <string name="invalid_url">Must be valid URL</string>
     <string name="invalid_phone">Must be valid phone number</string>
     <string name="invalid_image">Image is required</string>
+    <string name="invalid_start_date">Start date is required</string>
+    <string name="invalid_end_date">End date is required</string>
+    <string name="invalid_tickets">Tickets count is required</string>
 
     <!--    add event toasts-->
     <string name="end_must_be_after_start">The end time should be after the start time.</string>

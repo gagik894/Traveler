@@ -9,8 +9,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.together.traveler.R;
 import com.together.traveler.context.AppContext;
 import com.together.traveler.model.Event;
+import com.together.traveler.ui.add.place.AddPlaceFormState;
 import com.together.traveler.web.ApiClient;
 import com.together.traveler.web.ApiService;
 
@@ -31,7 +33,7 @@ import retrofit2.Response;
 
 public class AddEventViewModel extends ViewModel {
     private final String TAG = "AddEventViewModel";
-
+    private final MutableLiveData<AddEventFormState> formState;
     private final MutableLiveData<Event> data;
     private final MutableLiveData<ArrayList<String>> categories;
     private final MutableLiveData<Boolean> isTagValid;
@@ -40,6 +42,7 @@ public class AddEventViewModel extends ViewModel {
 
 
     public AddEventViewModel() {
+        formState = new MutableLiveData<>();
         data = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
         isValid = new MutableLiveData<>(false);
@@ -181,6 +184,10 @@ public class AddEventViewModel extends ViewModel {
         return isTagValid;
     }
 
+    public MutableLiveData<AddEventFormState> getFormState() {
+        return formState;
+    }
+
     public String getStart(){
         return Objects.requireNonNull(this.data.getValue()).getStartDate();
     }
@@ -210,11 +217,23 @@ public class AddEventViewModel extends ViewModel {
     }
 
     private void checkValid(Event current) {
-        isValid.setValue(!Objects.equals(current.getTitle(), "") && !Objects.equals(current.getLocation(), "")
-                && !Objects.equals(current.getStartDate(), "") && !Objects.equals(current.getEndDate(), "")
-                && !Objects.equals(current.getDescription(), "") && !Objects.equals(current.getCategory(), "")
-                && current.getTicketsCount() > 0
-                && current.getImageBitmap() != null);
+        if (current.getTitle().trim().length() < 5){
+            formState.setValue(new AddEventFormState(R.string.invalid_title,null,null,null,null,null,null ));
+        }else if(current.getDescription().trim().length() < 10){
+            formState.setValue(new AddEventFormState(null,R.string.invalid_description,null,null,null,null,null ));
+        }else if(Objects.equals(current.getLocation(), "")){
+            formState.setValue(new AddEventFormState(null,null,R.string.invalid_location,null,null,null,null ));
+        }else if(Objects.equals(current.getStartDate(), "")) {
+            formState.setValue(new AddEventFormState(null,null,null,R.string.invalid_start_date,null,null,null ));
+        }else if(Objects.equals(current.getEndDate(), "")){
+            formState.setValue(new AddEventFormState(null,null,null,null,R.string.invalid_end_date,null,null ));
+        }else if(current.getTicketsCount() == 0){
+            formState.setValue(new AddEventFormState(null,null,null,null,null,R.string.invalid_tickets,null ));
+        }else if (current.getImageBitmap() == null){
+            formState.setValue(new AddEventFormState(null,null,null,null,null,null,R.string.invalid_image ));
+        }else{
+            formState.setValue(new AddEventFormState(true));
+        }
     }
 
     private File saveBitmapToFile(Bitmap bitmap) {
