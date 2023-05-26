@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
@@ -18,7 +19,6 @@ import com.together.traveler.databinding.DialogSelectTimesBinding;
 import java.util.Objects;
 
 public class SelectTimesDialog extends DialogFragment {
-    private final String TAG = "MapDialog";
 
     private DialogSelectTimesBinding binding;
     private SelectTimesDialog.MyDialogListener listener;
@@ -28,6 +28,8 @@ public class SelectTimesDialog extends DialogFragment {
 
     private final String[] openingTimes = new String[7];
     private final String[] closingTimes = new String[7];
+
+    private CheckBox alwaysOpenChb;
 
     int hour;
     int minute;
@@ -50,6 +52,7 @@ public class SelectTimesDialog extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final Context ctx = getContext();
+        alwaysOpenChb = binding.timesChbAlwaysOpen;
         openingTimesEt[0] = binding.timesEt0Open;
         openingTimesEt[1] = binding.timesEt1Open;
         openingTimesEt[2] = binding.timesEt2Open;
@@ -74,6 +77,14 @@ public class SelectTimesDialog extends DialogFragment {
         closedChb[5] = binding.timesChb5;
         closedChb[6] = binding.timesChb6;
 
+        final Button cancelBtn = binding.timesBtnCancel;
+        final Button okBtn = binding.timesBtnOk;
+
+        cancelBtn.setOnClickListener(v->this.dismiss());
+        okBtn.setOnClickListener(v->{
+            updateListener();
+            this.dismiss();
+        });
         for (int i = 0; i < 7; i++) {
             int index = i;
             openingTimesEt[i].setOnClickListener(v->{
@@ -84,7 +95,6 @@ public class SelectTimesDialog extends DialogFragment {
                             if (index == 0 && allNullExceptFirst(true)){
                                 setAllTimes(true);
                             }
-                            updateListener();
                         }, hour, minute, true);
                 timePickerDialog.show();
             });
@@ -96,7 +106,6 @@ public class SelectTimesDialog extends DialogFragment {
                             if (index == 0 && allNullExceptFirst(false)){
                                 setAllTimes(false);
                             }
-                            updateListener();
                         }, hour, minute, true);
                 timePickerDialog.show();
             });
@@ -112,9 +121,23 @@ public class SelectTimesDialog extends DialogFragment {
                     openingTimesEt[index].setEnabled(true);
                     closingTimesEt[index].setEnabled(true);
                 }
-                updateListener();
             });
         }
+        alwaysOpenChb.setOnCheckedChangeListener((v, isChecked)->{
+            if (isChecked) {
+                for (int i = 0; i < 7; i++) {
+                    openingTimesEt[i].setEnabled(false);
+                    closingTimesEt[i].setEnabled(false);
+                    closedChb[i].setEnabled(false);
+                }
+            }else{
+                for (int i = 0; i < 7; i++) {
+                    openingTimesEt[i].setEnabled(true);
+                    closingTimesEt[i].setEnabled(true);
+                    closedChb[i].setEnabled(true);
+                }
+            }
+        });
     }
 
 
@@ -130,7 +153,7 @@ public class SelectTimesDialog extends DialogFragment {
     }
 
     public interface MyDialogListener {
-        void onDialogResult(String[] openingTimes, String[] closingTimes);
+        void onDialogResult(String[] openingTimes, String[] closingTimes, boolean isAlwaysOpen);
     }
 
     public void setListener(SelectTimesDialog.MyDialogListener listener) {
@@ -138,7 +161,7 @@ public class SelectTimesDialog extends DialogFragment {
     }
 
     private void updateListener(){
-        listener.onDialogResult(openingTimes, closingTimes);
+        listener.onDialogResult(openingTimes, closingTimes, alwaysOpenChb.isChecked());
     }
 
     private boolean allNullExceptFirst(boolean opening) {
