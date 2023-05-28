@@ -1,13 +1,11 @@
 package com.together.traveler.ui.main.home;
 
-import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.together.traveler.model.Event;
@@ -30,7 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeViewModel extends ViewModel {
+public class HomeViewModel extends ViewModel implements LocationProvider.OnLocationChangedListener{
     private final String TAG = "HomeViewModel";
 
     private final ArrayList<Event> allEvents;
@@ -57,9 +55,8 @@ public class HomeViewModel extends ViewModel {
         loading = new MutableLiveData<>(false);
         locationName = new MutableLiveData<>();
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
-        locationProvider = new LocationProvider();
+        locationProvider = new LocationProvider(this);
         fetchCategories();
-        getLocationByIP();
     }
 
     public void getLocationByGPS() {
@@ -74,7 +71,6 @@ public class HomeViewModel extends ViewModel {
         this.locationName.postValue(locationName);
         fetchEvents(locationName);
     }
-
 
     public LiveData<ArrayList<Event>> getAllEvents() {
         return filteredEvents;
@@ -97,15 +93,8 @@ public class HomeViewModel extends ViewModel {
     }
 
     public LiveData<String> getLocationName() {
-        return Transformations.map(locationProvider.getLocationLiveData(), location -> {
-            if (location != null) {
-                return location;
-            } else {
-                return locationName.getValue();
-            }
-        });
+        return locationName;
     }
-
 
     public void fetch(){
         fetchEvents(locationName.getValue());
@@ -261,11 +250,8 @@ public class HomeViewModel extends ViewModel {
                 HomeViewModel.this.filteredEvents.postValue(filteredEvents);
 
             });
-
             executorService.shutdown();
         }
-
-
     }
 
     public void getLocationByIP() {
@@ -289,5 +275,10 @@ public class HomeViewModel extends ViewModel {
                 }
             });
             executorService.shutdown();
+    }
+
+    @Override
+    public void onLocationChanged(String cityName) {
+        this.setLocationName(cityName);
     }
 }

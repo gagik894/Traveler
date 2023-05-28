@@ -58,6 +58,8 @@ public class HomeFragment extends Fragment{
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
                 if (Boolean.TRUE.equals(result.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false))) {
                     homeViewModel.getLocationByGPS();
+                }else{
+                    homeViewModel.getLocationByIP();
                 }
             });
 
@@ -67,9 +69,8 @@ public class HomeFragment extends Fragment{
         homeViewModel =
                 new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
 
-        return root;
+        return binding.getRoot();
     }
 
     @Override
@@ -231,7 +232,7 @@ public class HomeFragment extends Fragment{
             dialog.dismiss();
         });
         nearbyBtn.setOnClickListener(v->{
-            homeViewModel.getLocationByIP();
+            requestLocationAndGetNearbyEvents();
             dialog.dismiss();
         });
     }

@@ -11,8 +11,6 @@ import android.location.LocationManager;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.together.traveler.context.AppContext;
 
@@ -24,10 +22,11 @@ public class LocationProvider {
     private final String TAG = "LocationProvider";
     private final Context context = AppContext.getContext();
     private final LocationManager locationManager;
-    private final MutableLiveData<String> locationLiveData = new MutableLiveData<>();
+    private final OnLocationChangedListener onLocationChangedListener;
 
-    public LocationProvider() {
+    public LocationProvider(OnLocationChangedListener onLocationChangedListener) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        this.onLocationChangedListener = onLocationChangedListener;
     }
 
     public void getLastKnownLocation() {
@@ -37,7 +36,7 @@ public class LocationProvider {
         }
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null) {
-            locationLiveData.setValue(getNameFromLocation(location));
+            onLocationChangedListener.onLocationChanged(getNameFromLocation(location));
         } else {
             Log.i(TAG, "getLastKnownLocation: else");
             // Request a single location update
@@ -45,15 +44,11 @@ public class LocationProvider {
         }
     }
 
-    public LiveData<String> getLocationLiveData() {
-        return locationLiveData;
-    }
-
     private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             Log.i(TAG, "onLocationChanged: " + location);
-            locationLiveData.setValue(getNameFromLocation(location));
+            onLocationChangedListener.onLocationChanged(getNameFromLocation(location));
             // Remove the location listener after receiving a single update
             locationManager.removeUpdates(this);
         }
@@ -61,7 +56,7 @@ public class LocationProvider {
 
     private String getNameFromLocation(Location location) {
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-        List<Address> addresses = null;
+        List<Address> addresses;
         String cityName = "";
         try {
             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
@@ -72,7 +67,9 @@ public class LocationProvider {
         return cityName;
     }
 
+    public interface OnLocationChangedListener {
+        void onLocationChanged(String cityName);
+    }
 }
-
 
 
