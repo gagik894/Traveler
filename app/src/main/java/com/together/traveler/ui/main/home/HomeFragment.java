@@ -1,7 +1,7 @@
 package com.together.traveler.ui.main.home;
 
+import android.Manifest;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,8 +13,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
-import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -37,6 +38,8 @@ import com.together.traveler.model.Event;
 import java.util.ArrayList;
 import java.util.List;
 
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class HomeFragment extends Fragment{
     private final String TAG = "HomeFragment";
 
@@ -51,6 +54,13 @@ public class HomeFragment extends Fragment{
     private FragmentContainerView locationFragment;
     private final List<Event> eventList = new ArrayList<>();
 
+    private final ActivityResultLauncher<String[]> requestMultiplePermissionsLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                if (Boolean.TRUE.equals(result.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false))) {
+                    homeViewModel.getLocationByGPS();
+                }
+            });
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -58,20 +68,21 @@ public class HomeFragment extends Fragment{
                 new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        rvCards = binding.rvHome;
-        swipeRefreshLayout = binding.cardSwipeRefreshLayout;
-        progressBar = binding.homePb;
-        filtersButton = binding.homeBtnFilters;
-        chipGroup = binding.homeChgCategories;
-        locationFragment = binding.fragmentContainerView;
+
         return root;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        rvCards = binding.rvHome;
+        swipeRefreshLayout = binding.cardSwipeRefreshLayout;
+        progressBar = binding.homePb;
+        filtersButton = binding.homeBtnFilters;
+        chipGroup = binding.homeChgCategories;
+        locationFragment = binding.fragmentContainerView;
         SearchView searchView = binding.searchView;
+        requestLocationAndGetNearbyEvents();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             searchView.setIconifiedByDefault(false);
         }
@@ -181,6 +192,7 @@ public class HomeFragment extends Fragment{
         });
 
         homeViewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> progressBar.setVisibility(isLoading? View.VISIBLE : View.GONE));
+
     }
 
     @Override
@@ -207,9 +219,7 @@ public class HomeFragment extends Fragment{
         Button allBtn = dialogLayout.findViewById(R.id.DHomeLocationBtnAll);
         Button nearbyBtn = dialogLayout.findViewById(R.id.DHomeLocationBtnNearby);
 
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            homeViewModel.setLocationName(locationSearch.getText().toString());
-        });
+        builder.setPositiveButton("OK", (dialog, which) -> homeViewModel.setLocationName(locationSearch.getText().toString()));
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
@@ -221,10 +231,18 @@ public class HomeFragment extends Fragment{
             dialog.dismiss();
         });
         nearbyBtn.setOnClickListener(v->{
-            homeViewModel.fetchLocation();
+            homeViewModel.getLocationByIP();
             dialog.dismiss();
         });
     }
 
-
+    private void requestLocationAndGetNearbyEvents() {
+        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            // Permission already granted
+            homeViewModel.getLocationByGPS();
+        } else {
+            // Request permission
+            requestMultiplePermissionsLauncher.launch(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION});
+        }
+    }
 }

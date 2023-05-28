@@ -1,11 +1,13 @@
 package com.together.traveler.ui.main.home;
 
+import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.together.traveler.model.Event;
@@ -42,7 +44,7 @@ public class HomeViewModel extends ViewModel {
     private String userId;
     private CharSequence constraint;
     private final ApiService apiService;
-
+    private final LocationProvider locationProvider;
 
     public HomeViewModel() {
         constraint = "";
@@ -55,8 +57,13 @@ public class HomeViewModel extends ViewModel {
         loading = new MutableLiveData<>(false);
         locationName = new MutableLiveData<>();
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+        locationProvider = new LocationProvider();
         fetchCategories();
-        fetchLocation();
+        getLocationByIP();
+    }
+
+    public void getLocationByGPS() {
+        locationProvider.getLastKnownLocation();
     }
 
     public void changeCategoriesVisibility() {
@@ -67,6 +74,7 @@ public class HomeViewModel extends ViewModel {
         this.locationName.postValue(locationName);
         fetchEvents(locationName);
     }
+
 
     public LiveData<ArrayList<Event>> getAllEvents() {
         return filteredEvents;
@@ -88,9 +96,16 @@ public class HomeViewModel extends ViewModel {
         return selectedCategories;
     }
 
-    public MutableLiveData<String> getLocationName() {
-        return locationName;
+    public LiveData<String> getLocationName() {
+        return Transformations.map(locationProvider.getLocationLiveData(), location -> {
+            if (location != null) {
+                return location;
+            } else {
+                return locationName.getValue();
+            }
+        });
     }
+
 
     public void fetch(){
         fetchEvents(locationName.getValue());
@@ -253,7 +268,7 @@ public class HomeViewModel extends ViewModel {
 
     }
 
-    public void fetchLocation() {
+    public void getLocationByIP() {
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             executorService.submit(() -> {
                 URL url = null;
