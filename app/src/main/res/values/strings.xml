@@ -174,7 +174,7 @@
     <!--    home location dialog-->
     <string name="home_search">Find events in</string>
     <string name="home_show_all">Show all events</string>
-    <string name="home_show_nearby">Show nearby events</string>
+    <string name="home_show_nearby">Show local events</string>
 
     <string name="sunday">Sunday</string>
     <string name="monday">Monday</string>

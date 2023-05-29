@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -83,7 +84,7 @@ public class HomeFragment extends Fragment{
         chipGroup = binding.homeChgCategories;
         locationFragment = binding.fragmentContainerView;
         SearchView searchView = binding.searchView;
-        requestLocationAndGetNearbyEvents();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             searchView.setIconifiedByDefault(false);
         }
@@ -193,6 +194,10 @@ public class HomeFragment extends Fragment{
         });
 
         homeViewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> progressBar.setVisibility(isLoading? View.VISIBLE : View.GONE));
+
+        if (homeViewModel.getLocationName().getValue() == null){
+            requestLocationAndGetNearbyEvents();
+        }
 
     }
 
