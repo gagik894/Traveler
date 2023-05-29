@@ -62,11 +62,11 @@ public class MapFragment extends Fragment {
 
         onCenterButton.setVisibility(View.GONE);
         locationSearch.setVisibility(View.GONE);
-        map.setClickable(false);
-        map.setFocusable(false);
-        map.setFocusableInTouchMode(false);
-        map.setOnTouchListener((v, event) -> true);
-        disableClickEvents(map);
+//        map.setClickable(false);
+//        map.setFocusable(false);
+//        map.setFocusableInTouchMode(false);
+//        map.setOnTouchListener((v, event) -> true);
+//        disableClickEvents(map);
 
 
         if (eventViewModel.getData().getValue() != null) {

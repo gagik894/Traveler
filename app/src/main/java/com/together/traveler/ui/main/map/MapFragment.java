@@ -242,10 +242,15 @@ public class MapFragment extends Fragment {
                 chip.setText(categories.get(i));
                 chip.setClickable(true);
                 chip.setCheckable(true);
-                chip.setOnCloseIconClickListener(v -> {
-                    //TODO: Handle the click event here
-                });
+                chip.setOnClickListener(v -> mapViewModel.addOrRemoveSelectedCategories((String) chip.getText()));
                 chipGroup.addView(chip);
+            }
+        });
+
+        mapViewModel.getSelectedCategories().observe(getViewLifecycleOwner(), selectedCategories->{
+            for (int i = 0; i < selectedCategories.size(); i++) {
+                Chip chip = (Chip) chipGroup.getChildAt(selectedCategories.get(i));
+                chip.setChecked(true);
             }
         });
 

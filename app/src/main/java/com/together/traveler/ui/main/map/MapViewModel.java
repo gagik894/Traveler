@@ -12,6 +12,7 @@ import com.together.traveler.model.MapItem;
 import com.together.traveler.model.Place;
 import com.together.traveler.retrofit.ApiClient;
 import com.together.traveler.retrofit.ApiService;
+import com.together.traveler.ui.main.home.HomeViewModel;
 
 import org.osmdroid.bonuspack.location.GeocoderNominatim;
 import org.osmdroid.util.GeoPoint;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import retrofit2.Call;
@@ -42,11 +44,15 @@ public class MapViewModel extends ViewModel {
     private final MutableLiveData<Integer> state;
     private final MutableLiveData<Place> mapSelectedPlaceData;
     private final MutableLiveData<Event> mapSelectedEventData;
+    private final MutableLiveData<List<Integer>> selectedCategories;
+    private final MutableLiveData<ArrayList<Event>> filteredEvents;
 
     private final ArrayList<String> placeCategories;
     private final ArrayList<String> eventCategories;
     private final ArrayList<MapItem> events;
     private final ArrayList<MapItem> places;
+    private final ArrayList<Integer> eventSelectedCategories;
+    private final ArrayList<Integer> placeSelectedCategories;
 
 
     private String locationName;
@@ -62,11 +68,15 @@ public class MapViewModel extends ViewModel {
         state = new MutableLiveData<>();
         mapSelectedPlaceData = new MutableLiveData<>();
         mapSelectedEventData = new MutableLiveData<>();
+        selectedCategories = new MutableLiveData<>(new ArrayList<>());
+        filteredEvents = new MutableLiveData<>();
 
         placeCategories = new ArrayList<>();
         eventCategories = new ArrayList<>();
         events = new ArrayList<>();
         places = new ArrayList<>();
+        eventSelectedCategories = new ArrayList<>();
+        placeSelectedCategories = new ArrayList<>();
         setState(0);
     }
 
@@ -96,6 +106,29 @@ public class MapViewModel extends ViewModel {
         return mapSelectedEventData;
     }
 
+    public MutableLiveData<List<Integer>> getSelectedCategories() {
+        return selectedCategories;
+    }
+
+    public void addOrRemoveSelectedCategories(String checkedChip) {
+        Integer selectedId = Objects.requireNonNull(categories.getValue()).indexOf(checkedChip);
+        List<Integer> selected;
+        if (this.getState().getValue() != null && this.getState().getValue() == 0){
+             selected = eventSelectedCategories;
+        }else{
+            selected = placeSelectedCategories;
+        }
+        if (selected != null) {
+            if (selected.contains(selectedId)){
+                selected.remove(selectedId);
+            }else{
+                selected.add(selectedId);
+            }
+        }
+
+        this.selectedCategories.setValue(selected);
+        filterEventsByCategory();
+    }
 
     public void setMapSelectedEventData(String _id){
         fetchEventData(_id);
@@ -123,6 +156,7 @@ public class MapViewModel extends ViewModel {
                 categories.setValue(eventCategories);
                 mapItems.setValue(events);
             }
+            selectedCategories.setValue(eventSelectedCategories);
         }else{
             if (placeCategories.size() == 0){
                 fetchMapItems("places");
@@ -131,14 +165,12 @@ public class MapViewModel extends ViewModel {
                 categories.setValue(placeCategories);
                 mapItems.setValue(places);
             }
+            selectedCategories.setValue(placeSelectedCategories);
         }
-
         this.state.setValue(state);
+        filterEventsByCategory();
     }
 
-//    public void setMapSelectedPlace(int position){
-//        this.mapSelectedPlace.setValue(Objects.requireNonNull(places.get(position));
-//    }
 
     public void setItem(GeoPoint p){
         OverlayItem overlayItem = new OverlayItem(" ", "", new GeoPoint(p.getLatitude(), p.getLongitude()));
@@ -147,7 +179,6 @@ public class MapViewModel extends ViewModel {
         overlayItems.getValue().add(overlayItem);
         overlayItems.postValue(overlayItems.getValue());
     }
-
 
     public String getLocationName() {
         return locationName;
@@ -289,5 +320,43 @@ public class MapViewModel extends ViewModel {
                 Log.e(TAG, "fetchEvents request failed with error: " + t.getMessage());
             }
         });
+    }
+
+    public void filterEventsByCategory() {
+        ArrayList<MapItem> allItems;
+
+        if (this.getState().getValue() != null && this.getState().getValue() == 0){
+            allItems = this.events;
+        }else{
+            allItems = this.places;
+        }
+
+        if (allItems != null) {
+            List<Integer> selectedCategories = this.selectedCategories.getValue();
+            if (selectedCategories == null || selectedCategories.size() == 0) {
+                this.mapItems.postValue(allItems);
+                return;
+            }
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.submit(() -> {
+                ArrayList<MapItem> filtered = new ArrayList<>();
+
+                for (MapItem mapItem : allItems) {
+                    for (int i = 0; i < selectedCategories.size(); i++) {
+                        String category = Objects.requireNonNull(this.categories.getValue()).get(selectedCategories.get(i));
+                        if (Objects.equals(mapItem.getCategory(), category)) {
+                            filtered.add(mapItem);
+                            break; // Skip to the next event
+                        }
+                    }
+                }
+
+                this.mapItems.postValue(filtered);
+
+            });
+
+            executorService.shutdown();
+        }
     }
 }
