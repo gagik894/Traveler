@@ -141,9 +141,9 @@ public class AddPlaceViewModel extends ViewModel {
     }
 
     private void checkValid(Place current) {
-        if (current.getName().trim().length() < 5){
+        if (current.getName().trim().length() == 0){
             formState.setValue(new AddPlaceFormState(R.string.invalid_name,null,null,null,null,null,null ));
-        }else if(current.getDescription().trim().length() < 10){
+        }else if(current.getDescription().trim().length() <= 10){
             formState.setValue(new AddPlaceFormState(null,R.string.invalid_description,null,null,null,null,null ));
         }else if(Objects.equals(current.getLocation(), "")){
             formState.setValue(new AddPlaceFormState(null,null,R.string.invalid_location,null,null,null,null ));

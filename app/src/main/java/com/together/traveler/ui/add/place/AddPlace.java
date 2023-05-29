@@ -136,7 +136,20 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
         phone.addTextChangedListener(afterTextChangedListener);
         url.addTextChangedListener(afterTextChangedListener);
         times.addTextChangedListener(afterTextChangedListener);
+        phone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length()>0 && s.charAt(0) != '+') {
+                    s.insert(0, "+");
+                }
+            }
+        });
 
         location.setOnClickListener(this::showPopupView);
         eventImage.setOnClickListener(v -> selectImage());

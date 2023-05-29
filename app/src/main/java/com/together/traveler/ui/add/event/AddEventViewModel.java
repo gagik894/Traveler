@@ -217,9 +217,9 @@ public class AddEventViewModel extends ViewModel {
     }
 
     private void checkValid(Event current) {
-        if (current.getTitle().trim().length() < 5){
+        if (current.getTitle().trim().length() <= 5){
             formState.setValue(new AddEventFormState(R.string.invalid_title,null,null,null,null,null,null ));
-        }else if(current.getDescription().trim().length() < 10){
+        }else if(current.getDescription().trim().length() <= 10){
             formState.setValue(new AddEventFormState(null,R.string.invalid_description,null,null,null,null,null ));
         }else if(Objects.equals(current.getLocation(), "")){
             formState.setValue(new AddEventFormState(null,null,R.string.invalid_location,null,null,null,null ));

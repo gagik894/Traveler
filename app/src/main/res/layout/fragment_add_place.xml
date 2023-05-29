@@ -40,7 +40,7 @@
             android:background="@android:color/transparent"
             android:backgroundTint="@color/secondary_color"
             android:hint="@string/add_enter_name"
-            android:inputType="textPersonName|text"
+            android:inputType="textCapSentences"
             android:maxLines="3"
             android:minHeight="48dp"
             android:scrollHorizontally="false"
@@ -53,7 +53,7 @@
 
         <EditText
             android:id="@+id/addPlaceEtLocation"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:autofillHints=""
@@ -64,12 +64,13 @@
             android:inputType="text"
             android:minHeight="48dp"
             android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/addPlaceEtDescription"
             app:layout_constraintTop_toBottomOf="@+id/addPlaceEtDescription" />
 
         <EditText
             android:id="@+id/addPlaceEtDescription"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:autofillHints=""
             android:background="@color/colorTransparent"
@@ -79,12 +80,13 @@
             android:minHeight="48dp"
             android:singleLine="false"
             android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/addPlaceEtName"
             app:layout_constraintTop_toBottomOf="@+id/addPlaceEtName" />
 
         <EditText
             android:id="@+id/addPlaceEtPhone"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:autofillHints=""
@@ -95,12 +97,13 @@
             android:inputType="phone"
             android:minHeight="48dp"
             android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/addPlaceEtUrl"
             app:layout_constraintTop_toBottomOf="@+id/addPlaceEtUrl" />
 
         <EditText
             android:id="@+id/addPlaceEtUrl"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:autofillHints=""
@@ -110,12 +113,13 @@
             android:inputType="textUri"
             android:minHeight="48dp"
             android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/addPlaceEtTimes"
             app:layout_constraintTop_toBottomOf="@+id/addPlaceEtTimes" />
 
         <EditText
             android:id="@+id/addPlaceEtTimes"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:autofillHints=""
@@ -127,6 +131,7 @@
             android:inputType="textUri"
             android:minHeight="48dp"
             android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/addPlaceEtLocation"
             app:layout_constraintTop_toBottomOf="@+id/addPlaceEtLocation" />
 
