@@ -4,10 +4,9 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.together.traveler.model.Place
-import com.together.traveler.web.ApiClient
-import com.together.traveler.web.ApiService
+import com.together.traveler.retrofit.ApiClient
+import com.together.traveler.retrofit.ApiService
 import kotlinx.coroutines.flow.MutableStateFlow
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import org.json.JSONException

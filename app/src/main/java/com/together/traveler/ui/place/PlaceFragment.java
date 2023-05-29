@@ -1,5 +1,6 @@
 package com.together.traveler.ui.place;
 
+import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -55,6 +56,7 @@ public class PlaceFragment extends Fragment {
         final ImageButton backButton = binding.placeIBtnBack;
         final ImageButton saveButton = binding.placeIBtnSave;
         final FragmentContainerView mapCard = binding.placeMap;
+        final Group timesGroup = binding.placeTimeGroup;
         int maxLines = description.getMaxLines();
 
 
@@ -88,8 +90,13 @@ public class PlaceFragment extends Fragment {
             description.setText(place.getDescription());
             openStatus.setText(isOpen? R.string.place_open: R.string.place_closed);
             openStatus.setTextColor(isOpen? Color.GREEN : Color.RED);
-            nextStatus.setText(isOpen? R.string.place_closes : R.string.place_opens);
-            nextTime.setText(placeViewModel.getNextTime());
+            if (placeViewModel.getNextTime() == null){
+                timesGroup.setVisibility(View.GONE);
+            }else{
+                timesGroup.setVisibility(View.VISIBLE);
+                nextStatus.setText(isOpen? R.string.place_closes : R.string.place_opens);
+                nextTime.setText(placeViewModel.getNextTime());
+            }
             phone.setText(place.getPhone());
             link.setText(place.getUrl());
 

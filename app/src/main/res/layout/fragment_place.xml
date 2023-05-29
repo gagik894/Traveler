@@ -171,6 +171,15 @@
                             app:layout_constraintStart_toStartOf="@+id/placeTvLocation"
                             app:layout_constraintTop_toBottomOf="@+id/placeTvLocation" />
 
+                        <androidx.constraintlayout.widget.Group
+                            android:id="@+id/placeTimeGroup"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:visibility="visible"
+                            app:constraint_referenced_ids="textView8,placeTvNextTime,placeTvNextStatus"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
                         <TextView
                             android:id="@+id/textView8"
                             android:layout_width="wrap_content"

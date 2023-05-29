@@ -1,4 +1,4 @@
-package com.together.traveler.web;
+package com.together.traveler.retrofit;
 
 import com.together.traveler.model.CheckTicketResponse;
 import com.together.traveler.model.Event;
@@ -118,6 +118,7 @@ public interface ApiService {
             @Part("url") RequestBody url,
             @Part("alwaysOpen") RequestBody requestBodyAlwaysOpen,
             @Nullable @Part List<MultipartBody.Part> openingTimes,
-            @Nullable @Part List<MultipartBody.Part> closingTimes
+            @Nullable @Part List<MultipartBody.Part> closingTimes,
+            @Nullable @Part List<MultipartBody.Part> isClosed
     );
 }

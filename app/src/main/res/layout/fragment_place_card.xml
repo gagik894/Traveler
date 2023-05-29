@@ -24,6 +24,14 @@
             android:layout_height="wrap_content"
             android:padding="20dp">
 
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/placeCardGroupTimes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="placeCardTvNextStatus,placeCardTvNextTime,textView8"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/placeCardTvName"
                 android:layout_width="0dp"

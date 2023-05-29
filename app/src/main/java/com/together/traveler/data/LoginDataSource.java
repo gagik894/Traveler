@@ -5,8 +5,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.together.traveler.model.LoginResponse;
-import com.together.traveler.web.ApiClient;
-import com.together.traveler.web.ApiService;
+import com.together.traveler.retrofit.ApiClient;
+import com.together.traveler.retrofit.ApiService;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -84,6 +84,7 @@
     <string name="place_closes">Closes</string>
     <string name="place_opens">Opens</string>
     <string name="place_always_open">Always open</string>
+    <string name="place_tomorrow">Tomorrow</string>
 
     <!--    event card-->
     <string name="event_card_image">Card event image</string>

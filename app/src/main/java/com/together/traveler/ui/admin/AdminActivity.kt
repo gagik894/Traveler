@@ -1,7 +1,6 @@
 package com.together.traveler.ui.admin
 
 import android.os.Bundle
-import android.util.Log
 import android.view.ViewGroup
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -336,9 +335,13 @@ fun PlaceTimes(data: Place) {
     if (data.isAlwaysOpen) {
         Text(text = "Always Open")
     } else {
-        Column() {
-            data.openingTimes.forEachIndexed { index, element ->
-                Text(text = "$element - ${data.closingTimes[index]}")
+        Column {
+            data.isClosedDays.forEachIndexed{index, isClosed ->
+                if (isClosed){
+                    Text(text = stringResource(R.string.place_closed))
+                }else{
+                    Text(text = "${data.openingTimes[index]} - ${data.closingTimes[index]}")
+                }
             }
         }
     }

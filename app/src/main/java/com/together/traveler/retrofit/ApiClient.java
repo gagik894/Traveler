@@ -1,4 +1,4 @@
-package com.together.traveler.web;
+package com.together.traveler.retrofit;
 
 import android.content.Context;
 import android.content.SharedPreferences;

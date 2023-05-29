@@ -15,8 +15,8 @@ import com.google.i18n.phonenumbers.Phonenumber;
 import com.together.traveler.R;
 import com.together.traveler.context.AppContext;
 import com.together.traveler.model.Place;
-import com.together.traveler.web.ApiClient;
-import com.together.traveler.web.ApiService;
+import com.together.traveler.retrofit.ApiClient;
+import com.together.traveler.retrofit.ApiService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -70,11 +70,12 @@ public class AddPlaceViewModel extends ViewModel {
         checkValid(current);
     }
 
-    public void setEventOpenTimes(String[] openingTimes, String[] closingTimes, boolean isAlwaysOpen) {
+    public void setEventOpenTimes(String[] openingTimes, String[] closingTimes, boolean[] isClosed, boolean isAlwaysOpen) {
         Place current = data.getValue();
         Objects.requireNonNull(current).setAlwaysOpen(isAlwaysOpen);
         Objects.requireNonNull(current).setOpeningTimes(openingTimes);
         Objects.requireNonNull(current).setClosingTimes(closingTimes);
+        Objects.requireNonNull(current).setIsClosedDays(isClosed);
         this.data.setValue(current);
         checkValid(current);
     }
@@ -94,8 +95,6 @@ public class AddPlaceViewModel extends ViewModel {
         this.data.setValue(current);
         checkValid(current);
     }
-
-
 
     public MutableLiveData<ArrayList<String>> getCategories() {
         return categories;
@@ -215,8 +214,10 @@ public class AddPlaceViewModel extends ViewModel {
 
         String[] openingTimes = event.getOpeningTimes();
         String[] closingTimes = event.getClosingTimes();
+        boolean[] isClosedDays = event.getIsClosedDays();
         List<MultipartBody.Part> openingTimeParts = null;
         List<MultipartBody.Part> closingTimeParts = null;
+        List<MultipartBody.Part> isClosedDaysParts = null;
         if (!event.isAlwaysOpen()) {
             openingTimeParts = new ArrayList<>();
             for (String openingTime : openingTimes) {
@@ -229,6 +230,11 @@ public class AddPlaceViewModel extends ViewModel {
                 RequestBody closingTimeBody = RequestBody.create(MediaType.parse("text/plain"), closingTime);
                 MultipartBody.Part closingTimePart = MultipartBody.Part.createFormData("closingTimes[]", closingTime);
                 closingTimeParts.add(closingTimePart);
+            }
+            isClosedDaysParts = new ArrayList<>();
+            for (Boolean isClosed : isClosedDays) {
+                MultipartBody.Part isClosedDaysPart = MultipartBody.Part.createFormData("isClosedDays[]", String.valueOf(isClosed));
+                isClosedDaysParts.add(isClosedDaysPart);
             }
         }
 
@@ -249,7 +255,8 @@ public class AddPlaceViewModel extends ViewModel {
                 requestBodyUrl,
                 requestBodyAlwaysOpen,
                 openingTimeParts,
-                closingTimeParts
+                closingTimeParts,
+                isClosedDaysParts
         );
 
         call.enqueue(new Callback<ResponseBody>() {

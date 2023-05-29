@@ -7,7 +7,9 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clipToPadding="true"
         app:cardCornerRadius="20dp"
+        app:cardUseCompatPadding="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:strokeColor="@color/gray"
@@ -17,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingHorizontal="15dp"
+            android:paddingHorizontal="10dp"
             android:paddingVertical="4dp"
             android:showDividers="middle">
 
@@ -25,6 +27,7 @@
                 android:id="@+id/imageView20"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:contentDescription="@string/location_icon"
                 app:srcCompat="@drawable/location" />
 
             <View
@@ -37,19 +40,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="TextView" />
-
-            <View
-                android:id="@+id/view3"
-                android:layout_width="5dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:text="" />
 
             <ImageView
                 android:id="@+id/imageView21"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:layout_marginStart="5dp"
                 app:srcCompat="@android:drawable/arrow_down_float" />
         </LinearLayout>
 

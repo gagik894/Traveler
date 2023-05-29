@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -46,7 +47,7 @@ public class PlaceCard extends Fragment {
         final TextView currentStatus = binding.placeCardTvOpenStatus;
         final TextView nextStatus = binding.placeCardTvNextStatus;
         final TextView nextTime = binding.placeCardTvNextTime;
-
+        final Group timesGroup = binding.placeCardGroupTimes;
 
         mapViewModel.getMapSelectedPlaceData().observe(getViewLifecycleOwner(), data -> placeViewModel.setPlaceData(data));
         placeViewModel.getPlaceData().observe(getViewLifecycleOwner(), data->{
@@ -58,8 +59,14 @@ public class PlaceCard extends Fragment {
             category.setText(data.getCategory());
             currentStatus.setText(isOpen? R.string.place_open: R.string.place_closed);
             currentStatus.setTextColor(isOpen? Color.GREEN : Color.RED);
-            nextStatus.setText(isOpen? R.string.place_closes : R.string.place_opens);
-            nextTime.setText(placeViewModel.getNextTime());
+            if (placeViewModel.getNextTime() == null){
+                timesGroup.setVisibility(View.GONE);
+            }else{
+                timesGroup.setVisibility(View.VISIBLE);
+                nextStatus.setText(isOpen? R.string.place_closes : R.string.place_opens);
+                nextTime.setText(placeViewModel.getNextTime());
+            }
+
         });
     }
 

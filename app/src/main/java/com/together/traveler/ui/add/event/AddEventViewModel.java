@@ -12,9 +12,8 @@ import androidx.lifecycle.ViewModel;
 import com.together.traveler.R;
 import com.together.traveler.context.AppContext;
 import com.together.traveler.model.Event;
-import com.together.traveler.ui.add.place.AddPlaceFormState;
-import com.together.traveler.web.ApiClient;
-import com.together.traveler.web.ApiService;
+import com.together.traveler.retrofit.ApiClient;
+import com.together.traveler.retrofit.ApiService;
 
 import java.io.File;
 import java.io.FileOutputStream;

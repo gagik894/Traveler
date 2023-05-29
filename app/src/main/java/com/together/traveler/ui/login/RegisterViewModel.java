@@ -13,8 +13,8 @@ import com.together.traveler.R;
 import com.together.traveler.data.LoginRepository;
 import com.together.traveler.data.Result;
 import com.together.traveler.model.User;
-import com.together.traveler.web.ApiClient;
-import com.together.traveler.web.ApiService;
+import com.together.traveler.retrofit.ApiClient;
+import com.together.traveler.retrofit.ApiService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,13 +33,13 @@ import retrofit2.Response;
 public class RegisterViewModel extends ViewModel {
 
     private final String TAG = "RegisterViewModel";
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginFormState> verifyFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> signUpResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
+    private final MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
+    private final MutableLiveData<LoginFormState> verifyFormState = new MutableLiveData<>();
+    private final MutableLiveData<LoginResult> signUpResult = new MutableLiveData<>();
+    private final LoginRepository loginRepository;
     private final ApiService apiService;
     private final User user;
-    private MutableLiveData<String> secCode = new MutableLiveData<>();
+    private final MutableLiveData<String> secCode = new MutableLiveData<>();
 
     RegisterViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;

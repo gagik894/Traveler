@@ -34,11 +34,12 @@ public class SelectTimesDialog extends DialogFragment {
 
     private final String[] openingTimes = new String[7];
     private final String[] closingTimes = new String[7];
+    private final boolean[] isClosed = new boolean[7];
 
     private CheckBox alwaysOpenChb;
 
-    int hour;
-    int minute;
+    private int hour;
+    private int minute;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -151,9 +152,11 @@ public class SelectTimesDialog extends DialogFragment {
                 if (isChecked){
                     openingTimes[index] = "0:0";
                     closingTimes[index] = "0:0";
+                    isClosed[index] = true;
                     openingTimesEt[index].setEnabled(false);
                     closingTimesEt[index].setEnabled(false);
                 }else{
+                    isClosed[index] = false;
                     openingTimes[index] = String.valueOf(openingTimesEt[index].getText());
                     closingTimes[index] = String.valueOf(closingTimesEt[index].getText());
                     openingTimesEt[index].setEnabled(true);
@@ -178,16 +181,6 @@ public class SelectTimesDialog extends DialogFragment {
         });
     }
 
-    private Date convertToTime(String TimeString){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
-        Date date = null;
-        try {
-            date = dateFormat.parse(TimeString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
     @Override
     public void onResume() {
         super.onResume();
@@ -200,7 +193,7 @@ public class SelectTimesDialog extends DialogFragment {
     }
 
     public interface MyDialogListener {
-        void onDialogResult(String[] openingTimes, String[] closingTimes, boolean isAlwaysOpen);
+        void onDialogResult(String[] openingTimes, String[] closingTimes, boolean[] isClosed, boolean isAlwaysOpen);
     }
 
     public void setListener(SelectTimesDialog.MyDialogListener listener) {
@@ -208,7 +201,7 @@ public class SelectTimesDialog extends DialogFragment {
     }
 
     private void updateListener(){
-        listener.onDialogResult(openingTimes, closingTimes, alwaysOpenChb.isChecked());
+        listener.onDialogResult(openingTimes, closingTimes, isClosed, alwaysOpenChb.isChecked());
     }
 
     private boolean allNullExceptFirst(boolean opening) {
@@ -232,5 +225,16 @@ public class SelectTimesDialog extends DialogFragment {
                 closingTimesEt[i].setText(closingTimes[i]);
             }
         }
+    }
+
+    private Date convertToTime(String TimeString){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
+        Date date = null;
+        try {
+            date = dateFormat.parse(TimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 }

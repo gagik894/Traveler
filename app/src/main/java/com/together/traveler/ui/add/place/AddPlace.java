@@ -279,15 +279,19 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
     }
 
     @Override
-    public void onDialogResult(String[] openingTimes, String[] closingTimes, boolean isAlwaysOpen) {
+    public void onDialogResult(String[] openingTimes, String[] closingTimes, boolean[] isClosed, boolean isAlwaysOpen) {
         Log.i(TAG, "onDialogResult: " + Arrays.toString(openingTimes));
-        mViewModel.setEventOpenTimes(openingTimes, closingTimes, isAlwaysOpen);
+        mViewModel.setEventOpenTimes(openingTimes, closingTimes, isClosed, isAlwaysOpen);
         if (Objects.requireNonNull(mViewModel.getData().getValue()).isAlwaysOpen()){
             times.setText(R.string.place_always_open);
         }else{
             boolean openTimesAdded = mViewModel.areOpenTimesValid(Objects.requireNonNull(mViewModel.getData().getValue()));
             if (openTimesAdded){
-                times.setText(String.format("%s, %s - %s, ...", getString(R.string.monday), openingTimes[0], closingTimes[0]));
+                if (isClosed[0]){
+                    times.setText(String.format("%s, %s ...", getString(R.string.monday), getString(R.string.place_closed)));
+                }else{
+                    times.setText(String.format("%s, %s - %s, ...", getString(R.string.monday), openingTimes[0], closingTimes[0]));
+                }
             }else{
                 times.setText(R.string.add_select_all_open_times);
             }
