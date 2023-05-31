@@ -110,7 +110,7 @@
                 app:layout_constraintVertical_bias="0.0" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/placeCardIvPhone"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginTop="10dp"
@@ -125,9 +125,9 @@
                 android:layout_height="wrap_content"
                 android:autoLink="phone"
                 android:text="phone"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toTopOf="@+id/imageView"
+                app:layout_constraintBottom_toBottomOf="@+id/placeCardIvPhone"
+                app:layout_constraintStart_toEndOf="@+id/placeCardIvPhone"
+                app:layout_constraintTop_toTopOf="@+id/placeCardIvPhone"
                 app:layout_constraintVertical_bias="0.5" />
 
             <ImageView
@@ -137,8 +137,8 @@
                 android:layout_marginTop="10dp"
                 android:contentDescription="@string/category_icon"
                 android:src="@drawable/category"
-                app:layout_constraintStart_toStartOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                app:layout_constraintStart_toStartOf="@+id/placeCardIvPhone"
+                app:layout_constraintTop_toBottomOf="@+id/placeCardIvPhone" />
 
             <TextView
                 android:id="@+id/placeCardTvCategory"

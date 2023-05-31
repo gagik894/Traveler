@@ -41,6 +41,7 @@ public class PlaceCard extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         final ImageView eventImage = binding.placeCardIvMain;
+        final ImageView phoneIcon = binding.placeCardIvPhone;
         final TextView category = binding.placeCardTvCategory;
         final TextView name = binding.placeCardTvName;
         final TextView phone = binding.placeCardTvPhone;
@@ -55,6 +56,7 @@ public class PlaceCard extends Fragment {
             String eventImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", data.getImgId());
             Glide.with(requireContext()).load(eventImageUrl).into(eventImage);
             name.setText(data.getName());
+            phoneIcon.setVisibility(data.getPhone()==null? View.GONE: View.VISIBLE);
             phone.setText(data.getPhone());
             category.setText(data.getCategory());
             currentStatus.setText(isOpen? R.string.place_open: R.string.place_closed);

@@ -158,7 +158,7 @@
                             app:layout_constraintTop_toTopOf="@+id/eventTvDate" />
 
                         <ImageView
-                            android:id="@+id/imageView"
+                            android:id="@+id/placeIvPhone"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:contentDescription="@string/category_icon"

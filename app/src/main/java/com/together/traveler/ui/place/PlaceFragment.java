@@ -55,10 +55,11 @@ public class PlaceFragment extends Fragment {
         final TextView category = binding.placeTvCategory;
         final ImageButton backButton = binding.placeIBtnBack;
         final ImageButton saveButton = binding.placeIBtnSave;
+        final ImageView phoneIcon = binding.placeIvPhone;
+        final ImageView urlIcon = binding.placeIvUrl;
         final FragmentContainerView mapCard = binding.placeMap;
         final Group timesGroup = binding.placeTimeGroup;
         int maxLines = description.getMaxLines();
-
 
         if (getArguments() != null) {
             Log.d("asd", "onCreateView: " + getArguments());
@@ -97,6 +98,8 @@ public class PlaceFragment extends Fragment {
                 nextStatus.setText(isOpen? R.string.place_closes : R.string.place_opens);
                 nextTime.setText(placeViewModel.getNextTime());
             }
+            phoneIcon.setVisibility(place.getPhone()==null? View.GONE: View.VISIBLE);
+            urlIcon.setVisibility(place.getUrl()==null? View.GONE: View.VISIBLE);
             phone.setText(place.getPhone());
             link.setText(place.getUrl());
 
