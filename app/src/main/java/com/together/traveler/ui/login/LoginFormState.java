@@ -16,7 +16,7 @@ class LoginFormState {
     private Integer repeatPasswordError;
     @Nullable
     private Integer secCodeError;
-    private boolean isDataValid;
+    private final boolean isDataValid;
 
     LoginFormState(@Nullable Integer usernameError, @Nullable Integer emailError, @Nullable Integer passwordError, @Nullable Integer repeatPasswordError) {
         this.usernameError = usernameError;

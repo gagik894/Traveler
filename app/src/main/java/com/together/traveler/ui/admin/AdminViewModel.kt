@@ -9,6 +9,7 @@ import com.together.traveler.retrofit.ApiService
 import kotlinx.coroutines.flow.MutableStateFlow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -173,7 +174,7 @@ class AdminViewModel : ViewModel() {
             e.printStackTrace()
         }
         Log.i("admin", "fetchAddCategories: " + json.toString())
-        val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
+        val requestBody = json.toString().toRequestBody("application/json".toMediaTypeOrNull())
         loading.value = true
         apiService.addAdminCategories(type, requestBody).enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -197,7 +198,7 @@ class AdminViewModel : ViewModel() {
         })
     }
     private fun fetchDeleteCategories(type: String){
-        Log.i(TAG, "fetchDeleteCategories: ${deletedEventCategories.toString()}")
+        Log.i(TAG, "fetchDeleteCategories: $deletedEventCategories")
         val json = JSONObject()
         try {
             if (type == "events") {
@@ -210,7 +211,7 @@ class AdminViewModel : ViewModel() {
             e.printStackTrace()
         }
         Log.d("admin", "fetchDeleteCategories: "+json.toString())
-        val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
+        val requestBody = json.toString().toRequestBody("application/json".toMediaTypeOrNull())
         loading.value = true
         apiService.deleteAdminCategories(type, requestBody).enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {

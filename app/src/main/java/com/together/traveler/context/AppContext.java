@@ -4,7 +4,7 @@ import android.content.Context;
 
 public class AppContext {
     private static AppContext sInstance;
-    private Context mContext;
+    private final Context mContext;
 
     private AppContext(Context context) {
         mContext = context.getApplicationContext();

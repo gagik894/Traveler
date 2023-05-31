@@ -4,21 +4,21 @@ import androidx.annotation.Nullable;
 
 public class AddEventFormState {
     @Nullable
-    private Integer titleError;
+    private final Integer titleError;
     @Nullable
-    private Integer descriptionError;
+    private final Integer descriptionError;
     @Nullable
-    private Integer locationError;
+    private final Integer locationError;
     @Nullable
-    private Integer startDateError;
+    private final Integer startDateError;
     @Nullable
-    private Integer endDateError;
+    private final Integer endDateError;
     @Nullable
-    private Integer ticketsError;
+    private final Integer ticketsError;
     @Nullable
     private Integer imageError;
 
-    private boolean isDataValid;
+    private final boolean isDataValid;
 
     AddEventFormState(@Nullable Integer titleError, @Nullable Integer descriptionError, @Nullable Integer locationError, @Nullable Integer startDateError, @Nullable Integer endDateError, @Nullable Integer ticketsError, @Nullable Integer imageError) {
         this.titleError = titleError;

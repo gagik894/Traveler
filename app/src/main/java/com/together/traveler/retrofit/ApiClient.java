@@ -14,7 +14,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    private static String TAG = "ApiClient";
+    private static final String TAG = "ApiClient";
 
     private static Retrofit retrofit = null;
     private static final Gson gson = new GsonBuilder()

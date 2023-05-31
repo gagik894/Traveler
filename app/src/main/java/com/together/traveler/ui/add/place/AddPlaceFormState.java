@@ -4,21 +4,21 @@ import androidx.annotation.Nullable;
 
 public class AddPlaceFormState {
     @Nullable
-    private Integer titleError;
+    private final Integer titleError;
     @Nullable
-    private Integer descriptionError;
+    private final Integer descriptionError;
     @Nullable
-    private Integer locationError;
+    private final Integer locationError;
     @Nullable
-    private Integer openTimesError;
+    private final Integer openTimesError;
     @Nullable
-    private Integer urlError;
+    private final Integer urlError;
     @Nullable
-    private Integer phoneError;
+    private final Integer phoneError;
     @Nullable
     private Integer imageError;
 
-    private boolean isDataValid;
+    private final boolean isDataValid;
 
     AddPlaceFormState(@Nullable Integer titleError, @Nullable Integer descriptionError, @Nullable Integer locationError, @Nullable Integer openTimesError, @Nullable Integer urlError, @Nullable Integer phoneError, @Nullable Integer imageError) {
         this.titleError = titleError;

@@ -30,7 +30,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private NavHostFragment navHostFragment;
-    private List<Integer> menuItems = new ArrayList<>(Arrays.asList(R.id.homeFragment, R.id.universalTicketFragment, R.id.mapFragment, R.id.userFragment));
+    private final List<Integer> menuItems = new ArrayList<>(Arrays.asList(R.id.homeFragment, R.id.universalTicketFragment, R.id.mapFragment, R.id.userFragment));
     private BottomNavigationView bottomNav;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
