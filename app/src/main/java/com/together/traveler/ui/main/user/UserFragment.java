@@ -59,13 +59,11 @@ public class UserFragment extends Fragment {
         if (getArguments() != null) {
             if (getArguments().getString("userId") != null) {
                 userViewModel.setUserId(getArguments().getString("userId"));
-                BottomNavigationView bottomNavigationView =requireActivity().findViewById(R.id.nvMain);
+                BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.nvMain);
                 MenuItem menuItem = bottomNavigationView.getMenu().findItem(R.id.homeFragment);
-                menuItem.setChecked(true);
                 menuItem.setChecked(true);
             }else{
                 userViewModel.setUserId("self");
-
             }
         }
 
@@ -182,10 +180,7 @@ public class UserFragment extends Fragment {
             switchActivityIntent.putExtra("admin", userViewModel.getUser().getValue() != null && userViewModel.getUser().getValue().isAdmin());
             startActivity(switchActivityIntent);
         });
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            Thread thread = new Thread(userViewModel::fetchUser);
-            thread.start();
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> userViewModel.fetchUser());
 
     }
 

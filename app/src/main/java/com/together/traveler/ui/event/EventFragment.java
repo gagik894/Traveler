@@ -45,6 +45,7 @@ import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentEventBinding;
 import com.together.traveler.model.Event;
 import com.together.traveler.ui.event.ticket.TicketDialog;
+import com.together.traveler.ui.main.home.HomeViewModel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,10 +70,8 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
     private NestedScrollView scrollView;
     private final ActivityResultLauncher<String[]> requestMultiplePermissionsLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-                if (result.getOrDefault(Manifest.permission.READ_CALENDAR, false) && result.getOrDefault(Manifest.permission.WRITE_CALENDAR, false)) {
+                if (Boolean.TRUE.equals(result.getOrDefault(Manifest.permission.READ_CALENDAR, false)) && Boolean.TRUE.equals(result.getOrDefault(Manifest.permission.WRITE_CALENDAR, false))) {
                     alertSaveInCalendar();
-                } else {
-                    // At least one of the permissions is not granted
                 }
             });
 
@@ -82,8 +81,21 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
         eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
 
         binding = FragmentEventBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         scrollView = binding.eventNsv;
+        final View childView = view.findViewById(R.id.eventMap);
         final ImageView image = binding.eventIvImage;
         final TextView name = binding.ticketTvName;
         final TextView location = binding.eventTvLocation;
@@ -101,6 +113,7 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
         final FragmentContainerView mapCard = binding.eventMap;
         int maxLines = description.getMaxLines();
 
+        childView.setClickable(false);
         if (getArguments() != null) {
             Log.d("asd", "onCreateView: " + getArguments());
             eventViewModel.setData(getArguments().getParcelable("cardData"));
@@ -199,21 +212,6 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
             NavHostFragment.findNavController(this).navigate(action);
         });
 
-        return root;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        View childView = view.findViewById(R.id.eventMap);
-        childView.setClickable(false);
     }
 
     private void requestCalendarAndSetEvent() {
