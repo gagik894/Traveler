@@ -13,14 +13,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment{
     private ImageButton filtersButton;
     private ChipGroup chipGroup;
     private EventCardsAdapter eventCardsAdapter;
-    private FragmentContainerView locationFragment;
+    private CardView locationFragment;
     private final List<Event> eventList = new ArrayList<>();
 
     private final ActivityResultLauncher<String[]> requestMultiplePermissionsLauncher =
@@ -84,6 +84,7 @@ public class HomeFragment extends Fragment{
         chipGroup = binding.homeChgCategories;
         locationFragment = binding.fragmentContainerView;
         SearchView searchView = binding.searchView;
+        final TextView locationNameTv = binding.ItemLocationTv;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             searchView.setIconifiedByDefault(false);
@@ -194,7 +195,7 @@ public class HomeFragment extends Fragment{
         });
 
         homeViewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> progressBar.setVisibility(isLoading? View.VISIBLE : View.GONE));
-
+        homeViewModel.getLocationName().observe(getViewLifecycleOwner(), locationNameTv::setText);
         if (homeViewModel.getLocationName().getValue() == null){
             requestLocationAndGetNearbyEvents();
         }

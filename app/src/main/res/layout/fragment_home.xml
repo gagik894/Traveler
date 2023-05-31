@@ -5,18 +5,58 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.home.HomeFragment">
 
-    <androidx.fragment.app.FragmentContainerView
+    <com.google.android.material.card.MaterialCardView
+
         android:id="@+id/fragmentContainerView"
-        android:name="com.together.traveler.ui.cards.MapItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="90dp"
-        android:elevation="10dp"
+        android:clipToPadding="true"
+        app:cardCornerRadius="20dp"
+        app:cardUseCompatPadding="false"
         app:layout_constraintBottom_toBottomOf="@+id/cardSwipeRefreshLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout="@layout/item_home_location" />
+        app:strokeColor="@color/gray"
+        app:strokeWidth="0.3dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:showDividers="middle">
+
+            <ImageView
+                android:id="@+id/imageView20"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/location_icon"
+                app:srcCompat="@drawable/location" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="6dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/ItemLocationTv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="" />
+
+            <ImageView
+                android:id="@+id/imageView21"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:contentDescription="@string/location_icon"
+                app:srcCompat="@android:drawable/arrow_down_float" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
     <ProgressBar
         android:id="@+id/homePb"
         android:layout_width="30dp"

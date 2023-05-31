@@ -99,7 +99,7 @@
                     android:id="@+id/placeViewBottom"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-30dp"
+                    android:layout_marginTop="-20dp"
                     android:nestedScrollingEnabled="true"
                     android:visibility="visible"
                     app:cardElevation="0dp"
@@ -107,7 +107,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/placePlaceholder"
-                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerTopSize35dp">
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerTopSize20dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -130,14 +130,14 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
-                        android:id="@+id/imageView13"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:contentDescription="@string/location_icon"
-                        android:src="@drawable/location"
-                        app:layout_constraintBottom_toBottomOf="@+id/placeTvLocation"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/placeTvLocation" />
+                            android:id="@+id/imageView13"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:contentDescription="@string/location_icon"
+                            android:src="@drawable/location"
+                            app:layout_constraintBottom_toBottomOf="@+id/placeTvLocation"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/placeTvLocation" />
 
                         <TextView
                             android:id="@+id/placeTvLocation"
