@@ -79,7 +79,7 @@ public class PlaceFragment extends Fragment {
         });
 
         placeViewModel.getPlaceData().observe(getViewLifecycleOwner(), place -> {
-
+            Log.i("asd", "onViewCreated: " + place.getUrl().length());
             boolean isOpen = placeViewModel.isOpen();
             String imageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", place.getImgId());
             Log.i("asd", "onCreateView: " + imageUrl);
@@ -98,10 +98,22 @@ public class PlaceFragment extends Fragment {
                 nextStatus.setText(isOpen? R.string.place_closes : R.string.place_opens);
                 nextTime.setText(placeViewModel.getNextTime());
             }
-            phoneIcon.setVisibility(place.getPhone()==null || place.getPhone().length()==0? View.GONE: View.VISIBLE);
-            urlIcon.setVisibility(place.getUrl()==null || place.getUrl().length()==0? View.GONE: View.VISIBLE);
-            phone.setText(place.getPhone());
-            link.setText(place.getUrl());
+            if (place.getPhone()==null || place.getPhone().length()==1){
+                phoneIcon.setVisibility(View.GONE);
+                phone.setVisibility(View.GONE);
+            }else{
+                phoneIcon.setVisibility(View.VISIBLE);
+                phone.setVisibility(View.VISIBLE);
+                phone.setText(place.getPhone());
+            }
+            if (place.getUrl()==null || place.getUrl().length()==1){
+                urlIcon.setVisibility(View.GONE);
+                link.setVisibility(View.GONE);
+            }else{
+                urlIcon.setVisibility(View.VISIBLE);
+                link.setVisibility(View.VISIBLE);
+                link.setText(place.getUrl());
+            }
 
             ViewTreeObserver vto = description.getViewTreeObserver();
             vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

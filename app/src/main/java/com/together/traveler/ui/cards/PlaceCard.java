@@ -2,7 +2,6 @@ package com.together.traveler.ui.cards;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,6 @@ import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentPlaceCardBinding;
 import com.together.traveler.ui.main.map.MapViewModel;
 import com.together.traveler.ui.place.PlaceViewModel;
-
-import java.util.Locale;
 
 
 public class PlaceCard extends Fragment {
@@ -59,7 +56,7 @@ public class PlaceCard extends Fragment {
             String eventImageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", data.getImgId());
             Glide.with(requireContext()).load(eventImageUrl).into(eventImage);
             name.setText(data.getName());
-            phoneIcon.setVisibility(data.getPhone()==null || data.getPhone().length()==0? View.GONE: View.VISIBLE);
+            phoneIcon.setVisibility(data.getPhone()==null || data.getPhone().length()==1? View.GONE: View.VISIBLE);
             phone.setText(data.getPhone());
             category.setText(data.getCategory());
             currentStatus.setText(isOpen? R.string.place_open: R.string.place_closed);
