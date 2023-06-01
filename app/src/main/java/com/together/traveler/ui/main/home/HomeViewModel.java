@@ -57,9 +57,11 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         locationProvider = new LocationProvider(this);
         fetchCategories();
+        getLocationByIP();
     }
 
     public void getLocationByGPS() {
+        this.locationName.setValue(null);
         locationProvider.getLastKnownLocation();
     }
 
@@ -268,7 +270,11 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
                 try {
                     reader = new BufferedReader(new InputStreamReader(url != null ? url.openStream() : null));
                     cityName = reader.readLine();
-                    setLocationName(cityName);
+                    if (this.getLocationName().getValue() == null){
+                        setLocationName(cityName);
+                    }else{
+                        Log.i(TAG, "getLocationByIP: " + this.getLocationName().getValue());
+                    }
                     reader.close();
                 } catch (IOException e) {
                     e.printStackTrace();
