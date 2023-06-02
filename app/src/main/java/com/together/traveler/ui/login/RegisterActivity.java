@@ -1,7 +1,6 @@
 package com.together.traveler.ui.login;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -9,13 +8,14 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -27,8 +27,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.together.traveler.R;
 import com.together.traveler.databinding.ActivitySignupBinding;
-import com.together.traveler.model.User;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,8 +37,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private RegisterViewModel registerViewModel;
     private ActivitySignupBinding binding;
-    private CardView BottomView;
-    private RelativeLayout BottomRelativeLayout;
+    private CardView bottomView;
+    private RelativeLayout bottomRelativeLayout;
     private final String Tag = "RegisterActivity";
     private EditText emailEditText;
     private EditText passwordEditText;
@@ -53,6 +53,19 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivitySignupBinding.inflate(getLayoutInflater());
         final View activityRootView = binding.getRoot();
         setContentView(activityRootView);
+
+        emailEditText = binding.signupEtEmail;
+        passwordEditText = binding.signupEtPassword;
+        final EditText usernameEditText = binding.signupEtUsername;
+        final EditText rPasswordEditText = binding.signupEtRPassword;
+        final Button nextButton = binding.signupBtnSignup;
+        final ProgressBar loadingProgressBar = binding.signupPbLoading;
+        final TextView toLoginButton = binding.signupTvLogin;
+        final ImageView topView = binding.signupIvLogo;
+        bottomView = binding.signupViewBottom;
+        bottomRelativeLayout = binding.signupRlBottom;
+        final Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        final Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
 
         activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             private boolean wasOpened;
@@ -80,16 +93,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         registerViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(RegisterViewModel.class);
-
-        emailEditText = binding.signupEtEmail;
-        passwordEditText = binding.signupEtPassword;
-        final EditText usernameEditText = binding.signupEtUsername;
-        final EditText rPasswordEditText = binding.signupEtRPassword;
-        final Button nextButton = binding.signupBtnSignup;
-        final ProgressBar loadingProgressBar = binding.signupPbLoading;
-        final TextView toLoginButton = binding.signupTvLogin;
-        BottomView = binding.signupViewBottom;
-        BottomRelativeLayout = binding.signupRlBottom;
 
         registerViewModel.getLoginFormState().observe(this, loginFormState -> {
             if (loginFormState == null) {
@@ -194,11 +197,14 @@ public class RegisterActivity extends AppCompatActivity {
         emailEditText.setOnFocusChangeListener((view, b) -> changeView(b));
         passwordEditText.setOnFocusChangeListener((view, b) -> changeView(b));
         rPasswordEditText.setOnFocusChangeListener((view, b) -> changeView(b));
+
+        bottomView.startAnimation(slideUp);
+        topView.startAnimation(slideDown);
     }
 
     private void changeView(boolean b) {
-        assert BottomView != null;
-        assert BottomRelativeLayout != null;
+        assert bottomView != null;
+        assert bottomRelativeLayout != null;
 
         RegisterActivity.this.runOnUiThread(() -> {
             LinearLayout.LayoutParams param0 = new LinearLayout.LayoutParams(
@@ -211,9 +217,9 @@ public class RegisterActivity extends AppCompatActivity {
                     1);
 
             if (b) {
-                BottomView.setLayoutParams(param0);
+                bottomView.setLayoutParams(param0);
             } else {
-                BottomView.setLayoutParams(param1);
+                bottomView.setLayoutParams(param1);
             }
         });
     }
