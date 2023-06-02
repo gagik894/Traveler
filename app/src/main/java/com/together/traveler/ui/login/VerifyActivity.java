@@ -70,8 +70,9 @@ public class VerifyActivity extends AppCompatActivity {
         String username = bundle.getString("username");
         String email = bundle.getString("email");
         String password = bundle.getString("password");
+        String FCMToken = bundle.getString("FCMToken");
         String secCode = bundle.getString("secCode");
-        registerViewModel.setUser(new User(username, email, password));
+        registerViewModel.setUser(new User(username, email, password, FCMToken));
         registerViewModel.setSecCode(secCode);
 
 

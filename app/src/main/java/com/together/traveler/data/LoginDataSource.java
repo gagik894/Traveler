@@ -28,12 +28,13 @@ public class LoginDataSource {
     private final String TAG = "asd";
     private final ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
 
-    public Result<String> signup(String username, String email, String password) {
+    public Result<String> signup(String username, String email, String password, String FCMToken) {
         JSONObject json = new JSONObject();
         try {
             json.put("username", username);
             json.put("email", email);
             json.put("password", password);
+            json.put("FCMToken", FCMToken);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -118,12 +119,13 @@ public class LoginDataSource {
 //    }
 
 
-    public Result<String> login(String email, String password){
-
+    public Result<String> login(String email, String password, String FCMToken){
+        Log.i(TAG, "login: " + FCMToken);
         JSONObject json = new JSONObject();
         try {
             json.put("email", email);
             json.put("password", password);
+            json.put("FCMToken", FCMToken);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -25,6 +25,7 @@
         android:theme="@style/Theme.Traveler"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
             android:name=".ui.admin.AdminActivity"
             android:exported="false"

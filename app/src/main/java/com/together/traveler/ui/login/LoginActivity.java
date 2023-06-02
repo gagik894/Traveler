@@ -26,6 +26,7 @@ import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.together.traveler.R;
 import com.together.traveler.ui.main.MainActivity;
 import com.together.traveler.context.AppContext;
@@ -37,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private CardView bottomView;
     private RelativeLayout bottomRelativeLayout;
     private final String TAG = "asd";
-
+    final String[] FCMToken = new String[1];
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         final View activityRootView = binding.getRoot();
         setContentView(activityRootView);
-
+        getFCMToken();
         final TextInputEditText emailEditText = binding.loginEtEmail;
         final EditText passwordEditText = binding.loginEtPassword;
         final Button loginButton = binding.loginBtnlogin;
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         bottomRelativeLayout = binding.loginRlBottom;
         final Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
         final Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
-
+        Log.d(TAG, "onCreate: " + FCMToken);
         activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             private boolean wasOpened;
 
@@ -155,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
                     loginViewModel.getLoginFormState().getValue() != null &&
                     loginViewModel.getLoginFormState().getValue().isDataValid()) {
                 loginViewModel.login(emailEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                        passwordEditText.getText().toString(), FCMToken[0]);
             }
             return false;
         });
@@ -164,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
             loadingProgressBar.setVisibility(View.VISIBLE);
             loginButton.setEnabled(false);
             loginViewModel.login(emailEditText.getText().toString(),
-                    passwordEditText.getText().toString());
+                    passwordEditText.getText().toString(), FCMToken[0]);
 
         });
 
@@ -214,6 +215,20 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showLoginFailed(String errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    private void getFCMToken(){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                        return;
+                    }
+
+                    // Get new FCM registration token
+                    FCMToken[0] = task.getResult();
+                    Log.d(TAG, FCMToken[0]);
+                });
     }
 
 }

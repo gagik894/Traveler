@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
@@ -27,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.together.traveler.R;
 import com.together.traveler.databinding.ActivitySignupBinding;
 
@@ -42,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
     private final String Tag = "RegisterActivity";
     private EditText emailEditText;
     private EditText passwordEditText;
+    private final String[] FCMToken = new String[1];
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
         bottomRelativeLayout = binding.signupRlBottom;
         final Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
         final Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+
 
         activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             private boolean wasOpened;
@@ -120,7 +124,7 @@ public class RegisterActivity extends AppCompatActivity {
             loadingProgressBar.setVisibility(View.GONE);
             nextButton.setEnabled(true);
             updateUiWithUser(secCode, usernameEditText.getText().toString(), emailEditText.getText().toString(),
-                    passwordEditText.getText().toString());
+                    passwordEditText.getText().toString(), FCMToken[0]);
             setResult(Activity.RESULT_OK);
 
         });
@@ -224,12 +228,13 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUiWithUser(String secCode, String username, String email, String password) {
+    private void updateUiWithUser(String secCode, String username, String email, String password, String FCMToken) {
         Bundle bundle = new Bundle();
         bundle.putString("secCode", secCode);
         bundle.putString("username", username);
         bundle.putString("email", email);
         bundle.putString("password", password);
+        bundle.putString("FCMToken", FCMToken);
 
         Intent switchActivityIntent = new Intent(this, VerifyActivity.class);
         switchActivityIntent.putExtra("extras", bundle);
@@ -278,6 +283,19 @@ public class RegisterActivity extends AppCompatActivity {
 
             timer.schedule(timerTask, DELAY);
         }
+    }
+    private void getFCMToken(){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("asd", "Fetching FCM registration token failed", task.getException());
+                        return;
+                    }
+
+                    // Get new FCM registration token
+                    FCMToken[0] = task.getResult();
+                    Log.d("asd", FCMToken[0]);
+                });
     }
 
 }

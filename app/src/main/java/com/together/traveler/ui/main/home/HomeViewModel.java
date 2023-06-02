@@ -62,6 +62,7 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
 
     public void getLocationByGPS() {
         this.locationName.setValue(null);
+        this.getLocationByIP();
         locationProvider.getLastKnownLocation();
     }
 

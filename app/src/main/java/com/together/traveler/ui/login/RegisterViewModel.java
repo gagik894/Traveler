@@ -75,12 +75,13 @@ public class RegisterViewModel extends ViewModel {
         this.user.setPassword(user.getPassword());
         this.user.setUsername(user.getUsername());
         this.user.setEmail(user.getEmail());
+        this.user.setFCMToken(user.getFCMToken());
     }
 
     public void signup() {
         // can be launched in a separate asynchronous job
         Thread thread = new Thread(() -> {
-            Result<String> result = loginRepository.signup(user.getUsername(), user.getEmail(), user.getPassword());
+            Result<String> result = loginRepository.signup(user.getUsername(), user.getEmail(), user.getPassword(), user.getFCMToken());
 
             if (result instanceof Result.Success) {
                 String data = ((Result.Success<String>) result).getData();

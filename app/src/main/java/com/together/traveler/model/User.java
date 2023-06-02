@@ -13,6 +13,7 @@ public class User implements Parcelable {
     private String _id;
     private String location;
     private String password;
+    private String FCMToken;
     private float rating;
     private ArrayList<Event> upcomingEvents = null;
     private ArrayList<Event> savedEvents = null;
@@ -37,10 +38,11 @@ public class User implements Parcelable {
         this.rating = rating;
     }
 
-    public User(String username, String email, String password) {
+    public User(String username, String email, String password, String FCMToken) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.FCMToken = FCMToken;
     }
 
     public User(String _id, String email) {
@@ -87,6 +89,10 @@ public class User implements Parcelable {
         return password;
     }
 
+    public String getFCMToken() {
+        return FCMToken;
+    }
+
     public float getRating() {
         return rating;
     }
@@ -121,6 +127,10 @@ public class User implements Parcelable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setFCMToken(String FCMToken) {
+        this.FCMToken = FCMToken;
     }
 
     @Override

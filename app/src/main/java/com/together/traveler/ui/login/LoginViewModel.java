@@ -28,10 +28,10 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void login(String email, String password) {
+    public void login(String email, String password, String FCMToken) {
         // can be launched in a separate asynchronous job
         Thread thread = new Thread(() -> {
-            Result<String> result = loginRepository.login(email, password);
+            Result<String> result = loginRepository.login(email, password, FCMToken);
 
             if (result instanceof Result.Success) {
                 String data = ((Result.Success<String>) result).getData();
@@ -44,21 +44,6 @@ public class LoginViewModel extends ViewModel {
         thread.start();
     }
 
-    public void signup(String username, String email, String password) {
-        // can be launched in a separate asynchronous job
-        Thread thread = new Thread(() -> {
-            Result<String> result = loginRepository.signup(username, email, password);
-
-            if (result instanceof Result.Success) {
-                String data = ((Result.Success<String>) result).getData();
-                loginResult.postValue(new LoginResult(new LoggedInUserView(data)));
-            } else {
-                String data = ((Result.Error) result).getError();
-                loginResult.postValue(new LoginResult(data));
-            }
-        });
-        thread.start();
-    }
 
     public void loginDataChanged(String email, String password) {
         if (!isEmailValid(email)) {

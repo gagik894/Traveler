@@ -59,9 +59,9 @@ public class LoginRepository {
         // @see https://developer.android.com/training/articles/keystore
     }
 
-    public Result<String> signup(String username, String email, String password) {
+    public Result<String> signup(String username, String email, String password, String FCMToken) {
         // handle login
-        Result<String> result = dataSource.signup(username, email, password);
+        Result<String> result = dataSource.signup(username, email, password, FCMToken);
 
         if (result instanceof Result.Success) {
             Log.i("asd", "login: " + result);
@@ -70,9 +70,9 @@ public class LoginRepository {
         return result;
     }
 
-    public Result<String> login(String username, String password) {
+    public Result<String> login(String username, String password, String FCMToken) {
         // handle login
-        Result<String> result = dataSource.login(username, password);
+        Result<String> result = dataSource.login(username, password, FCMToken);
 
         if (result instanceof Result.Success) {
             Log.i("asd", "login: " + result);
