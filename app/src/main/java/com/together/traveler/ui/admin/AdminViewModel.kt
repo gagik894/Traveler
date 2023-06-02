@@ -127,13 +127,24 @@ class AdminViewModel : ViewModel() {
         }
     }
 
-    fun verifyPlace(id: String){
+    fun verifyPlace(place: Place){
+        val json = JSONObject()
+        try {
+            json.put("name", place.name)
+            json.put("description", place.description)
+            json.put("url", place.url)
+            json.put("phone", place.phone)
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+
+        val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
         Log.i(TAG, "verifyPlace: ")
-        apiService.verifyAdminPlace(id).enqueue(object : Callback<String> {
+        apiService.verifyAdminPlace(place._id, requestBody).enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 Log.d("Admin", "onResponse: " + response.body())
                 if(response.isSuccessful) {
-                    val updatedList = _placesData.value?.filter { it._id != id }
+                    val updatedList = _placesData.value?.filter { it._id != place._id }
                     _placesData.value = updatedList
                 }
             }

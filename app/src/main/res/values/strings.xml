@@ -126,7 +126,7 @@
     <string name="add_select_tags">Tags</string>
     <string name="add_enter_tags">Add tags (optional)</string>
     <string name="add_submit">Submit</string>
-    <string name="add_add_place">Add place</string>
+    <string name="add_add_place">Send to verification</string>
     <string name="add_phone">Phone</string>
     <string name="add_enter_phone">Enter phone number(optional)</string>
     <string name="add_web_page">Web page</string>

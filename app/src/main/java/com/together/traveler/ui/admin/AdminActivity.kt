@@ -9,12 +9,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.rounded.DateRange
-import androidx.compose.material.icons.rounded.LocationOn
-import androidx.compose.material.icons.rounded.Phone
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -201,6 +202,11 @@ fun PlaceCard(
 fun SinglePlace(data: Place, mViewModel: AdminViewModel, navController: NavController) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
+    var name by remember { mutableStateOf(data.name ?: "") }
+    var location by remember { mutableStateOf(data.location ?: "") }
+    var phone by remember { mutableStateOf(data.phone ?: "") }
+    var url by remember { mutableStateOf(data.url ?: "") }
+    var description by remember { mutableStateOf(data.description ?: "") }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -218,13 +224,12 @@ fun SinglePlace(data: Place, mViewModel: AdminViewModel, navController: NavContr
         }
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Spacer(modifier = Modifier.height(10.dp))
-            data.name?.let {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.h5,
-                    maxLines = 4
-                )
-            }
+            BasicTextField(
+                value = name,
+                onValueChange = { name = it },
+                singleLine = true,
+                textStyle = MaterialTheme.typography.h5,
+            )
             Spacer(modifier = Modifier.height(20.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 TintedIcon(
@@ -232,9 +237,11 @@ fun SinglePlace(data: Place, mViewModel: AdminViewModel, navController: NavContr
                     contentDescription = "Location"
                 )
                 Spacer(modifier = Modifier.width(5.dp))
-                data.location?.let {
-                    Text(text = it)
-                }
+                BasicTextField(
+                    value = location,
+                    onValueChange = { location = it },
+                    singleLine = true
+                )
             }
             Spacer(modifier = Modifier.height(15.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -251,10 +258,16 @@ fun SinglePlace(data: Place, mViewModel: AdminViewModel, navController: NavContr
                     imageVector = Icons.Rounded.Phone,
                     contentDescription = "Phone"
                 )
-                Spacer(modifier = Modifier.width(5.dp))
-                data.phone?.let {
-                    Text(text = it)
-                }
+                BasicTextField(
+                    value = phone,
+                    onValueChange = {
+                        if (it.all { char -> char.isDigit() || char == '+' }) {
+                            phone = it
+                        }
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                )
             }
             Spacer(modifier = Modifier.height(15.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -262,10 +275,11 @@ fun SinglePlace(data: Place, mViewModel: AdminViewModel, navController: NavContr
                     imageVector = Icons.Default.Email,
                     contentDescription = "Link"
                 )
-                Spacer(modifier = Modifier.width(5.dp))
-                data.url?.let {
-                    Text(text = it)
-                }
+                BasicTextField(
+                    value = url,
+                    onValueChange = { url = it },
+                    singleLine = true
+                )
             }
             Spacer(modifier = Modifier.height(15.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -283,10 +297,12 @@ fun SinglePlace(data: Place, mViewModel: AdminViewModel, navController: NavContr
                 text = stringResource(R.string.place_about),
                 style = MaterialTheme.typography.h5
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            data.description?.let {
-                Text(text = it)
-            }
+            Spacer(modifier = Modifier.height(5.dp))
+            BasicTextField(
+                value = description,
+                onValueChange = { description = it },
+                singleLine = true
+            )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = stringResource(R.string.place_location),
@@ -319,7 +335,12 @@ fun SinglePlace(data: Place, mViewModel: AdminViewModel, navController: NavContr
                 }
                 Spacer(modifier = Modifier.width(10.dp))
                 Button(onClick = {
-                    mViewModel.verifyPlace(data._id)
+                    data.name = name
+                    data.location = location
+                    data.phone = phone.trim()
+                    data.url = url.trim()
+                    data.description = description
+                    mViewModel.verifyPlace(data)
                     navController.navigateUp()
                 }) {
                     Text(text = "Verify", fontSize = 15.sp)

@@ -64,7 +64,8 @@ public interface ApiService {
 
     @PATCH("admin/places/verify/{id}")
     Call<String> verifyAdminPlace(
-            @Path("id") String id
+            @Path("id") String id,
+            @Body RequestBody requestBody
     );
     @DELETE("admin/places/delete/{id}")
     Call<String> deleteAdminPlace(

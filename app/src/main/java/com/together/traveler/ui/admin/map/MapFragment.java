@@ -32,13 +32,11 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("ghj", "onCreate: ");
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Log.i("ghj", "onCreateView: ");
         binding = FragmentMapBinding.inflate(inflater, container, false);
         adminViewModel = new ViewModelProvider(requireActivity()).get(AdminViewModel.class);
         return binding.getRoot();
@@ -53,12 +51,6 @@ public class MapFragment extends Fragment {
         ImageButton onCenterButton = binding.mapBtnCenterOnLocation;
         EditText locationSearch = binding.mapEtLocation;
         MapView map = binding.map;
-        if (map == null) {
-            Log.e("MapFragment", "MapView is null");
-        } else {
-            Log.i("MapFragment", "MapView is not null");
-            // ... your existing code ...
-        }
         IMapController mapController = map.getController();
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setBuiltInZoomControls(false);
