@@ -57,7 +57,7 @@ public class HomeFragment extends Fragment{
 
     private final ActivityResultLauncher<String[]> requestMultiplePermissionsLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-                if (Boolean.TRUE.equals(result.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false))) {
+                if (Boolean.TRUE.equals(result.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false))) {
                     homeViewModel.getLocationByGPS();
                 }else{
                     homeViewModel.getLocationByIP();
@@ -244,12 +244,12 @@ public class HomeFragment extends Fragment{
     }
 
     private void requestLocationAndGetNearbyEvents() {
-        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
+        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)) {
             // Permission already granted
             homeViewModel.getLocationByGPS();
         } else {
             // Request permission
-            requestMultiplePermissionsLauncher.launch(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION});
+            requestMultiplePermissionsLauncher.launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
         }
     }
 }
