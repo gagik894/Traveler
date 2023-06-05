@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,7 +19,6 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.android.gms.common.images.ImageManager;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -97,6 +97,7 @@ public class TicketDialog extends Dialog {
 
         int qrCodeSize = 1000;
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        Log.i("asd", "onCreate: " + userId);
         try {
             BitMatrix bitMatrix = qrCodeWriter.encode(userId, BarcodeFormat.QR_CODE, qrCodeSize, qrCodeSize);
             int bitmapWidth = bitMatrix.getWidth();

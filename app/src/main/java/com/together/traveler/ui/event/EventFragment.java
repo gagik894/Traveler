@@ -30,6 +30,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.Group;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
@@ -45,7 +46,6 @@ import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentEventBinding;
 import com.together.traveler.model.Event;
 import com.together.traveler.ui.event.ticket.TicketDialog;
-import com.together.traveler.ui.main.home.HomeViewModel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -111,6 +111,8 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
         final ChipGroup chipGroup = binding.eventChgTags;
         final FragmentContainerView userCard = binding.eventUser;
         final FragmentContainerView mapCard = binding.eventMap;
+        final Group userGroup = binding.eventGrpUser;
+
         int maxLines = description.getMaxLines();
 
         childView.setClickable(false);
@@ -134,12 +136,15 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
             if (data.isEnrolled()) {
                 bottomButton.setText(R.string.event_button_ticket);
                 bottomButton.setBackgroundColor(requireContext().getResources().getColor(R.color.secondary_color));
+                userGroup.setVisibility(View.VISIBLE);
             } else if (data.isUserOwned()) {
                 bottomButton.setText(R.string.event_button_check_tickets);
                 bottomButton.setBackgroundColor(requireContext().getResources().getColor(R.color.check_btn_color));
+                userGroup.setVisibility(View.GONE);
             } else {
                 bottomButton.setText(R.string.event_button_enroll);
                 bottomButton.setBackgroundColor(requireContext().getResources().getColor(R.color.primary_color));
+                userGroup.setVisibility(View.VISIBLE);
             }
 
             if (data.isSaved()) {

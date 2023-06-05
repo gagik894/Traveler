@@ -2,6 +2,7 @@ package com.together.traveler.ui.event;
 
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -93,5 +94,50 @@ public class EventViewModel extends ViewModel {
 
     public String getUserId() {
         return userId;
+    }
+
+    public void follow() {
+        Event current = data.getValue();
+        if (current == null)
+            return;
+        apiService.follow(current.getUser().get_id()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if (response.isSuccessful()) {
+                    current.getUser().setFollowed(true);
+                    EventViewModel.this.data.postValue(current);
+                    Log.i(TAG, "onResponse: followed");
+                } else {
+                    Log.e(TAG, "save request failed with code: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.e(TAG, "save request failed with error: " + t.getMessage());
+            }
+        });
+    }
+    public void unfollow() {
+        Event current = data.getValue();
+        if (current == null)
+            return;
+        apiService.unfollow(current.getUser().get_id()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if (response.isSuccessful()) {
+                    current.getUser().setFollowed(false);
+                    EventViewModel.this.data.postValue(current);
+                    Log.i(TAG, "onResponse: followed");
+                } else {
+                    Log.e(TAG, "save request failed with code: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.e(TAG, "save request failed with error: " + t.getMessage());
+            }
+        });
     }
 }

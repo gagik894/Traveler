@@ -237,6 +237,23 @@
                             app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
                         <TextView
+                            android:id="@+id/eventTvMore"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/event_read_more"
+                            android:textColor="@color/purple_500"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/eventTvDescription" />
+
+                        <androidx.constraintlayout.widget.Group
+                            android:id="@+id/eventGrpUser"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:constraint_referenced_ids="eventUser,textView14"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
                             android:id="@+id/textView14"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -247,15 +264,6 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/eventTvMore" />
-
-                        <TextView
-                            android:id="@+id/eventTvMore"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/event_read_more"
-                            android:textColor="@color/purple_500"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/eventTvDescription" />
 
                         <androidx.fragment.app.FragmentContainerView
                             android:id="@+id/eventUser"

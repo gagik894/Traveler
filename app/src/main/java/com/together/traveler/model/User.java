@@ -19,6 +19,7 @@ public class User implements Parcelable {
     private ArrayList<Event> savedEvents = null;
     private ArrayList<Event> userEvents = null;
     private boolean admin = false;
+    private boolean followed = false;
 
     public User(String avatar, String username, String location, String password, float rating, ArrayList<Event> upcomingEvents, ArrayList<Event> savedEvents, ArrayList<Event> userEvents) {
         this.avatar = avatar;
@@ -66,6 +67,7 @@ public class User implements Parcelable {
                 ", savedEvents=" + savedEvents +
                 ", userEvents=" + userEvents +
                 ", admin=" + admin +
+                ", followed=" + followed +
                 '}';
     }
 
@@ -117,6 +119,10 @@ public class User implements Parcelable {
         return admin;
     }
 
+    public boolean isFollowed() {
+        return followed;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -133,6 +139,10 @@ public class User implements Parcelable {
         this.FCMToken = FCMToken;
     }
 
+    public void setFollowed(boolean followed) {
+        this.followed = followed;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -146,11 +156,13 @@ public class User implements Parcelable {
         dest.writeString(this._id);
         dest.writeString(this.location);
         dest.writeString(this.password);
+        dest.writeString(this.FCMToken);
         dest.writeFloat(this.rating);
         dest.writeTypedList(this.upcomingEvents);
         dest.writeTypedList(this.savedEvents);
         dest.writeTypedList(this.userEvents);
         dest.writeByte(this.admin ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.followed ? (byte) 1 : (byte) 0);
     }
 
     public void readFromParcel(Parcel source) {
@@ -160,11 +172,13 @@ public class User implements Parcelable {
         this._id = source.readString();
         this.location = source.readString();
         this.password = source.readString();
+        this.FCMToken = source.readString();
         this.rating = source.readFloat();
         this.upcomingEvents = source.createTypedArrayList(Event.CREATOR);
         this.savedEvents = source.createTypedArrayList(Event.CREATOR);
         this.userEvents = source.createTypedArrayList(Event.CREATOR);
         this.admin = source.readByte() != 0;
+        this.followed = source.readByte() != 0;
     }
 
     protected User(Parcel in) {
@@ -174,11 +188,13 @@ public class User implements Parcelable {
         this._id = in.readString();
         this.location = in.readString();
         this.password = in.readString();
+        this.FCMToken = in.readString();
         this.rating = in.readFloat();
         this.upcomingEvents = in.createTypedArrayList(Event.CREATOR);
         this.savedEvents = in.createTypedArrayList(Event.CREATOR);
         this.userEvents = in.createTypedArrayList(Event.CREATOR);
         this.admin = in.readByte() != 0;
+        this.followed = in.readByte() != 0;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {

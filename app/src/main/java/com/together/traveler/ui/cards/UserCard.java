@@ -39,7 +39,6 @@ public class UserCard extends Fragment {
         final TextView rating = binding.userCardTvRating;
         final Button followButton = binding.userCardBtnFollow;
 
-        followButton.setOnClickListener(v -> Toast.makeText(requireContext(), "Followed", Toast.LENGTH_SHORT).show());
 
         eventViewModel.getData().observe(getViewLifecycleOwner(), data -> {
             User userData = data.getUser();
@@ -47,6 +46,13 @@ public class UserCard extends Fragment {
             Glide.with(requireContext()).load(userImageUrl).into(userImage);
             username.setText(userData.getUsername());
             rating.setText(String.valueOf(userData.getRating()));
+            if (userData.isFollowed()){
+                followButton.setText(R.string.user_unfollow);
+                followButton.setOnClickListener(v-> eventViewModel.unfollow());
+            }else{
+                followButton.setText(R.string.user_follow);
+                followButton.setOnClickListener(v-> eventViewModel.follow());
+            }
         });
 
         return root;

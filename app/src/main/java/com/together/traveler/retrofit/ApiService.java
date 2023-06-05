@@ -42,7 +42,7 @@ public interface ApiService {
     @GET("admin/places")
     Call<List<Place>> getAdminPlaces();
 
-    @GET("events/profile/{userId}")
+    @GET("users/profile/{userId}")
     Call<User> getUser(
             @Path("userId") String userId
     );
@@ -61,7 +61,14 @@ public interface ApiService {
     Call<List<String>> getCategories(
             @Path("type") String type
     );
-
+    @GET("users/follow/{userId}")
+    Call<Void> follow(
+            @Path("userId") String userId
+    );
+    @GET("users/unfollow/{userId}")
+    Call<Void> unfollow(
+            @Path("userId") String userId
+    );
     @PATCH("admin/places/verify/{id}")
     Call<String> verifyAdminPlace(
             @Path("id") String id,
