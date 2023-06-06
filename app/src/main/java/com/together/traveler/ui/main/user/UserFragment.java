@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.together.traveler.R;
 import com.together.traveler.SettingsActivity;
 import com.together.traveler.adapter.EventCardsAdapter;
@@ -49,13 +51,7 @@ public class UserFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentUserBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        rvCards = binding.rvUser;
-        swipeRefreshLayout = binding.userSwipeRefresh;
-        progressBar = binding.userPb;
-
         if (getArguments() != null) {
             if (getArguments().getString("userId") != null) {
                 userViewModel.setUserId(getArguments().getString("userId"));
@@ -67,14 +63,7 @@ public class UserFragment extends Fragment {
             }
         }
 
-        adapter = new EventCardsAdapter(eventList, item -> {
-            NavDirections action = UserFragmentDirections.actionUserFragmentToEventFragment(item, userViewModel.getUserId());
-            NavHostFragment.findNavController(this).navigate(action);
-        });
-        rvCards.setAdapter(adapter);
-        rvCards.setLayoutManager(new LinearLayoutManager(requireActivity()));
-
-        return root;
+        return binding.getRoot();
     }
 
 
@@ -82,10 +71,24 @@ public class UserFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        rvCards = binding.rvUser;
+        swipeRefreshLayout = binding.userSwipeRefresh;
+        progressBar = binding.userPb;
+
+        adapter = new EventCardsAdapter(eventList, item -> {
+            NavDirections action = UserFragmentDirections.actionUserFragmentToEventFragment(item, userViewModel.getUserId());
+            NavHostFragment.findNavController(this).navigate(action);
+        });
+        rvCards.setAdapter(adapter);
+        rvCards.setLayoutManager(new LinearLayoutManager(requireActivity()));
+
+
         final TextView username = binding.userTvUsername;
         final TextView rating = binding.userTvRating;
         final Button upcomingButton = binding.userBtnUpcoming;
-        final Button savedButton = binding.userBtnSaved;
+        final Button pastButton = binding.userBtnPast;
+        final Button ticketsButton = binding.userBtnTickets;
+        final Button savedButton = binding.userBtnFavorites;
         final Button myEventsButton = binding.userBtnMyEvents;
         final ImageButton settingsButton = binding.userBtnSettings;
         final LinearLayout eventsLl = binding.userLlEvents;
@@ -116,30 +119,8 @@ public class UserFragment extends Fragment {
         });
 
         int orangeColor = ContextCompat.getColor(requireActivity(), R.color.orange);
-        userViewModel.getState().observe(getViewLifecycleOwner(), state -> {
-            upcomingButton.setTextColor(textColor);
-            savedButton.setTextColor(textColor);
-            myEventsButton.setTextColor(textColor);
 
-            List<Event> newEvents = new ArrayList<>();
-            if (state != null &&  userViewModel.getUser().getValue() != null) {
-                switch (state) {
-                    case 0:
-                        upcomingButton.setTextColor(orangeColor);
-                        newEvents = userViewModel.getUser().getValue().getUpcomingEvents();
-                        break;
-                    case 1:
-                        savedButton.setTextColor(orangeColor);
-                        newEvents = userViewModel.getUser().getValue().getSavedEvents();
-                        break;
-                    case 2:
-                        myEventsButton.setTextColor(orangeColor);
-                        newEvents = userViewModel.getUser().getValue().getUserEvents();
-                        break;
-                }
-            }
-
-            List<Event> finalNewEvents = newEvents;
+        userViewModel.getEvents().observe(getViewLifecycleOwner(), newEvents -> {
             DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
                 @Override
                 public int getOldListSize() {
@@ -148,31 +129,70 @@ public class UserFragment extends Fragment {
 
                 @Override
                 public int getNewListSize() {
-                    return finalNewEvents.size();
+                    return newEvents.size();
                 }
 
                 @Override
                 public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
                     Event oldEvent = eventList.get(oldItemPosition);
-                    Event newEvent = finalNewEvents.get(newItemPosition);
+                    Event newEvent = newEvents.get(newItemPosition);
                     return oldEvent.get_id().equals(newEvent.get_id());
                 }
 
                 @Override
                 public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
                     Event oldEvent = eventList.get(oldItemPosition);
-                    Event newEvent = finalNewEvents.get(newItemPosition);
+                    Event newEvent = newEvents.get(newItemPosition);
                     return oldEvent.equals(newEvent);
                 }
             });
 
             eventList.clear();
-            eventList.addAll(finalNewEvents);
+            eventList.addAll(newEvents);
             diffResult.dispatchUpdatesTo(adapter);
         });
 
+        userViewModel.getState().observe(getViewLifecycleOwner(), state -> {
+            ticketsButton.setTextColor(textColor);
+            savedButton.setTextColor(textColor);
+            myEventsButton.setTextColor(textColor);
 
-        upcomingButton.setOnClickListener(v -> userViewModel.setState(0));
+            List<Event> newEvents = new ArrayList<>();
+            if (state != null &&  userViewModel.getUser().getValue() != null) {
+                switch (state) {
+                    case 0:
+                        ticketsButton.setTextColor(orangeColor);
+//                        newEvents = userViewModel.getUser().getValue().getEnrolledEvents().get("upcoming");
+                        break;
+                    case 1:
+                        savedButton.setTextColor(orangeColor);
+//                        newEvents = userViewModel.getUser().getValue().getFavoriteEvents().get("upcoming");
+                        break;
+                    case 2:
+                        myEventsButton.setTextColor(orangeColor);
+//                        newEvents = userViewModel.getUser().getValue().getUserEvents().get("upcoming");
+                        break;
+                }
+            }
+
+
+        });
+
+        userViewModel.getUpcomingState().observe(getViewLifecycleOwner(), upcoming -> {
+            Log.i("user", "onViewCreated: "+upcoming);
+            upcomingButton.setTextColor(textColor);
+            pastButton.setTextColor(textColor);
+
+                if (upcoming){
+                    upcomingButton.setTextColor(orangeColor);
+                }else{
+                    pastButton.setTextColor(orangeColor);
+                }
+        });
+
+        upcomingButton.setOnClickListener(v-> userViewModel.setUpcomingState(true));
+        pastButton.setOnClickListener(v-> userViewModel.setUpcomingState(false));
+        ticketsButton.setOnClickListener(v -> userViewModel.setState(0));
         savedButton.setOnClickListener(v -> userViewModel.setState(1));
         myEventsButton.setOnClickListener(v -> userViewModel.setState(2));
         settingsButton.setOnClickListener(v-> {

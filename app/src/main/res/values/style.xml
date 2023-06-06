@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <style name="Theme.Traveler" parent="Theme.MaterialComponents.Light">
+
+        <!-- Original AppCompat attributes. -->
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorSecondary">@color/secondary_color</item>
+        <item name="android:colorBackground">#F9F9F9</item>
+        <item name="colorError">@color/red</item>
+
+        <!-- New MaterialComponents attributes. -->
+        <item name="colorPrimaryVariant">@color/color_primary_variant</item>
+        <item name="colorSecondaryVariant">@color/yellow</item>
+        <item name="scrimBackground">@color/mtrl_scrim_color</item>
+        <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.MaterialComponents.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.MaterialComponents.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.MaterialComponents.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.MaterialComponents.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.MaterialComponents.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.MaterialComponents.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.MaterialComponents.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.MaterialComponents.Body2</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.MaterialComponents.Caption</item>
+        <item name="textAppearanceButton">@style/TextAppearance.MaterialComponents.Button</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
+<!--        <item name="colorOnSurface">@color/red</item>-->
+        <item name="colorSurface">@color/white</item>
+        <item name="android:textColorTertiary">@color/text</item>
+        <item name="android:textColorSecondary">@color/orange</item>
+        <item name="android:textColorSecondaryInverse">@color/orange</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+    </style>
+
+
+
     <style name="ShapeAppearanceOverlay.App.CornerSize15dp" parent="">
         <item name="cornerSize">15dp</item>
     </style>

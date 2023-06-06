@@ -221,6 +221,8 @@
     <string name="pref_category_title_auth">Authentification</string>
     <string name="user_follow">Follow</string>
     <string name="user_unfollow">Unfollow</string>
+    <string name="event_upcoming">Upcoming</string>
+    <string name="event_past">Past</string>
 
 
 </resources>

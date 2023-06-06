@@ -69,6 +69,10 @@ public interface ApiService {
     Call<Void> unfollow(
             @Path("userId") String userId
     );
+
+    @GET("auth/logout")
+    Call<Void> logout();
+
     @PATCH("admin/places/verify/{id}")
     Call<String> verifyAdminPlace(
             @Path("id") String id,

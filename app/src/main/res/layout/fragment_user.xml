@@ -129,20 +129,51 @@
                 android:layout_margin="0dp"
                 android:padding="0dp">
 
-                <ProgressBar
-                    android:id="@+id/userPb"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="80dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/userSwipeRefresh"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <FrameLayout
-                    android:id="@+id/frameLayout"
+                <LinearLayout
+                    android:id="@+id/linearLayout5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view3">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/userBtnUpcoming"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/event_upcoming"
+                        android:textColor="@color/secondary_color"
+                        android:textSize="14sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/userBtnPast"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/event_past"
+                        android:textColor="@android:color/secondary_text_light"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:background="@color/gray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/appbar" />
+
+                <FrameLayout
+                    android:id="@+id/appbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorTransparent"
+                    app:elevation="1dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -168,7 +199,7 @@
                         android:visibility="visible">
 
                         <Button
-                            android:id="@+id/userBtnUpcoming"
+                            android:id="@+id/userBtnTickets"
                             style="?android:attr/buttonBarButtonStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -181,7 +212,7 @@
                             android:textSize="14sp" />
 
                         <Button
-                            android:id="@+id/userBtnSaved"
+                            android:id="@+id/userBtnFavorites"
                             style="?android:attr/buttonBarButtonStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -207,14 +238,25 @@
                     </LinearLayout>
                 </FrameLayout>
 
+                <ProgressBar
+                    android:id="@+id/userPb"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/userSwipeRefresh"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
+
                 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                     android:id="@+id/userSwipeRefresh"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:layout_marginTop="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/frameLayout">
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvUser"
@@ -222,6 +264,13 @@
                         android:layout_height="match_parent"
                         android:clipToPadding="false"
                         android:paddingBottom="65dp" />
+
+                    <FrameLayout
+                        android:id="@+id/frameLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+
+                    </FrameLayout>
 
                 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

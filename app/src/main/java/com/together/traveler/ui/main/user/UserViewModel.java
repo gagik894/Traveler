@@ -12,6 +12,7 @@ import com.together.traveler.model.User;
 import com.together.traveler.retrofit.ApiClient;
 import com.together.traveler.retrofit.ApiService;
 
+import java.util.List;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -23,7 +24,9 @@ public class UserViewModel extends ViewModel {
     private final String TAG = "UserViewModel";
 
     private final MutableLiveData<User> user;
+    private final MutableLiveData<List<Event>> events;
     private final MutableLiveData<Integer> state;
+    private final MutableLiveData<Boolean> upcomingState;
     private final MutableLiveData<Boolean> selfPage;
     private boolean firstFetch;
     private String userId;
@@ -32,6 +35,8 @@ public class UserViewModel extends ViewModel {
     public UserViewModel() {
         user = new MutableLiveData<>();
         state = new MutableLiveData<>();
+        events = new MutableLiveData<>();
+        upcomingState = new MutableLiveData<>(true);
         selfPage = new MutableLiveData<>(true);
         firstFetch = true;
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
@@ -45,6 +50,10 @@ public class UserViewModel extends ViewModel {
         return state;
     }
 
+    public LiveData<Boolean> getUpcomingState() {
+        return upcomingState;
+    }
+
     public MutableLiveData<Boolean> isSelfPage() {
         return selfPage;
     }
@@ -53,8 +62,32 @@ public class UserViewModel extends ViewModel {
         return user;
     }
 
+    public LiveData<List<Event>> getEvents() {
+        return events;
+    }
+
     public void setState(int state) {
-        this.state.setValue(state);
+        User user  = getUser().getValue();
+        this.state.postValue(state);
+        Log.i(TAG, "setState: " + upcomingState.getValue());
+        if (user != null) {
+            switch (state){
+                case 0:
+                    events.postValue(user.getEnrolledEvents().get(Boolean.TRUE.equals(upcomingState.getValue()) ?"upcoming":"past"));
+                    break;
+                case 1:
+                    events.postValue(user.getFavoriteEvents().get(Boolean.TRUE.equals(upcomingState.getValue()) ?"upcoming":"past"));
+                    break;
+                case 2:
+                    events.postValue(user.getUserEvents().get(Boolean.TRUE.equals(upcomingState.getValue()) ?"upcoming":"past"));
+                    break;
+            }
+        }
+    }
+
+    public void setUpcomingState(boolean upcomingState) {
+        this.upcomingState.setValue(upcomingState);
+        setState(state.getValue());
     }
 
     public void setUser(User user) {
@@ -74,15 +107,6 @@ public class UserViewModel extends ViewModel {
             fetchUser();
     }
 
-    public void addUserFavorites(Event event){
-        User user = this.getUser().getValue();
-        Log.i(TAG, "addUserFavorites: " + user);
-        if (user == null) {
-            return;
-        }
-        user.getSavedEvents().add(event);
-        this.user.setValue(user);
-    }
 
     public void fetchUser() {
         Log.i(TAG, "fetchUser: " + userId);
@@ -92,16 +116,19 @@ public class UserViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     Log.d("UserViewModel", "onResponse: " + response.body());
                     User fetchedUser = response.body();
-                    user.postValue(fetchedUser);
+                    setUser(fetchedUser);
+//                    user.postValue(fetchedUser);
 
                     if (Boolean.FALSE.equals(selfPage.getValue())) {
-                        state.postValue(2);
+                        setState(2);
                         return;
                     }
+                    if (state.getValue() != null)
+                        setState(state.getValue());
                     state.postValue(state.getValue());
                     userId = fetchedUser != null ? fetchedUser.get_id() : null;
                     if (firstFetch) {
-                        state.postValue(0);
+                        setState(0);
                         firstFetch = false;
                     }
                 } else {

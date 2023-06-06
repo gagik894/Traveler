@@ -28,11 +28,13 @@
 
         <activity
             android:name=".ui.admin.AdminActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:label="@string/title_activity_admin"
             android:theme="@style/Theme.Traveler" />
         <activity
             android:name=".SettingsActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.main.MainActivity">
@@ -42,6 +44,7 @@
         </activity>
         <activity
             android:name=".ui.add.event.AddEventActivity"
+            android:screenOrientation="portrait"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -49,6 +52,7 @@
         </activity>
         <activity
             android:name=".ui.add.place.AddPlaceActivity"
+            android:screenOrientation="portrait"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -56,6 +60,7 @@
         </activity>
         <activity
             android:name=".ui.add.AddActivity"
+            android:screenOrientation="portrait"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -63,14 +68,17 @@
         </activity>
         <activity
             android:name=".ui.login.RegisterActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:label="@string/title_activity_signup" />
         <activity
             android:name=".ui.login.VerifyActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:label="@string/title_activity_verify" />
         <activity
             android:name=".ui.login.LoginActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -80,6 +88,7 @@
         </activity>
         <activity
             android:name=".ui.main.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.samsung.android.support.REMOTE_ACTION" />

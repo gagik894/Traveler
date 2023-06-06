@@ -43,7 +43,6 @@
             android:background="@drawable/transparent_background"
             android:hapticFeedbackEnabled="true"
             android:visibility="visible"
-            app:compatShadowEnabled="true"
             app:itemIconSize="25dp"
             app:labelVisibilityMode="selected"
             app:menu="@menu/menu_navigation_main" />
