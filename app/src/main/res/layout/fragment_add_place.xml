@@ -11,7 +11,6 @@
         android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
         android:padding="16dp">
 
 
@@ -165,60 +164,60 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
+            android:contentDescription="@string/text_icon"
             android:src="@drawable/ic_baseline_text_fields"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/addPlaceEtName"
-            android:contentDescription="@string/text_icon" />
+            app:layout_constraintTop_toTopOf="@+id/addPlaceEtName" />
 
         <ImageView
             android:id="@+id/imageView15"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
+            android:contentDescription="@string/location_icon"
             android:src="@drawable/location"
             app:layout_constraintStart_toStartOf="@+id/imageView12"
-            app:layout_constraintTop_toTopOf="@+id/addPlaceEtLocation"
-            android:contentDescription="@string/location_icon"/>
+            app:layout_constraintTop_toTopOf="@+id/addPlaceEtLocation" />
 
         <ImageView
             android:id="@+id/imageView16"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
+            android:contentDescription="@string/calendar_icon"
             android:src="@drawable/calendar"
             app:layout_constraintStart_toStartOf="@+id/imageView15"
-            app:layout_constraintTop_toTopOf="@+id/addPlaceEtTimes"
-            android:contentDescription="@string/calendar_icon"/>
+            app:layout_constraintTop_toTopOf="@+id/addPlaceEtTimes" />
 
         <ImageView
             android:id="@+id/imageView17"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
+            android:contentDescription="@string/phone_icon"
             android:src="@drawable/ic_baseline_phone"
             app:layout_constraintStart_toStartOf="@+id/imageView18"
-            app:layout_constraintTop_toTopOf="@+id/addPlaceEtPhone"
-            android:contentDescription="@string/phone_icon"/>
+            app:layout_constraintTop_toTopOf="@+id/addPlaceEtPhone" />
 
         <ImageView
             android:id="@+id/imageView18"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
+            android:contentDescription="@string/link_icon"
             android:src="@drawable/ic_baseline_link"
             app:layout_constraintStart_toStartOf="@+id/imageView16"
-            app:layout_constraintTop_toTopOf="@+id/addPlaceEtUrl"
-            android:contentDescription="@string/link_icon"/>
+            app:layout_constraintTop_toTopOf="@+id/addPlaceEtUrl" />
 
         <ImageView
             android:id="@+id/imageView19"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
+            android:contentDescription="@string/category_icon"
             android:src="@drawable/category"
             app:layout_constraintStart_toStartOf="@+id/imageView17"
-            app:layout_constraintTop_toTopOf="@+id/addPlaceTagSpinner"
-            android:contentDescription="@string/category_icon"/>
+            app:layout_constraintTop_toTopOf="@+id/addPlaceTagSpinner" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

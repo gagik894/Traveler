@@ -5,16 +5,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 
+import com.together.traveler.model.User;
+import com.together.traveler.retrofit.ApiClient;
+import com.together.traveler.retrofit.ApiService;
 import com.together.traveler.ui.admin.AdminActivity;
 import com.together.traveler.ui.admin.AdminActivityKt;
 import com.together.traveler.ui.login.LoginActivity;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SettingsActivity extends AppCompatActivity {
     private static boolean isAdmin = false;
@@ -53,12 +62,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
             if (logoutBtn != null) {
                 logoutBtn.setOnPreferenceClickListener(v->{
-                    SharedPreferences sharedPreferences = requireContext().getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.clear();
-                    editor.apply();
-                    requireActivity().finish();
-                    startActivity(new Intent(requireActivity(), LoginActivity.class));
+                    fetchLogout();
+
                     return true;
                 });
             }
@@ -78,6 +83,25 @@ public class SettingsActivity extends AppCompatActivity {
             AlertDialog dialog = builder.create();
             dialog.show();
 
+        }
+        private void fetchLogout(){
+            ApiService apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+            apiService.logout().enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    SharedPreferences sharedPreferences = requireContext().getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.clear();
+                    editor.apply();
+                    requireActivity().finish();
+                    startActivity(new Intent(requireActivity(), LoginActivity.class));
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    Log.e("Settings", "fetchUser request failed with error: " + t.getMessage());
+                }
+            });
         }
     }
 }

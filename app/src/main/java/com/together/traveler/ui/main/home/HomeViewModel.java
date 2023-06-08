@@ -237,7 +237,8 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
                         eventAdded = true;
                     } else {
                         for (String tag : event.getTags()) {
-                            if (tag.contains(filterPattern)) {
+                            Log.i(TAG, "filterBySearchAndTags: " + tag + " " + filterPattern);
+                            if (tag.toLowerCase().contains(filterPattern)) {
                                 filteredEvents.add(event);
                                 eventAdded = true;
                                 break;
