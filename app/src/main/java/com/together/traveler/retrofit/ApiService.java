@@ -99,6 +99,9 @@ public interface ApiService {
             @Part MultipartBody.Part filePart
     );
 
+    @POST("auth/change/password")
+    Call<LoginResponse> changePassword(@Body RequestBody requestBody);
+
     @POST("events/checkTicket")
     Call<CheckTicketResponse> checkTicket(@Body RequestBody requestBody);
 

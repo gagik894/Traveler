@@ -84,7 +84,6 @@ public class PlaceFragment extends Fragment {
             String imageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", place.getImgId());
             Log.i("asd", "onCreateView: " + imageUrl);
             Glide.with(requireContext()).load(imageUrl).into(image);
-            Toast.makeText(requireContext(), place.getName() + "" + isOpen, Toast.LENGTH_SHORT).show();
             name.setText(place.getName());
             location.setText(place.getLocation());
             category.setText(place.getCategory());

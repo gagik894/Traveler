@@ -25,61 +25,72 @@
         android:theme="@style/Theme.Traveler"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ui.login.ChangePasswordActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".ui.admin.AdminActivity"
-            android:screenOrientation="portrait"
             android:exported="false"
             android:label="@string/title_activity_admin"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Traveler" />
         <activity
             android:name=".SettingsActivity"
-            android:screenOrientation="portrait"
             android:exported="false"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".ui.main.MainActivity">
+            android:parentActivityName=".ui.main.MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".ui.add.event.AddEventActivity"
-            android:screenOrientation="portrait"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".ui.add.place.AddPlaceActivity"
-            android:screenOrientation="portrait"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".ui.add.AddActivity"
-            android:screenOrientation="portrait"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".ui.login.RegisterActivity"
-            android:screenOrientation="portrait"
             android:exported="false"
-            android:label="@string/title_activity_signup" />
+            android:label="@string/title_activity_signup"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.login.CheckEmailActivity"
+            android:exported="false"
+            android:label="@string/title_activity_check_email"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.VerifyActivity"
-            android:screenOrientation="portrait"
             android:exported="false"
-            android:label="@string/title_activity_verify" />
+            android:label="@string/title_activity_verify"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -88,8 +99,8 @@
         </activity>
         <activity
             android:name=".ui.main.MainActivity"
-            android:screenOrientation="portrait"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.samsung.android.support.REMOTE_ACTION" />
             </intent-filter>

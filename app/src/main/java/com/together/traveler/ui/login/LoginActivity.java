@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         final ProgressBar loadingProgressBar = binding.loginPbLoading;
         final TextView toSignupButton = binding.loginTvSignup;
         final ImageView topView = binding.loginIvLogo;
+        final TextView forgetPassButton = binding.loginTvForgotPass;
         bottomView = binding.loginViewBottom;
         bottomRelativeLayout = binding.loginRlBottom;
         final Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
@@ -129,6 +130,11 @@ public class LoginActivity extends AppCompatActivity {
 
         toSignupButton.setOnClickListener(v->{
             Intent switchActivityIntent = new Intent(this, RegisterActivity.class);
+            startActivity(switchActivityIntent);
+        });
+
+        forgetPassButton.setOnClickListener(v->{
+            Intent switchActivityIntent = new Intent(this, CheckEmailActivity.class);
             startActivity(switchActivityIntent);
         });
 

@@ -226,6 +226,11 @@
     <string name="event_get_tickets">Get tickets</string>
     <string name="home_divider_top">You\'ve explored all events in this location</string>
     <string name="homee_divider_bottom">Discover more from other platforms</string>
+    <string name="verify_sec_code">Sec code from email</string>
+    <string name="button_next">next</string>
+    <string name="title_activity_check_email">CheckEmailActivity</string>
+    <string name="change_new_password">Enter new password</string>
+    <string name="change_repeat_new_password">Repeat_new_password</string>
 
 
 </resources>

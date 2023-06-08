@@ -149,7 +149,7 @@
                     android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/loginTvForgotPass"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/loginBtnlogin"
