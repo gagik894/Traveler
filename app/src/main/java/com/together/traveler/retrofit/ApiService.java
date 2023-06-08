@@ -78,6 +78,7 @@ public interface ApiService {
             @Path("id") String id,
             @Body RequestBody requestBody
     );
+
     @DELETE("admin/places/delete/{id}")
     Call<String> deleteAdminPlace(
             @Path("id") String id
@@ -86,10 +87,18 @@ public interface ApiService {
     Call<String> addAdminCategories(
             @Path("type") String type, @Body RequestBody requestBody
     );
+
     @PATCH("admin/{type}/categories/remove/")
     Call<String> deleteAdminCategories(
             @Path("type") String type, @Body RequestBody requestBody
     );
+
+    @Multipart
+    @PATCH("users/change/avatar")
+    Call<String> changeAvatar(
+            @Part MultipartBody.Part filePart
+    );
+
     @POST("events/checkTicket")
     Call<CheckTicketResponse> checkTicket(@Body RequestBody requestBody);
 
