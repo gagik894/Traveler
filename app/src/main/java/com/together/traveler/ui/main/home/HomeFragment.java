@@ -33,10 +33,13 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.together.traveler.R;
 import com.together.traveler.adapter.EventCardsAdapter;
+import com.together.traveler.adapter.ParsedEventCardsAdapter;
 import com.together.traveler.databinding.FragmentHomeBinding;
+import com.together.traveler.model.ParsedEvent;
 import com.together.traveler.model.Event;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
@@ -51,9 +54,10 @@ public class HomeFragment extends Fragment{
     private ProgressBar progressBar;
     private ImageButton filtersButton;
     private ChipGroup chipGroup;
-    private EventCardsAdapter eventCardsAdapter;
+    private ParsedEventCardsAdapter parsedEventCardsAdapter;
     private CardView locationFragment;
     private final List<Event> eventList = new ArrayList<>();
+    private final List<ParsedEvent> parsedEventList = new ArrayList<>();
 
     private final ActivityResultLauncher<String[]> requestMultiplePermissionsLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -117,16 +121,20 @@ public class HomeFragment extends Fragment{
                 }
             }
         });
-        eventCardsAdapter = new EventCardsAdapter(eventList, item -> {
+
+        parsedEventCardsAdapter = new ParsedEventCardsAdapter(eventList,parsedEventList, item -> {
             if (isAdded()) {
                 NavDirections action = HomeFragmentDirections.actionHomeFragmentToEventFragment(item, homeViewModel.getUserId());
                 NavHostFragment.findNavController(this).navigate(action);
             }
+        }, item -> {
+            NavDirections action = HomeFragmentDirections.actionHomeFragmentToParsedEvent(item);
+            NavHostFragment.findNavController(this).navigate(action);
         });
 
-        rvCards.setAdapter(eventCardsAdapter);
-        rvCards.setLayoutManager(new LinearLayoutManager(requireContext()));
 
+        rvCards.setLayoutManager(new LinearLayoutManager(requireContext()));
+        rvCards.setAdapter(parsedEventCardsAdapter);
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             Thread thread = new Thread(homeViewModel::fetch);
@@ -136,39 +144,27 @@ public class HomeFragment extends Fragment{
         locationFragment.setOnClickListener(v-> showSelectLocation());
         filtersButton.setOnClickListener(v-> homeViewModel.changeCategoriesVisibility());
 
-        homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), newEvents  -> {
-
+        homeViewModel.getAllEvents().observe(getViewLifecycleOwner(), newEvents -> {
             swipeRefreshLayout.setRefreshing(false);
-                DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
-                    @Override
-                    public int getOldListSize() {
-                        return eventList.size();
-                    }
+            DiffUtil.DiffResult parsedEventDiffResult = DiffUtil.calculateDiff(new CombinedDiffCallback(eventList, newEvents, parsedEventList, parsedEventList));
+            eventList.clear();
+            eventList.addAll(newEvents);
+            parsedEventDiffResult.dispatchUpdatesTo(parsedEventCardsAdapter);
 
-                    @Override
-                    public int getNewListSize() {
-                        return newEvents.size();
-                    }
-
-                    @Override
-                    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                        Event oldEvent = eventList.get(oldItemPosition);
-                        Event newEvent = newEvents.get(newItemPosition);
-                        return oldEvent.get_id().equals(newEvent.get_id());
-                    }
-
-                    @Override
-                    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                        Event oldEvent = eventList.get(oldItemPosition);
-                        Event newEvent = newEvents.get(newItemPosition);
-                        return oldEvent.equals(newEvent);
-                    }
-                });
-                diffResult.dispatchUpdatesTo(eventCardsAdapter);
-                eventList.clear();
-                eventList.addAll(newEvents);
-//                eventCardsAdapter.updateData(newEvents);
         });
+
+        homeViewModel.getParsedEvents().observe(getViewLifecycleOwner(), newEvents -> {
+            swipeRefreshLayout.setRefreshing(false);
+            DiffUtil.DiffResult parsedEventDiffResult = DiffUtil.calculateDiff(new CombinedDiffCallback(eventList, eventList, parsedEventList, newEvents ));
+            parsedEventList.clear();
+            parsedEventList.addAll(newEvents);
+            parsedEventDiffResult.dispatchUpdatesTo(parsedEventCardsAdapter);
+        });
+
+
+
+
+
 
         homeViewModel.getCategoriesVisibility().observe(getViewLifecycleOwner(), visible->{
             chipGroup.setVisibility(visible? View.VISIBLE: View.GONE);
@@ -253,3 +249,92 @@ public class HomeFragment extends Fragment{
         }
     }
 }
+
+
+class CombinedDiffCallback extends DiffUtil.Callback {
+    private List<Event> oldEvents;
+    private List<Event> newEvents;
+    private List<ParsedEvent> oldParsedEvents;
+    private List<ParsedEvent> newParsedEvents;
+
+    public CombinedDiffCallback(List<Event> oldEvents, List<Event> newEvents, List<ParsedEvent> oldParsedEvents, List<ParsedEvent> newParsedEvents) {
+        this.oldEvents = oldEvents;
+        this.newEvents = newEvents;
+        this.oldParsedEvents = oldParsedEvents;
+        this.newParsedEvents = newParsedEvents;
+    }
+
+    @Override
+    public int getOldListSize() {
+        return oldEvents.size() + oldParsedEvents.size() + 1; // Add 1 for the divider
+    }
+
+    @Override
+    public int getNewListSize() {
+        return newEvents.size() + newParsedEvents.size() + 1; // Add 1 for the divider
+    }
+
+    @Override
+    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+        if (isDividerPosition(oldItemPosition) && isDividerPosition(newItemPosition)) {
+            return true; // Both are dividers
+        } else if (isDividerPosition(oldItemPosition) || isDividerPosition(newItemPosition)) {
+            return false; // One is a divider, the other is an item
+        }
+
+        int oldPosition = adjustPosition(oldItemPosition);
+        int newPosition = adjustPosition(newItemPosition);
+
+        if (oldPosition < oldEvents.size() && newPosition < newEvents.size()) {
+            Event oldEvent = oldEvents.get(oldPosition);
+            Event newEvent = newEvents.get(newPosition);
+            return oldEvent.get_id().equals(newEvent.get_id());
+        } else if (oldPosition >= oldEvents.size() && newPosition >= newEvents.size()) {
+            int oldParsedPosition = oldPosition - oldEvents.size();
+            int newParsedPosition = newPosition - newEvents.size();
+            ParsedEvent oldParsedEvent = oldParsedEvents.get(oldParsedPosition);
+            ParsedEvent newParsedEvent = newParsedEvents.get(newParsedPosition);
+            return oldParsedEvent.getTitle().equals(newParsedEvent.getTitle());
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+        if (isDividerPosition(oldItemPosition) && isDividerPosition(newItemPosition)) {
+            return true; // Both are dividers
+        } else if (isDividerPosition(oldItemPosition) || isDividerPosition(newItemPosition)) {
+            return false; // One is a divider, the other is an item
+        }
+
+        int oldPosition = adjustPosition(oldItemPosition);
+        int newPosition = adjustPosition(newItemPosition);
+
+        if (oldPosition < oldEvents.size() && newPosition < newEvents.size()) {
+            Event oldEvent = oldEvents.get(oldPosition);
+            Event newEvent = newEvents.get(newPosition);
+            return oldEvent.equals(newEvent);
+        } else if (oldPosition >= oldEvents.size() && newPosition >= newEvents.size()) {
+            int oldParsedPosition = oldPosition - oldEvents.size();
+            int newParsedPosition = newPosition - newEvents.size();
+            ParsedEvent oldParsedEvent = oldParsedEvents.get(oldParsedPosition);
+            ParsedEvent newParsedEvent = newParsedEvents.get(newParsedPosition);
+            return oldParsedEvent.equals(newParsedEvent);
+        }
+
+        return false;
+    }
+
+    private boolean isDividerPosition(int position) {
+        return position == oldEvents.size() || position == oldEvents.size() + oldParsedEvents.size() + 1;
+    }
+
+    private int adjustPosition(int position) {
+        if (position >= oldEvents.size()) {
+            return position - oldEvents.size() - 1;
+        }
+        return position;
+    }
+}
+

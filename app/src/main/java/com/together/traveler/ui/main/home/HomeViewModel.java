@@ -8,10 +8,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.together.traveler.model.ParsedEvent;
 import com.together.traveler.model.Event;
 import com.together.traveler.model.EventsResponse;
 import com.together.traveler.retrofit.ApiClient;
 import com.together.traveler.retrofit.ApiService;
+import com.together.traveler.webScraping.WebScraping;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,8 +34,10 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
     private final String TAG = "HomeViewModel";
 
     private final ArrayList<Event> allEvents;
+    private final ArrayList<ParsedEvent> allParsedEvents;
     private final ArrayList<Event> categoryFilteredEvents;
     private final MutableLiveData<ArrayList<Event>> filteredEvents;
+    private final MutableLiveData<ArrayList<ParsedEvent>> parsedEvents;
     private final MutableLiveData<ArrayList<String>> categories;
     private final MutableLiveData<List<Integer>> selectedCategories;
     private final MutableLiveData<String> locationName;
@@ -43,10 +47,13 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
     private CharSequence constraint;
     private final ApiService apiService;
     private final LocationProvider locationProvider;
+    private final WebScraping webScraping;
 
     public HomeViewModel() {
         constraint = "";
         allEvents = new ArrayList<>();
+        allParsedEvents = new ArrayList<>();
+        parsedEvents = new MutableLiveData<>(new ArrayList<>());
         categoryFilteredEvents = new ArrayList<>();
         filteredEvents = new MutableLiveData<>(new ArrayList<>());
         categories = new MutableLiveData<>(new ArrayList<>());
@@ -56,6 +63,8 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
         locationName = new MutableLiveData<>();
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         locationProvider = new LocationProvider(this);
+        webScraping = new WebScraping(HomeViewModel.this);
+        webScraping.startScraping();
         fetchCategories();
         getLocationByIP();
     }
@@ -74,6 +83,16 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
         this.locationName.postValue(locationName);
         fetchEvents(locationName);
     }
+
+    public void addParsedEvents(ParsedEvent event){
+        allParsedEvents.add(event);
+        if (constraint == null || constraint.length() == 0){
+            parsedEvents.postValue(allParsedEvents);
+        }else{
+            filterEventsByCategory();
+        }
+    }
+
 
     public LiveData<ArrayList<Event>> getAllEvents() {
         return filteredEvents;
@@ -97,6 +116,10 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
 
     public LiveData<String> getLocationName() {
         return locationName;
+    }
+
+    public LiveData<ArrayList<ParsedEvent>> getParsedEvents() {
+        return parsedEvents;
     }
 
     public void fetch(){
@@ -218,6 +241,7 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
         loading.postValue(true);
         this.constraint = constraint;
         ArrayList<Event> allEvents = this.categoryFilteredEvents;
+        ArrayList<ParsedEvent> allParsedEvents = this.allParsedEvents;
         if (allEvents != null) {
             if (constraint == null || constraint.length() == 0) {
                 HomeViewModel.this.loading.postValue(false);
@@ -253,6 +277,28 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
                 HomeViewModel.this.loading.postValue(false);
                 HomeViewModel.this.filteredEvents.postValue(filteredEvents);
 
+            });
+            executorService.shutdown();
+        }
+        if(allParsedEvents != null){
+            if (constraint == null || constraint.length() == 0) {
+                HomeViewModel.this.loading.postValue(false);
+                HomeViewModel.this.parsedEvents.postValue(allParsedEvents);
+                return;
+            }
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.submit(() -> {
+                ArrayList<ParsedEvent> filteredParsedEvents = new ArrayList<>();
+
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (ParsedEvent event : allParsedEvents) {
+                    if (event.getTitle().toLowerCase().contains(filterPattern)) {
+                        filteredParsedEvents.add(event);
+                    }else if(event.getDescription().toLowerCase().contains(filterPattern)) {
+                        filteredParsedEvents.add(event);
+                    }
+                }
+                HomeViewModel.this.parsedEvents.postValue(filteredParsedEvents);
             });
             executorService.shutdown();
         }
