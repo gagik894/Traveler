@@ -1,8 +1,11 @@
 package com.together.traveler.ui.main.ticket;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,14 +48,16 @@ public class UniversalTicketFragment extends Fragment {
         final ImageView userImage = binding.utkIvUser;
         final QRCodeWriter qrCodeWriter = new QRCodeWriter();
         int qrCodeSize = 1000;
-
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", "");
         userViewModel.getUser().observe(getViewLifecycleOwner(), data->{
+            Log.d("Ticket", "onViewCreated: " + userId);
             String imageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", data.getAvatar());
             username.setText(data.getUsername());
             Glide.with(requireContext()).load(imageUrl).into(userImage);
 
             try {
-                BitMatrix bitMatrix = qrCodeWriter.encode(data.get_id(), BarcodeFormat.QR_CODE, qrCodeSize, qrCodeSize);
+                BitMatrix bitMatrix = qrCodeWriter.encode(userId, BarcodeFormat.QR_CODE, qrCodeSize, qrCodeSize);
                 int bitmapWidth = bitMatrix.getWidth();
                 int bitmapHeight = bitMatrix.getHeight();
                 Bitmap bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);

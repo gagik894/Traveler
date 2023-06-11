@@ -6,15 +6,7 @@ import android.os.Parcelable;
 public class LoginResponse implements Parcelable {
     String auth_token;
     String error;
-
-    public LoginResponse(String auth_token, String error) {
-        this.auth_token = auth_token;
-        this.error = error;
-    }
-
-    public LoginResponse(String auth_token) {
-        this.auth_token = auth_token;
-    }
+    String userId;
 
     public String getAuth_token() {
         return auth_token;
@@ -32,6 +24,13 @@ public class LoginResponse implements Parcelable {
         this.error = error;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     @Override
     public int describeContents() {
@@ -42,16 +41,19 @@ public class LoginResponse implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.auth_token);
         dest.writeString(this.error);
+        dest.writeString(this.userId);
     }
 
     public void readFromParcel(Parcel source) {
         this.auth_token = source.readString();
         this.error = source.readString();
+        this.userId = source.readString();
     }
 
     protected LoginResponse(Parcel in) {
         this.auth_token = in.readString();
         this.error = in.readString();
+        this.userId = in.readString();
     }
 
     public static final Creator<LoginResponse> CREATOR = new Creator<LoginResponse>() {

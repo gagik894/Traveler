@@ -199,7 +199,7 @@ public class ChangePasswordViewModel extends ViewModel {
             @Override
             public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 if (response.isSuccessful()){
-                    setLoggedInUser(response.body().getAuth_token());
+                    setLoggedInUser(response.body().getAuth_token(), response.body().getUserId());
                     loginSuccess.postValue(true);
                 }
             }
@@ -210,11 +210,12 @@ public class ChangePasswordViewModel extends ViewModel {
             }
         });
     }
-    private void setLoggedInUser(String auth_token) {
+    private void setLoggedInUser(String auth_token, String userId) {
         Context context = AppContext.getContext();
         final SharedPreferences sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("auth_token", auth_token);
+        editor.putString("userId", userId);
         editor.apply();
 
         Log.i(TAG, "setLoggedInUser: " + sharedPreferences.getString("auth_token", null));

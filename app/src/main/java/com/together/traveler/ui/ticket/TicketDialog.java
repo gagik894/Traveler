@@ -1,7 +1,8 @@
-package com.together.traveler.ui.event.ticket;
+package com.together.traveler.ui.ticket;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -24,12 +25,13 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.together.traveler.R;
+import com.together.traveler.context.AppContext;
 import com.together.traveler.model.Event;
 
 public class TicketDialog extends Dialog {
     private final Event data;
-    private final String userId;
     private OnImageLoadedListener listener;
+    private Context context;
 
     public interface OnImageLoadedListener {
         void onImageLoaded();
@@ -39,10 +41,10 @@ public class TicketDialog extends Dialog {
         this.listener = listener;
     }
 
-    public TicketDialog(Context context, Event data, String userId) {
+    public TicketDialog(Context context, Event data) {
         super(context);
         this.data = data;
-        this.userId = userId;
+        this.context = context;
     }
 
     @Override
@@ -70,11 +72,15 @@ public class TicketDialog extends Dialog {
         ImageButton backBtn = findViewById(R.id.ticketIBtnBack);
         String imageUrl = String.format("https://drive.google.com/uc?export=wiew&id=%s", data.getImgId());
 
+        SharedPreferences sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", "");
+
+        Log.d("Ticket", "onViewCreated: " + userId);
         title.setText(data.getTitle());
         location.setText(data.getLocation());
         start.setText(String.format("From %s", data.getStartDate()));
         end.setText(String.format("To %s", data.getEndDate()));
-        Glide.with(getContext())
+        Glide.with(context)
                 .load(imageUrl)
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -97,7 +103,7 @@ public class TicketDialog extends Dialog {
 
         int qrCodeSize = 1000;
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        Log.i("asd", "onCreate: " + userId);
+
         try {
             BitMatrix bitMatrix = qrCodeWriter.encode(userId, BarcodeFormat.QR_CODE, qrCodeSize, qrCodeSize);
             int bitmapWidth = bitMatrix.getWidth();

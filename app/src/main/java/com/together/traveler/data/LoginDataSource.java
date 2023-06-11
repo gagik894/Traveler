@@ -1,9 +1,12 @@
 package com.together.traveler.data;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.together.traveler.context.AppContext;
 import com.together.traveler.model.LoginResponse;
 import com.together.traveler.retrofit.ApiClient;
 import com.together.traveler.retrofit.ApiService;
@@ -47,9 +50,10 @@ public class LoginDataSource {
             public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     Log.d("UserViewModel", "onResponse: " + response.body());
-                    LoginResponse eventsResponse = response.body();
-                    String auth_token = eventsResponse.getAuth_token();
+                    LoginResponse loginResponse = response.body();
+                    String auth_token = loginResponse.getAuth_token();
                     result[0] = new Result.Success(auth_token);
+                    saveUserId(loginResponse.getUserId());
                 } else {
                     try {
                         String errorBody = response.errorBody().string();
@@ -138,9 +142,10 @@ public class LoginDataSource {
             public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     Log.d("UserViewModel", "onResponse: " + response.body());
-                    LoginResponse eventsResponse = response.body();
-                    String auth_token = eventsResponse.getAuth_token();
+                    LoginResponse loginResponse = response.body();
+                    String auth_token = loginResponse.getAuth_token();
                     result[0] = new Result.Success(auth_token);
+                    saveUserId(loginResponse.getUserId());
                 } else {
                     try {
                         String errorBody = response.errorBody().string();
@@ -206,6 +211,14 @@ public class LoginDataSource {
 //            e.printStackTrace();
 //            return new Result.Error(new IOException("Error creating user"));
 //        }
+    }
+
+    private void saveUserId(String userId) {
+        Context context = AppContext.getContext();
+        final SharedPreferences sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("userId", userId);
+        editor.apply();
     }
 
     public void logout() {

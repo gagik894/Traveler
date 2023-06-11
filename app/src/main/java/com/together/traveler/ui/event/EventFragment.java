@@ -45,7 +45,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentEventBinding;
 import com.together.traveler.model.Event;
-import com.together.traveler.ui.event.ticket.TicketDialog;
+import com.together.traveler.ui.ticket.TicketDialog;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -189,7 +189,7 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
                 Button button = (Button) v;
                 String buttonText = button.getText().toString();
                 if (buttonText.equals(getString(R.string.event_button_ticket))) {
-                    TicketDialog dialog = new TicketDialog(requireContext(), eventViewModel.getData().getValue(), eventViewModel.getUserId());
+                    TicketDialog dialog = new TicketDialog(requireContext(), eventViewModel.getData().getValue());
                     dialog.show();
                 } else if (buttonText.equals(getString(R.string.event_button_check_tickets))) {
                     if (eventViewModel.getData().getValue() == null)
@@ -242,7 +242,7 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
     }
 
     private void callDialogWithListener() {
-        dialog = new TicketDialog(requireContext(), eventViewModel.getData().getValue(), eventViewModel.getUserId());
+        dialog = new TicketDialog(requireContext(), eventViewModel.getData().getValue());
         dialog.setOnImageLoadedListener(this);
         dialog.show();
     }
