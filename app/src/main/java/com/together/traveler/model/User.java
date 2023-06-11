@@ -17,9 +17,9 @@ public class User implements Parcelable {
     private String password;
     private String FCMToken;
     private float rating;
-    private Map<String, ArrayList<Event>> enrolledEvents = null;
-    private Map<String, ArrayList<Event>> favoriteEvents = null;
-    private Map<String, ArrayList<Event>> userEvents = null;
+    private Map<String, ArrayList<Event>> enrolledEvents = new HashMap<>();;
+    private Map<String, ArrayList<Event>> favoriteEvents = new HashMap<>();;
+    private Map<String, ArrayList<Event>> userEvents = new HashMap<>();;
 
 //    private ArrayList<Event> upcomingEvents = null;
 //    private ArrayList<Event> savedEvents = null;
