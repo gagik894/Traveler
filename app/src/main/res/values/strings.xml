@@ -231,6 +231,7 @@
     <string name="title_activity_check_email">CheckEmailActivity</string>
     <string name="change_new_password">Enter new password</string>
     <string name="change_repeat_new_password">Repeat_new_password</string>
+    <string name="pref_category_title_admin">Admin</string>
 
 
 </resources>
