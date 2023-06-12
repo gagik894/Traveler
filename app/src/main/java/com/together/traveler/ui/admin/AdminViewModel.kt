@@ -29,11 +29,6 @@ class AdminViewModel : ViewModel() {
     val placeCategories: MutableLiveData<List<String>?> = _placeCategories
     val eventCategories: MutableLiveData<List<String>?> = _eventCategories
 
-    private val deletedPlaceCategories = ArrayList<String>()
-    private val deletedEventCategories = ArrayList<String>()
-    private val addedPlaceCategories = ArrayList<String>()
-    private val addedEventCategories = ArrayList<String>()
-
     val loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     init {
@@ -86,46 +81,50 @@ class AdminViewModel : ViewModel() {
 
     fun deleteCategory(name:String, type: String){
         if (type == "event"){
+            fetchDeleteCategories("events", name);
             val updatedList = _eventCategories.value?.filter { it != name }
             _eventCategories.value = updatedList
-            deletedEventCategories.add(name)
+//            deletedEventCategories.add(name)
         }else{
+            fetchDeleteCategories("places", name);
             val updatedList = _placeCategories.value?.filter { it != name }
             _placeCategories.value = updatedList
-            deletedPlaceCategories.add(name)
+//            deletedPlaceCategories.add(name)
         }
     }
 
     fun addCategory(name:String, type: String){
         if (type == "event"){
+            fetchAddCategories("events", name)
             val updatedList = _eventCategories.value?.plus(name)
             _eventCategories.value = updatedList
-            addedEventCategories.add(name)
+//            addedEventCategories.add(name)
         }else{
+            fetchAddCategories("places", name)
             val updatedList = _placeCategories.value?.plus(name)
             _placeCategories.value = updatedList
-            addedPlaceCategories.add(name)
+//            addedPlaceCategories.add(name)
         }
     }
 
-    fun submitCategories(type: String){
-        if (type == "event"){
-            if (addedEventCategories.size>0){
-                fetchAddCategories("events")
-            }
-            if (deletedEventCategories.size>0){
-                fetchDeleteCategories("events")
-            }
-        }else{
-            if (addedPlaceCategories.size>0){
-                fetchAddCategories("places")
-            }
-            if (deletedPlaceCategories.size>0){
-                Log.i(TAG, "submitCategories: $deletedPlaceCategories")
-                fetchDeleteCategories("places")
-            }
-        }
-    }
+//    fun submitCategories(type: String){
+//        if (type == "event"){
+//            if (addedEventCategories.size>0){
+//                fetchAddCategories("events")
+//            }
+//            if (deletedEventCategories.size>0){
+//                fetchDeleteCategories("events")
+//            }
+//        }else{
+//            if (addedPlaceCategories.size>0){
+//                fetchAddCategories("places")
+//            }
+//            if (deletedPlaceCategories.size>0){
+//                Log.i(TAG, "submitCategories: $deletedPlaceCategories")
+//                fetchDeleteCategories("places")
+//            }
+//        }
+//    }
 
     fun verifyPlace(place: Place){
         val json = JSONObject()
@@ -172,15 +171,10 @@ class AdminViewModel : ViewModel() {
         })
     }
 
-    private fun fetchAddCategories(type: String){
+    private fun fetchAddCategories(type: String, category: String){
         val json = JSONObject()
         try {
-            if (type == "events") {
-                json.put("categories", addedEventCategories)
-            }else{
-                json.put("categories", addedPlaceCategories)
-            }
-
+            json.put("categories", arrayOf(category).contentToString())
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -191,11 +185,6 @@ class AdminViewModel : ViewModel() {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 Log.d("Admin", "onResponse: " + response.body())
                 if (response.isSuccessful){
-                    if (type == "events") {
-                        addedEventCategories.clear()
-                    }else{
-                        addedPlaceCategories.clear()
-                    }
                     fetchCategories()
                 }
                 loading.value = false
@@ -208,31 +197,19 @@ class AdminViewModel : ViewModel() {
 
         })
     }
-    private fun fetchDeleteCategories(type: String){
-        Log.i(TAG, "fetchDeleteCategories: $deletedEventCategories")
+    private fun fetchDeleteCategories(type: String, category: String){
         val json = JSONObject()
         try {
-            if (type == "events") {
-                json.put("categories", deletedEventCategories)
-            }else{
-                json.put("categories", deletedPlaceCategories)
-            }
-
+            json.put("categories", arrayOf(category).contentToString())
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        Log.d("admin", "fetchDeleteCategories: "+json.toString())
         val requestBody = json.toString().toRequestBody("application/json".toMediaTypeOrNull())
         loading.value = true
         apiService.deleteAdminCategories(type, requestBody).enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 Log.d("Admin", "onResponse: " + response.body())
                 if (response.isSuccessful){
-                    if (type == "events") {
-                        deletedEventCategories.clear()
-                    }else{
-                       deletedPlaceCategories.clear()
-                    }
                     fetchCategories()
                 }
                 loading.value = false

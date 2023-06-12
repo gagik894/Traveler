@@ -26,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -82,7 +83,7 @@ fun TabLayout() {
         when (selectedTabIndex) {
             0 -> Navigation()
             1 -> CategoriesPage()
-            2 -> Text("Content of Tab 3")
+            2 -> Text("Soon")
         }
     }
 }
@@ -108,21 +109,39 @@ fun Navigation() {
 @Composable
 fun PlaceCards(navController: NavController, viewModel: AdminViewModel) {
     val places by viewModel.placesData.observeAsState()
-    LazyColumn(
-        Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(horizontal = 5.dp)
-    ) {
-        places?.forEach { item ->
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-                PlaceCard(data = item) {
-                    viewModel.setSelectedPlaceData(place = item)
-                    navController.navigate("singlePlace")
+    if (places == null || places?.size == 0) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                "Nothing to check yet",
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .height(IntrinsicSize.Min)
+                    .fillMaxHeight()
+            )
+        }
+
+    } else {
+        LazyColumn(
+            Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(horizontal = 5.dp)
+        ) {
+
+            places?.forEach { item ->
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    PlaceCard(data = item) {
+                        viewModel.setSelectedPlaceData(place = item)
+                        navController.navigate("singlePlace")
+                    }
                 }
             }
         }
+
     }
 }
 
@@ -357,10 +376,10 @@ fun PlaceTimes(data: Place) {
         Text(text = "Always Open")
     } else {
         Column {
-            data.isClosedDays.forEachIndexed{index, isClosed ->
-                if (isClosed){
+            data.isClosedDays.forEachIndexed { index, isClosed ->
+                if (isClosed) {
                     Text(text = stringResource(R.string.place_closed))
-                }else{
+                } else {
                     Text(text = "${data.openingTimes[index]} - ${data.closingTimes[index]}")
                 }
             }
@@ -400,7 +419,7 @@ fun FragmentInComposeExample() {
 
 @Composable
 fun CategoriesPage() {
-        CategoryItems()
+    CategoryItems()
 }
 
 
@@ -417,7 +436,7 @@ fun CategoryItems() {
             .padding(horizontal = 5.dp)
     ) {
         item {
-            Text(text = "Events", style = MaterialTheme.typography.h5)
+            Text(text = "Event Categories", style = MaterialTheme.typography.h5, modifier = Modifier.padding(top = 16.dp))
         }
         eventCategories?.forEach { item ->
             item {
@@ -432,14 +451,15 @@ fun CategoryItems() {
                 onAdd = { text ->
                     mViewModel.addCategory(text, "event")
                 },
-                onSubmit = {
-                    mViewModel.submitCategories("event")
-                }
             )
 
         }
         item {
-            Text(text = "Places", style = MaterialTheme.typography.h5)
+            Text(
+                text = "Place Categories",
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.padding(top = 16.dp)
+            )
         }
         placeCategories?.forEach { item ->
             item {
@@ -454,16 +474,13 @@ fun CategoryItems() {
                 onAdd = { text ->
                     mViewModel.addCategory(text, "place")
                 },
-                onSubmit = {
-                    mViewModel.submitCategories("place")
-                }
             )
         }
     }
 }
 
 @Composable
-fun TextFieldWithButtons(onAdd: (String) -> Unit, onSubmit: () -> Unit) {
+fun TextFieldWithButtons(onAdd: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
     Column {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -479,14 +496,8 @@ fun TextFieldWithButtons(onAdd: (String) -> Unit, onSubmit: () -> Unit) {
                     .weight(1f)
                     .padding(vertical = 0.dp)
             )
-            Button(onClick = { onAdd(text) }, enabled = text.trim().length>3) {
+            Button(onClick = { onAdd(text) }, enabled = text.trim().length > 3) {
                 Text(text = "Add")
-            }
-        }
-        Row {
-            Spacer(modifier = Modifier.weight(1f))
-            Button(onClick = { onSubmit() }) {
-                Text(text = "Submit")
             }
         }
     }

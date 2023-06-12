@@ -21,32 +21,29 @@
             android:title="@string/pref_summary_push_switch"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_category_title_admin"
-        app:iconSpaceReserved="false">
-        <PreferenceScreen
-            android:key="prefBtnAdmin"
-            android:title="@string/pref_title_admin_page_button"
-            app:iconSpaceReserved="false"></PreferenceScreen>
-    </PreferenceCategory>
+
     <PreferenceCategory
         android:title="@string/pref_category_title_account"
         app:iconSpaceReserved="false">
         <PreferenceScreen
+            android:key="prefBtnAdmin"
+            android:title="@string/pref_title_admin_page_button"
+            app:iconSpaceReserved="false" />
+        <PreferenceScreen
             android:key="prefBtnUsername"
             android:title="@string/pref_title_change_username_button"
-            app:iconSpaceReserved="false"></PreferenceScreen>
+            app:iconSpaceReserved="false" />
         <PreferenceScreen
             android:key="prefBtnPassword"
             android:title="@string/pref_title_change_password_button"
-            app:iconSpaceReserved="false"></PreferenceScreen>
+            app:iconSpaceReserved="false" />
         <PreferenceScreen
             android:key="prefBtnDelete"
             android:title="@string/pref_title_delete_button"
-            app:iconSpaceReserved="false"></PreferenceScreen>
+            app:iconSpaceReserved="false" />
         <PreferenceScreen
             android:key="prefBtnLogout"
             android:title="@string/pref_title_logout_button"
-            app:iconSpaceReserved="false"></PreferenceScreen>
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </PreferenceScreen>
