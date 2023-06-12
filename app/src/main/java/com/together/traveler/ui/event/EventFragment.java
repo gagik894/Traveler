@@ -213,7 +213,7 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
             }
         });
         userCard.setOnClickListener(v -> {
-            NavDirections action = EventFragmentDirections.actionEventFragmentToUserFragment(eventViewModel.getData().getValue().getUser().get_id());
+            NavDirections action = EventFragmentDirections.actionEventFragmentToUserOtherFragment(eventViewModel.getData().getValue().getUser().get_id());
             NavHostFragment.findNavController(this).navigate(action);
         });
 
@@ -221,10 +221,8 @@ public class EventFragment extends Fragment implements TicketDialog.OnImageLoade
 
     private void requestCalendarAndSetEvent() {
         if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.WRITE_CALENDAR) && EasyPermissions.hasPermissions(requireContext(), Manifest.permission.READ_CALENDAR)) {
-            // Permission already granted
             alertSaveInCalendar();
         } else {
-            // Request permission
             requestMultiplePermissionsLauncher.launch(new String[]{Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR});
         }
     }

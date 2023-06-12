@@ -3,6 +3,7 @@ package com.together.traveler.ui.add.place.times;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,6 +93,7 @@ public class SelectTimesDialog extends DialogFragment {
             updateListener();
             this.dismiss();
         });
+
         for (int i = 0; i < 7; i++) {
             int index = i;
             openingTimesEt[i].setOnClickListener(v->{
@@ -100,8 +102,9 @@ public class SelectTimesDialog extends DialogFragment {
                             Date selectedTime = convertToTime(String.format("%s:%s", hourOfDay, minute));
                             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
                             String dateTimeString = dateFormat.format(selectedTime.getTime());
-                            if (openingTimes[index] != null){
-                                Date time = convertToTime(openingTimes[index]);
+                            if (closingTimes[index] != null && closingTimes[index].length() > 0){
+                                Date time = convertToTime(closingTimes[index]);
+                                Log.i("time", "onViewCreated: " + closingTimes[index] + " " + time);
                                 if (selectedTime.getTime() > time.getTime()) {
                                     Toast.makeText(requireContext(), R.string.end_must_be_after_start, Toast.LENGTH_SHORT).show();
                                 }else{
@@ -127,8 +130,9 @@ public class SelectTimesDialog extends DialogFragment {
                         Date selectedTime = convertToTime(String.format("%s:%s", hourOfDay, minute));
                             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
                             String dateTimeString = dateFormat.format(selectedTime.getTime());
-                            if (openingTimes[index] != null){
+                            if (openingTimes[index] != null && openingTimes[index].length()>0){
                                 Date time = convertToTime(openingTimes[index]);
+                                Log.i("time", "onViewCreated: " + openingTimes[index] + " " + time.toString());
                                 if (selectedTime.getTime() < time.getTime()) {
                                     Toast.makeText(requireContext(), R.string.end_must_be_after_start, Toast.LENGTH_SHORT).show();
                                 }else{
@@ -150,8 +154,8 @@ public class SelectTimesDialog extends DialogFragment {
             });
             closedChb[i].setOnCheckedChangeListener((v, isChecked) ->{
                 if (isChecked){
-                    openingTimes[index] = "0:0";
-                    closingTimes[index] = "0:0";
+                    openingTimes[index] = null;
+                    closingTimes[index] = null;
                     isClosed[index] = true;
                     openingTimesEt[index].setEnabled(false);
                     closingTimesEt[index].setEnabled(false);
@@ -165,19 +169,12 @@ public class SelectTimesDialog extends DialogFragment {
             });
         }
         alwaysOpenChb.setOnCheckedChangeListener((v, isChecked)->{
-            if (isChecked) {
                 for (int i = 0; i < 7; i++) {
-                    openingTimesEt[i].setEnabled(false);
-                    closingTimesEt[i].setEnabled(false);
-                    closedChb[i].setEnabled(false);
+                    boolean isClosed = closedChb[i].isChecked();
+                    openingTimesEt[i].setEnabled(!isChecked && !isClosed);
+                    closingTimesEt[i].setEnabled(!isChecked && !isClosed);
+                    closedChb[i].setEnabled(!isChecked);
                 }
-            }else{
-                for (int i = 0; i < 7; i++) {
-                    openingTimesEt[i].setEnabled(true);
-                    closingTimesEt[i].setEnabled(true);
-                    closedChb[i].setEnabled(true);
-                }
-            }
         });
     }
 

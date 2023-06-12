@@ -74,6 +74,10 @@
         <action
             android:id="@+id/action_eventFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_eventFragment_to_userOtherFragment"
+            app:destination="@id/userOtherFragment"
+            app:popUpTo="@id/userOtherFragment" />
     </fragment>
     <fragment
         android:id="@+id/addEvent"
@@ -116,5 +120,18 @@
         <argument
             android:name="cardData"
             app:argType="com.together.traveler.model.ParsedEvent" />
+    </fragment>
+    <fragment
+        android:id="@+id/userOtherFragment"
+        android:name="com.together.traveler.ui.main.user.UserOtherFragment"
+        android:label="UserOtherFragment" >
+        <action
+            android:id="@+id/action_userOtherFragment_to_eventFragment"
+            app:destination="@id/eventFragment"
+            app:enterAnim="@anim/expanding_animation"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+        <argument
+            android:name="userId"
+            app:argType="string" />
     </fragment>
 </navigation>
