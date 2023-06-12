@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -104,28 +103,28 @@ public class ParsedEvent extends Fragment {
 
         eventViewModel.getData().observe(getViewLifecycleOwner(), data -> {
 
-            Glide.with(requireContext()).load(data.getImg_url()).into(image);
+            Glide.with(requireContext()).load(data.getImage()).into(image);
             name.setText(data.getTitle());
             location.setText(data.getLocation());
             startDate.setText(String.format("From %s", data.getStartDate()));
             endDate.setText(String.format("To %s", data.getEndDate()));
-            category.setText(data.getGenre());
+            category.setText(data.getCategory());
             description.setText(data.getDescription());
+            mapCard.setVisibility(data.getLatitude()!=0.0d? View.VISIBLE: View.GONE);
 
-
-            if (data.getTags().size() > 0){
-                tags.setVisibility(View.VISIBLE);
-                chipGroup.removeAllViews();
-                for (int i = 0; i < data.getTags().size(); i++) {
-                    Chip chip = new Chip(requireContext());
-                    chip.setText(data.getTags().get(i));
-                    chip.setClickable(false);
-                    chip.setCheckable(false);
-                    chipGroup.addView(chip);
-                }
-            }else{
+//            if (data.getTags().size() > 0){
+//                tags.setVisibility(View.VISIBLE);
+//                chipGroup.removeAllViews();
+//                for (int i = 0; i < data.getTags().size(); i++) {
+//                    Chip chip = new Chip(requireContext());
+//                    chip.setText(data.getTags().get(i));
+//                    chip.setClickable(false);
+//                    chip.setCheckable(false);
+//                    chipGroup.addView(chip);
+//                }
+//            }else{
                 tags.setVisibility(View.GONE);
-            }
+//            }
 
             ViewTreeObserver vto = description.getViewTreeObserver();
             vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -142,7 +141,7 @@ public class ParsedEvent extends Fragment {
                 }
             });
 
-            bottomButton.setOnClickListener(v -> openUrl(data.getLink()));
+            bottomButton.setOnClickListener(v -> openUrl(data.getUrl()));
         });
 
 

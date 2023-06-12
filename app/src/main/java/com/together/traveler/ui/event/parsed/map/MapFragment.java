@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,6 @@ public class MapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMapBinding.inflate(inflater, container, false);
-
         return binding.getRoot();
     }
 
@@ -70,9 +70,10 @@ public class MapFragment extends Fragment {
 //        disableClickEvents(map);
 
 
-        if (eventViewModel.getData().getValue() != null && eventViewModel.getData().getValue().getGeoPoint()!=null) {
-            double longitude = eventViewModel.getData().getValue().getGeoPoint().getLongitude();
-            double latitude = eventViewModel.getData().getValue().getGeoPoint().getLatitude();
+        if (eventViewModel.getData().getValue() != null && eventViewModel.getData().getValue().getLatitude() != 0.0d) {
+            Log.i("asd", "onViewCreated: " + eventViewModel.getData().getValue().getLatitude());
+            double longitude = eventViewModel.getData().getValue().getLatitude();
+            double latitude = eventViewModel.getData().getValue().getLongitude();
             GeoPoint location = new GeoPoint(latitude, longitude);
             Marker marker = new Marker(map);
             marker.setPosition(location);

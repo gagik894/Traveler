@@ -100,10 +100,10 @@ public class WebScraping {
         }
         ParsedEvent eventInfo = new ParsedEvent();
         try {
-            eventInfo.setLink(link);
+            eventInfo.setUrl(link);
             eventInfo.setTitle(event.getElementById("eventName").text().replaceAll("/", " "));
             eventInfo.setDescription(event.getElementById("eventDesc").text());
-            eventInfo.setImg_url(event.getElementById("single_default").absUrl("href"));
+            eventInfo.setImage(event.getElementById("single_default").absUrl("href"));
             eventInfo.setLocation(event.getElementsByClass("occurrence_venue").get(0).text());
             eventInfo.setMore_images(new ArrayList<String>());
             eventInfo.setTags(new ArrayList<String>());
@@ -200,10 +200,10 @@ public class WebScraping {
         ParsedEvent eventInfo = new ParsedEvent();
 
         try {
-            eventInfo.setLink(link);
+            eventInfo.setUrl(link);
             eventInfo.setTitle(event.getElementsByClass("info__title title").get(0).text());
             String img_url = "https://tkt.am"+ event.getElementsByClass("event-image").attr("src");
-            eventInfo.setImg_url(img_url);
+            eventInfo.setImage(img_url);
             eventInfo.setMore_images(new ArrayList<String>(Collections.singleton(img_url)));
             String full_address = event.getElementsByClass("place__place-more").get(0).text();
             eventInfo.setGeoPoint(getLocationFromAddress(full_address, context));

@@ -5,6 +5,8 @@ import com.together.traveler.model.Event;
 import com.together.traveler.model.EventsResponse;
 import com.together.traveler.model.LoginResponse;
 import com.together.traveler.model.MapItem;
+import com.together.traveler.model.ParcedResponse;
+import com.together.traveler.model.ParsedEvent;
 import com.together.traveler.model.Place;
 import com.together.traveler.model.User;
 
@@ -29,6 +31,9 @@ import retrofit2.http.Query;
 public interface ApiService {
     @GET("events")
     Call<EventsResponse> getEvents(@Query("fields") String fields, @Query("location") String location);
+
+    @GET("parce")
+    Call<ParcedResponse> getParcedEvents(@Query("location") String location);
 
     @GET("{type}")
     Call<List<MapItem>> getMapItems(@Path("type") String type, @Query("fields") String fields);

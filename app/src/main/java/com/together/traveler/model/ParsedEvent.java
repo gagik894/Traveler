@@ -11,38 +11,40 @@ import java.util.Date;
 public class ParsedEvent implements Parcelable {
     private String title;
     private String location;
-    private String img_url;
+    private String image;
     private String description;
     private String duration;
-    private String genre;
+    private String category;
     private String min_age;
     private String username;
     private String userAvatar;
     private String startDate;
     private String endDate;
+    private double longitude;
+    private double latitude;
     private ArrayList<Integer> prices;
     private ArrayList<String> tags;
     private ArrayList<String> more_images;
     private ArrayList<Date> dates;
     private GeoPoint geoPoint;
-    private String link;
+    private String url;
 
     private boolean liked = false;
 
 
-    public ParsedEvent(String name, String location, String img_url, String description, String duration, String genre, String min_age, ArrayList<Integer> prices, ArrayList<String> tags, ArrayList<String> more_images, ArrayList<Date> dates, String link, GeoPoint geoPoint, String username, String userAvatar) {
+    public ParsedEvent(String name, String location, String image, String description, String duration, String category, String min_age, ArrayList<Integer> prices, ArrayList<String> tags, ArrayList<String> more_images, ArrayList<Date> dates, String link, GeoPoint geoPoint, String username, String userAvatar) {
         this.title = name;
         this.location = location;
-        this.img_url = img_url;
+        this.image = image;
         this.description = description;
         this.duration = duration;
-        this.genre = genre;
+        this.category = category;
         this.min_age = min_age;
         this.prices = prices;
         this.tags = tags;
         this.more_images = more_images;
         this.dates = dates;
-        this.link = link;
+        this.url = link;
         this.geoPoint = geoPoint;
         this.username = username;
         this.userAvatar = userAvatar;
@@ -76,12 +78,12 @@ public class ParsedEvent implements Parcelable {
         this.location = location;
     }
 
-    public String getImg_url() {
-        return img_url;
+    public String getImage() {
+        return image;
     }
 
-    public void setImg_url(String img_url) {
-        this.img_url = img_url;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public GeoPoint getGeoPoint() {
@@ -116,12 +118,12 @@ public class ParsedEvent implements Parcelable {
         this.min_age = min_age;
     }
 
-    public String getGenre() {
-        return genre;
+    public String getCategory() {
+        return category;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public ArrayList<String> getTags() {
@@ -157,12 +159,12 @@ public class ParsedEvent implements Parcelable {
         this.dates = dates;
     }
 
-    public String getLink() {
-        return link;
+    public String getUrl() {
+        return url;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getUsername() {
@@ -197,6 +199,22 @@ public class ParsedEvent implements Parcelable {
         this.endDate = endDate;
     }
 
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
 
     @Override
     public int describeContents() {
@@ -207,36 +225,40 @@ public class ParsedEvent implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.title);
         dest.writeString(this.location);
-        dest.writeString(this.img_url);
+        dest.writeString(this.image);
         dest.writeString(this.description);
         dest.writeString(this.duration);
-        dest.writeString(this.genre);
+        dest.writeString(this.category);
         dest.writeString(this.min_age);
         dest.writeString(this.username);
         dest.writeString(this.userAvatar);
         dest.writeString(this.startDate);
         dest.writeString(this.endDate);
+        dest.writeDouble(this.longitude);
+        dest.writeDouble(this.latitude);
         dest.writeList(this.prices);
         dest.writeStringList(this.tags);
         dest.writeStringList(this.more_images);
         dest.writeList(this.dates);
         dest.writeParcelable(this.geoPoint, flags);
-        dest.writeString(this.link);
+        dest.writeString(this.url);
         dest.writeByte(this.liked ? (byte) 1 : (byte) 0);
     }
 
     public void readFromParcel(Parcel source) {
         this.title = source.readString();
         this.location = source.readString();
-        this.img_url = source.readString();
+        this.image = source.readString();
         this.description = source.readString();
         this.duration = source.readString();
-        this.genre = source.readString();
+        this.category = source.readString();
         this.min_age = source.readString();
         this.username = source.readString();
         this.userAvatar = source.readString();
         this.startDate = source.readString();
         this.endDate = source.readString();
+        this.longitude = source.readDouble();
+        this.latitude = source.readDouble();
         this.prices = new ArrayList<Integer>();
         source.readList(this.prices, Integer.class.getClassLoader());
         this.tags = source.createStringArrayList();
@@ -244,22 +266,24 @@ public class ParsedEvent implements Parcelable {
         this.dates = new ArrayList<Date>();
         source.readList(this.dates, Date.class.getClassLoader());
         this.geoPoint = source.readParcelable(GeoPoint.class.getClassLoader());
-        this.link = source.readString();
+        this.url = source.readString();
         this.liked = source.readByte() != 0;
     }
 
     protected ParsedEvent(Parcel in) {
         this.title = in.readString();
         this.location = in.readString();
-        this.img_url = in.readString();
+        this.image = in.readString();
         this.description = in.readString();
         this.duration = in.readString();
-        this.genre = in.readString();
+        this.category = in.readString();
         this.min_age = in.readString();
         this.username = in.readString();
         this.userAvatar = in.readString();
         this.startDate = in.readString();
         this.endDate = in.readString();
+        this.longitude = in.readDouble();
+        this.latitude = in.readDouble();
         this.prices = new ArrayList<Integer>();
         in.readList(this.prices, Integer.class.getClassLoader());
         this.tags = in.createStringArrayList();
@@ -267,7 +291,7 @@ public class ParsedEvent implements Parcelable {
         this.dates = new ArrayList<Date>();
         in.readList(this.dates, Date.class.getClassLoader());
         this.geoPoint = in.readParcelable(GeoPoint.class.getClassLoader());
-        this.link = in.readString();
+        this.url = in.readString();
         this.liked = in.readByte() != 0;
     }
 

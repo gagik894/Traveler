@@ -161,7 +161,7 @@ public class ParsedEventCardsAdapter extends RecyclerView.Adapter<RecyclerView.V
             tvDate.setText(String.format("%s -", event.getStartDate()));
             tvTime.setText(event.getEndDate());
             tvUserUsername.setText(event.getUsername());
-            String imageUrl = event.getImg_url();
+            String imageUrl = event.getImage();
             String userImageUrl = event.getUserAvatar();
             Glide.with(ctx).load(imageUrl).into(ivImage);
             Glide.with(ctx).load(userImageUrl).into(ivUserImage);

@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.together.traveler.model.ParcedResponse;
 import com.together.traveler.model.ParsedEvent;
 import com.together.traveler.model.Event;
 import com.together.traveler.model.EventsResponse;
@@ -47,7 +48,7 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
     private CharSequence constraint;
     private final ApiService apiService;
     private final LocationProvider locationProvider;
-    private final WebScraping webScraping;
+//    private final WebScraping webScraping;
 
     public HomeViewModel() {
         constraint = "";
@@ -63,8 +64,8 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
         locationName = new MutableLiveData<>();
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         locationProvider = new LocationProvider(this);
-        webScraping = new WebScraping(HomeViewModel.this);
-        webScraping.startScraping();
+//        webScraping = new WebScraping(HomeViewModel.this);
+//        webScraping.startScraping();
         fetchCategories();
         getLocationByIP();
     }
@@ -82,6 +83,7 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
     public void setLocationName(String locationName){
         this.locationName.postValue(locationName);
         fetchEvents(locationName);
+        fetchParcedEvents(locationName);
     }
 
     public void addParsedEvents(ParsedEvent event){
@@ -135,7 +137,6 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
                     Log.d("UserViewModel", "onResponse: " + response.body());
                     EventsResponse eventsResponse = response.body();
                     List<Event> events = eventsResponse != null ? eventsResponse.getData() : null;
-
                     AsyncTask.execute(() -> {
                         HomeViewModel.this.filteredEvents.postValue((ArrayList<Event>) events);
                         HomeViewModel.this.allEvents.clear();
@@ -156,6 +157,32 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
         });
     }
 
+    private void fetchParcedEvents(String location) {
+        apiService.getParcedEvents(location).enqueue(new Callback<ParcedResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ParcedResponse> call, @NonNull Response<ParcedResponse> response) {
+                if (response.isSuccessful()) {
+                    Log.d("UserViewModel", "onResponse: " + response.body());
+                    ParcedResponse parcedResponse = response.body();
+                    List<ParsedEvent> events = parcedResponse.getData();
+                    allParsedEvents.clear();
+                    allParsedEvents.addAll(events);
+                    if (constraint == null || constraint.length() == 0){
+                        parsedEvents.postValue(allParsedEvents);
+                    }else{
+                        filterEventsByCategory();
+                    }
+                } else {
+                    Log.e(TAG, "fetchEvents request failed with code: " + response.code() + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ParcedResponse> call, @NonNull Throwable t) {
+                Log.e(TAG, "fetchEvents request failed with error: " + t.getMessage());
+            }
+        });
+    }
 
     private void fetchCategories(){
         apiService.getCategories("events").enqueue(new Callback<List<String>>() {

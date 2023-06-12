@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -117,7 +118,13 @@ public class AddPlaceViewModel extends ViewModel {
             return true;
         }
         return !Arrays.asList(current.getOpeningTimes()).contains(null)
-                && !Arrays.asList(current.getClosingTimes()).contains(null);
+                && !Arrays.asList(current.getClosingTimes()).contains(null)
+                || IntStream.range(0, current.getIsClosedDays().length)
+                .allMatch(i -> current.getIsClosedDays()[i] || current.getOpeningTimes()[i] != null)
+                && IntStream.range(0, current.getIsClosedDays().length)
+                .allMatch(i -> current.getIsClosedDays()[i] || current.getClosingTimes()[i] != null);
+
+
     }
     public boolean isUrlValid(Place current) {
         if (current.getUrl().trim().length() == 0){
