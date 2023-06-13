@@ -79,6 +79,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         super.onCreate(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(AddEventViewModel.class);
 
+        // Set up activity result launcher for image cropping
         imageCroppingActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -100,13 +101,14 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
                 }
         );
 
+        // Set up activity result launcher for requesting permissions
         requestPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
                 isGranted -> {
                     if (isGranted.containsValue(false)) {
-
+                        // Handle permission not granted
                     } else {
-
+                        // Handle permission granted
                     }
                 }
         );
@@ -117,6 +119,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.show();
@@ -124,6 +127,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         FragmentAddEventBinding binding = FragmentAddEventBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        // Inflate the layout for this fragment
         Button btnCreate = binding.addBtnCreate;
         Spinner spinner = binding.addTagSpinner;
         Button addTag = binding.addBtnAddTag;
@@ -140,6 +144,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
                 requireActivity(), android.R.layout.simple_spinner_item,
                 new ArrayList<>());
 
+        // Set up adapter for spinner
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner.setAdapter(adapter);
 
@@ -151,6 +156,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         ticketsCount.addTextChangedListener(afterTextChangedListener);
         newTag.addTextChangedListener(tagsTextWatcher);
 
+        // Set click listeners for specific views
         location.setOnClickListener(this::showPopupView);
         startDateAndTime.setOnClickListener(v -> showDatePicker(true));
         endDateAndTime.setOnClickListener(v ->{
@@ -184,6 +190,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
             }
         });
 
+        // Observe LiveData and update UI accordingly
         mViewModel.getData().observe(getViewLifecycleOwner(), data -> {
             eventImage.setImageBitmap(data.getImageBitmap());
             chipGroup.removeAllViews();
@@ -238,7 +245,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         return root;
     }
 
-
+    // Implement other methods and listeners
     @Override
     public void onDialogResult(String result, GeoPoint geoPoint) {
         Log.i(TAG, "onDialogResult: " + geoPoint.getLongitude());
@@ -350,6 +357,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
         return date;
     }
 
+    // TextWatcher to listen for changes in input fields
     private final TextWatcher afterTextChangedListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -366,6 +374,7 @@ public class AddEvent extends Fragment implements MapDialog.MyDialogListener {
             mViewModel.dataChanged(title.getText().toString(), location.getText().toString(), description.getText().toString(), Integer.parseInt(String.valueOf(ticketsCount.getText()).equals("") ? String.valueOf(0) : String.valueOf(ticketsCount.getText())));
         }
     };
+    // TextWatcher to listen for changes in the newTag input field
     private final TextWatcher tagsTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {

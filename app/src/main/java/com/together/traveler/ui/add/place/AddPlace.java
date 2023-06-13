@@ -68,6 +68,7 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
         super.onCreate(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(AddPlaceViewModel.class);
 
+        // Register the activity result launcher for image cropping
         imageCroppingActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -79,6 +80,7 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
                         }
                         if (croppedImageUri != null) {
                             try {
+                                // Get the cropped image bitmap and set it in the view model
                                 Bitmap croppedImageBitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), croppedImageUri);
                                 mViewModel.setEventImage(croppedImageBitmap);
                             } catch (IOException e) {
@@ -89,27 +91,30 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
                 }
         );
 
+        // Register the activity result launcher for requesting permissions
         requestPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
                 isGranted -> {
                     if (isGranted.containsValue(false)) {
-
+                        // Handle the case when permissions are not granted
                     } else {
-
+                        // Handle the case when permissions are granted
                     }
                 }
         );
-
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        // Show the action bar if it exists
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.show();
         }
+
+        // Inflate the layout and get references to the views
         FragmentAddPlaceBinding binding = FragmentAddPlaceBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -123,6 +128,7 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
         url = binding.addPlaceEtUrl;
         times = binding.addPlaceEtTimes;
 
+        // Create and set up the adapter for the spinner
         adapter = new ArrayAdapter<>(
                 requireActivity(), android.R.layout.simple_spinner_item,
                 new ArrayList<>());
@@ -130,6 +136,7 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner.setAdapter(adapter);
 
+        // Set up text change listeners for the input fields
         name.addTextChangedListener(afterTextChangedListener);
         location.addTextChangedListener(afterTextChangedListener);
         description.addTextChangedListener(afterTextChangedListener);
@@ -151,15 +158,19 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
             }
         });
 
+        // Set click listeners for location, event image, and times
         location.setOnClickListener(this::showPopupView);
         eventImage.setOnClickListener(v -> selectImage());
         times.setOnClickListener(this::showTimesPopupView);
 
+        // Set click listener for the create button
         btnCreate.setOnClickListener(v -> {
             mViewModel.create();
             Intent switchActivityIntent = new Intent(requireActivity(), MainActivity.class);
             startActivity(switchActivityIntent);
         });
+
+        // Set item selection listener for the spinner
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -173,6 +184,7 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
             }
         });
 
+        // Observe the data in the view model and update the UI accordingly
         mViewModel.getData().observe(getViewLifecycleOwner(), data -> eventImage.setImageBitmap(data.getImageBitmap()));
         mViewModel.isValid().observe(getViewLifecycleOwner(), btnCreate::setEnabled);
         mViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
@@ -254,6 +266,8 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
         popupFragment.setListener(this);
         popupFragment.show(getChildFragmentManager(), "popup_times");
     }
+
+    // TextWatcher for input fields
     private final TextWatcher afterTextChangedListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -271,6 +285,7 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
         }
     };
 
+    // Callback method for location selection dialog
     @Override
     public void onDialogResult(String result, GeoPoint geoPoint) {
         Log.i(TAG, "onDialogResult: " + geoPoint.getLongitude());
@@ -278,6 +293,7 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
         mViewModel.setEventLocation(geoPoint.getLatitude(), geoPoint.getLongitude());
     }
 
+    // Callback method for times selection dialog
     @Override
     public void onDialogResult(String[] openingTimes, String[] closingTimes, boolean[] isClosed, boolean isAlwaysOpen) {
         Log.i(TAG, "onDialogResult: " + Arrays.toString(openingTimes));
@@ -298,3 +314,4 @@ public class AddPlace extends Fragment implements SelectTimesDialog.MyDialogList
         }
     }
 }
+

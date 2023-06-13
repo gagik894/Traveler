@@ -27,19 +27,30 @@ import java.util.Objects;
 
 public class SelectTimesDialog extends DialogFragment {
 
+    // Binding for the dialog layout
     private DialogSelectTimesBinding binding;
+    // Listener to communicate with the parent activity/fragment
     private SelectTimesDialog.MyDialogListener listener;
+    // EditText fields for opening times
     private final EditText[] openingTimesEt = new EditText[7];
+    // EditText fields for closing times
     private final EditText[] closingTimesEt = new EditText[7];
+    // CheckBoxes for closed days
     private final CheckBox[] closedChb = new CheckBox[7];
 
+    // Array to store opening times
     private final String[] openingTimes = new String[7];
+    // Array to store closing times
     private final String[] closingTimes = new String[7];
+    // Array to store closed days
     private final boolean[] isClosed = new boolean[7];
 
+    // CheckBox for always open option
     private CheckBox alwaysOpenChb;
 
+    // Variable to store the selected hour
     private int hour;
+    // Variable to store the selected minute
     private int minute;
 
     @Override
@@ -56,6 +67,7 @@ public class SelectTimesDialog extends DialogFragment {
         return binding.getRoot();
     }
 
+    // Loop through the days of the week
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -88,78 +100,96 @@ public class SelectTimesDialog extends DialogFragment {
         final Button cancelBtn = binding.timesBtnCancel;
         final Button okBtn = binding.timesBtnOk;
 
-        cancelBtn.setOnClickListener(v->this.dismiss());
-        okBtn.setOnClickListener(v->{
+        // Click listener for the cancel button
+        cancelBtn.setOnClickListener(v -> this.dismiss());
+        // Click listener for the OK button
+        okBtn.setOnClickListener(v -> {
             updateListener();
             this.dismiss();
         });
 
+        // Loop through the days of the week
         for (int i = 0; i < 7; i++) {
             int index = i;
-            openingTimesEt[i].setOnClickListener(v->{
+            openingTimesEt[i].setOnClickListener(v -> {
+                // Click listener for opening times EditText
                 TimePickerDialog timePickerDialog = new TimePickerDialog(ctx,
                         (view1, hourOfDay, minute) -> {
+                            // Convert selected time to Date object
                             Date selectedTime = convertToTime(String.format("%s:%s", hourOfDay, minute));
+                            // Format the Date object to a time string
                             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
                             String dateTimeString = dateFormat.format(selectedTime.getTime());
-                            if (closingTimes[index] != null && closingTimes[index].length() > 0){
+                            if (closingTimes[index] != null && closingTimes[index].length() > 0) {
+                                // Check if the selected opening time is after the corresponding closing time
                                 Date time = convertToTime(closingTimes[index]);
                                 Log.i("time", "onViewCreated: " + closingTimes[index] + " " + time);
                                 if (selectedTime.getTime() > time.getTime()) {
                                     Toast.makeText(requireContext(), R.string.end_must_be_after_start, Toast.LENGTH_SHORT).show();
-                                }else{
+                                } else {
+                                    // Update the opening time and EditText
                                     openingTimes[index] = dateTimeString;
                                     openingTimesEt[index].setText(dateTimeString);
-                                    if (index == 0 && allNullExceptFirst(true)){
+                                    // If it's the first day (index 0) and all other opening times are null, set all opening times
+                                    if (index == 0 && allNullExceptFirst(true)) {
                                         setAllTimes(true);
                                     }
                                 }
-                            }else{
+                            } else {
+                                // Update the opening time and EditText
                                 openingTimes[index] = dateTimeString;
                                 openingTimesEt[index].setText(dateTimeString);
-                                if (index == 0 && allNullExceptFirst(true)){
+                                // If it's the first day (index 0) and all other opening times are null, set all opening times
+                                if (index == 0 && allNullExceptFirst(true)) {
                                     setAllTimes(true);
                                 }
                             }
                         }, hour, minute, true);
                 timePickerDialog.show();
             });
-            closingTimesEt[i].setOnClickListener(v->{
+            // Click listener for closing times EditText
+            closingTimesEt[i].setOnClickListener(v -> {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(ctx,
                         (view1, hourOfDay, minute) -> {
-                        Date selectedTime = convertToTime(String.format("%s:%s", hourOfDay, minute));
+                            // Convert selected time to Date object
+                            Date selectedTime = convertToTime(String.format("%s:%s", hourOfDay, minute));
+                            // Format the Date object to a time string
                             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
                             String dateTimeString = dateFormat.format(selectedTime.getTime());
-                            if (openingTimes[index] != null && openingTimes[index].length()>0){
+                            if (openingTimes[index] != null && openingTimes[index].length() > 0) {
+                                // Check if the selected closing time is before the corresponding opening time
                                 Date time = convertToTime(openingTimes[index]);
                                 Log.i("time", "onViewCreated: " + openingTimes[index] + " " + time.toString());
                                 if (selectedTime.getTime() < time.getTime()) {
                                     Toast.makeText(requireContext(), R.string.end_must_be_after_start, Toast.LENGTH_SHORT).show();
-                                }else{
+                                } else {
+                                    // Update the closing time and EditText
                                     closingTimes[index] = dateTimeString;
                                     closingTimesEt[index].setText(dateTimeString);
-                                    if (index == 0 && allNullExceptFirst(false)){
+                                    if (index == 0 && allNullExceptFirst(false)) {
                                         setAllTimes(false);
                                     }
                                 }
-                            }else{
+                            } else {
+                                // Update the closing time and EditText
                                 closingTimes[index] = dateTimeString;
                                 closingTimesEt[index].setText(dateTimeString);
-                                if (index == 0 && allNullExceptFirst(false)){
+                                if (index == 0 && allNullExceptFirst(false)) {
                                     setAllTimes(false);
                                 }
                             }
                         }, hour, minute, true);
                 timePickerDialog.show();
             });
-            closedChb[i].setOnCheckedChangeListener((v, isChecked) ->{
-                if (isChecked){
+            // Click listener for closed days CheckBox
+            closedChb[i].setOnCheckedChangeListener((v, isChecked) -> {
+                if (isChecked) {
                     openingTimes[index] = null;
                     closingTimes[index] = null;
                     isClosed[index] = true;
                     openingTimesEt[index].setEnabled(false);
                     closingTimesEt[index].setEnabled(false);
-                }else{
+                } else {
                     isClosed[index] = false;
                     openingTimes[index] = String.valueOf(openingTimesEt[index].getText());
                     closingTimes[index] = String.valueOf(closingTimesEt[index].getText());
@@ -168,13 +198,14 @@ public class SelectTimesDialog extends DialogFragment {
                 }
             });
         }
-        alwaysOpenChb.setOnCheckedChangeListener((v, isChecked)->{
-                for (int i = 0; i < 7; i++) {
-                    boolean isClosed = closedChb[i].isChecked();
-                    openingTimesEt[i].setEnabled(!isChecked && !isClosed);
-                    closingTimesEt[i].setEnabled(!isChecked && !isClosed);
-                    closedChb[i].setEnabled(!isChecked);
-                }
+        // Click listener for always open CheckBox
+        alwaysOpenChb.setOnCheckedChangeListener((v, isChecked) -> {
+            for (int i = 0; i < 7; i++) {
+                boolean isClosed = closedChb[i].isChecked();
+                openingTimesEt[i].setEnabled(!isChecked && !isClosed);
+                closingTimesEt[i].setEnabled(!isChecked && !isClosed);
+                closedChb[i].setEnabled(!isChecked);
+            }
         });
     }
 
@@ -197,10 +228,11 @@ public class SelectTimesDialog extends DialogFragment {
         this.listener = listener;
     }
 
-    private void updateListener(){
+    private void updateListener() {
         listener.onDialogResult(openingTimes, closingTimes, isClosed, alwaysOpenChb.isChecked());
     }
 
+    // Method to check if all opening/closing times are null except the first day
     private boolean allNullExceptFirst(boolean opening) {
         boolean allNullExceptFirst = true;
         for (int i = 1; i < 7; i++) {
@@ -209,22 +241,24 @@ public class SelectTimesDialog extends DialogFragment {
                 break;
             }
         }
-        return  allNullExceptFirst;
+        return allNullExceptFirst;
     }
 
+    // Method to set all opening/closing times based on the first day's time
     private void setAllTimes(boolean opening) {
         for (int i = 1; i < 7; i++) {
-            if (opening){
+            if (opening) {
                 openingTimes[i] = openingTimes[0];
                 openingTimesEt[i].setText(openingTimes[i]);
-            }else{
+            } else {
                 closingTimes[i] = closingTimes[0];
                 closingTimesEt[i].setText(closingTimes[i]);
             }
         }
     }
 
-    private Date convertToTime(String TimeString){
+    // Method to convert time string to Date object
+    private Date convertToTime(String TimeString) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
         Date date = null;
         try {

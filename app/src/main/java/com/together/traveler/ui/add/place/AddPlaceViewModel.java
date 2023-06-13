@@ -37,11 +37,11 @@ import retrofit2.Response;
 
 public class AddPlaceViewModel extends ViewModel {
     private final String TAG = "AddPlaceViewModel";
-    private final MutableLiveData<AddPlaceFormState> formState;
-    private final MutableLiveData<Place> data;
-    private final MutableLiveData<ArrayList<String>> categories;
-    private final MutableLiveData<Boolean> isValid;
-    private final ApiService apiService;
+    private final MutableLiveData<AddPlaceFormState> formState; // Form validation state
+    private final MutableLiveData<Place> data; // Place data
+    private final MutableLiveData<ArrayList<String>> categories; // Available categories
+    private final MutableLiveData<Boolean> isValid; // Flag indicating if the form is valid
+    private final ApiService apiService; // API service for category fetching
 
     public AddPlaceViewModel() {
         formState = new MutableLiveData<>();
@@ -50,10 +50,10 @@ public class AddPlaceViewModel extends ViewModel {
         isValid = new MutableLiveData<>(false);
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         this.data.setValue(new Place());
-        fetchCategories();
+        fetchCategories(); // Fetch available categories
     }
 
-
+    // Update the form state and check if the form is valid
     public void dataChanged(String name, String location, String description, String phone, String url) {
         Place current = data.getValue();
         Objects.requireNonNull(current).setName(name);
@@ -64,6 +64,7 @@ public class AddPlaceViewModel extends ViewModel {
         checkValid(current);
     }
 
+    // Update the form state and check if the form is valid
     public void setEventImage(Bitmap image) {
         Place current = data.getValue();
         Objects.requireNonNull(current).setImageBitmap(image);
@@ -71,6 +72,7 @@ public class AddPlaceViewModel extends ViewModel {
         checkValid(current);
     }
 
+    // Set the event open times
     public void setEventOpenTimes(String[] openingTimes, String[] closingTimes, boolean[] isClosed, boolean isAlwaysOpen) {
         Place current = data.getValue();
         Objects.requireNonNull(current).setAlwaysOpen(isAlwaysOpen);
@@ -81,6 +83,7 @@ public class AddPlaceViewModel extends ViewModel {
         checkValid(current);
     }
 
+    // Set the event location
     public void setEventLocation(double latitude, double longitude) {
         Place current = data.getValue();
         Objects.requireNonNull(current).setLongitude(longitude);
@@ -89,6 +92,7 @@ public class AddPlaceViewModel extends ViewModel {
         checkValid(current);
     }
 
+    // Set the event category
     public void setEventCategory(String eventCategory) {
         Log.i(TAG, "setEventCategory: " + eventCategory);
         Place current = data.getValue();
@@ -113,6 +117,7 @@ public class AddPlaceViewModel extends ViewModel {
         return formState;
     }
 
+    // Check if the opening times are valid
     public boolean areOpenTimesValid(Place current) {
         if (current.isAlwaysOpen()){
             return true;
@@ -126,6 +131,8 @@ public class AddPlaceViewModel extends ViewModel {
 
 
     }
+
+    // Check if the URL is valid
     public boolean isUrlValid(Place current) {
         if (current.getUrl().trim().length() == 0){
             return true;
@@ -133,6 +140,7 @@ public class AddPlaceViewModel extends ViewModel {
         return current.getUrl().contains(".");
     }
 
+    // Check if the phone number is valid
     public boolean isPhoneValid(Place current) {
         if (current.getPhone().length() == 0){
             return true;
@@ -146,6 +154,7 @@ public class AddPlaceViewModel extends ViewModel {
         }
     }
 
+    // Check the overall validity of the form
     private void checkValid(Place current) {
         if (current.getName().trim().length() == 0){
             formState.setValue(new AddPlaceFormState(R.string.invalid_name,null,null,null,null,null,null ));
@@ -166,6 +175,7 @@ public class AddPlaceViewModel extends ViewModel {
         }
     }
 
+    // Save the bitmap to a file
     private File saveBitmapToFile(Bitmap bitmap) {
         Context context = AppContext.getContext();
         File file = new File(context.getCacheDir(), "image.jpg");
@@ -180,6 +190,7 @@ public class AddPlaceViewModel extends ViewModel {
         return file;
     }
 
+    // Fetch the available categories from the API
     private void fetchCategories() {
         apiService.getCategories("places").enqueue(new Callback<List<String>>() {
             @Override
@@ -197,6 +208,7 @@ public class AddPlaceViewModel extends ViewModel {
         });
     }
 
+    // Create a new place
     public void create() {
         Place event = data.getValue();
         if (event == null) {

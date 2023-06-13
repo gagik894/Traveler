@@ -32,6 +32,8 @@ import retrofit2.Response;
 
 public class AddEventViewModel extends ViewModel {
     private final String TAG = "AddEventViewModel";
+
+    // MutableLiveData to hold the form state, event data, categories, and tag validity
     private final MutableLiveData<AddEventFormState> formState;
     private final MutableLiveData<Event> data;
     private final MutableLiveData<ArrayList<String>> categories;
@@ -39,44 +41,53 @@ public class AddEventViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isValid;
     private final ApiService apiService;
 
-
     public AddEventViewModel() {
+        // Initialize the MutableLiveData objects
         formState = new MutableLiveData<>();
         data = new MutableLiveData<>();
         categories = new MutableLiveData<>(new ArrayList<>());
         isValid = new MutableLiveData<>(false);
         isTagValid = new MutableLiveData<>(false);
+
+        // Create an instance of the ApiService using the ApiClient
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
+
+        // Set initial values for the event data and fetch categories
         this.data.setValue(new Event());
         fetchCategories();
     }
 
-
-    public void dataChanged(String tittle, String location, String description, int count) {
+    // Method to handle changes in the input fields and update the form state
+    public void dataChanged(String title, String location, String description, int count) {
         Event current = data.getValue();
-        Objects.requireNonNull(current).setTitle(tittle);
+        Objects.requireNonNull(current).setTitle(title);
         Objects.requireNonNull(current).setLocation(location);
         Objects.requireNonNull(current).setDescription(description);
         Objects.requireNonNull(current).setTicketsCount(count);
         checkValid(current);
     }
 
+    // Method to set the start date and time of the event
     public void setStartDateAndTime(String dateTimeString) {
         Objects.requireNonNull(data.getValue()).setStartDate(dateTimeString);
         this.data.setValue(data.getValue());
     }
 
+    // Method to set the end date and time of the event
     public void setEndDateAndTime(String dateTimeString) {
         Objects.requireNonNull(data.getValue()).setEndDate(dateTimeString);
         this.data.setValue(data.getValue());
     }
 
+    // Method to set the event image
     public void setEventImage(Bitmap image) {
         Event current = data.getValue();
         Objects.requireNonNull(current).setImageBitmap(image);
         this.data.setValue(current);
         checkValid(current);
     }
+
+    // Method to set the event location
     public void setEventLocation(double latitude, double longitude) {
         Event current = data.getValue();
         Objects.requireNonNull(current).setLongitude(longitude);
@@ -84,6 +95,8 @@ public class AddEventViewModel extends ViewModel {
         this.data.setValue(current);
         checkValid(current);
     }
+
+    // Method to set the event category
     public void setEventCategory(String eventCategory) {
         Log.i(TAG, "setEventCategory: " + eventCategory);
         Event current = data.getValue();
@@ -91,13 +104,17 @@ public class AddEventViewModel extends ViewModel {
         this.data.setValue(current);
         checkValid(current);
     }
+
+    // Method to check the validity of the tag
     public void checkTag(String tag) {
-        if (tag.trim().length()>0) {
+        if (tag.trim().length() > 0) {
             isTagValid.setValue(true);
-        }else{
+        } else {
             isTagValid.setValue(false);
         }
     }
+
+    // Method to create the event
     public void create() {
         Event event = data.getValue();
         if (event == null) {
@@ -105,11 +122,14 @@ public class AddEventViewModel extends ViewModel {
             return;
         }
 
+        // Save the event image to a file
         File file = saveBitmapToFile(event.getImageBitmap());
         if (!file.exists()) {
             // Handle error, file does not exist
             return;
         }
+
+        // Create the multipart request body parts for the event data
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         RequestBody requestBodyTitle = RequestBody.create(MediaType.parse("text/plain"), event.getTitle());
@@ -125,6 +145,7 @@ public class AddEventViewModel extends ViewModel {
 
         List<MultipartBody.Part> tagParts = new ArrayList<>();
 
+        // Create multipart request body parts for each tag
         for (String tag : tags) {
             RequestBody tagBody = RequestBody.create(MediaType.parse("text/plain"), tag);
             MultipartBody.Part tagPart = MultipartBody.Part.createFormData("tags[]", tag);
@@ -136,6 +157,7 @@ public class AddEventViewModel extends ViewModel {
             return;
         }
 
+        // Make the API call to upload the event file and data
         Call<ResponseBody> call = apiService.uploadEventFile(
                 body,
                 requestBodyTitle,
@@ -167,6 +189,7 @@ public class AddEventViewModel extends ViewModel {
         });
     }
 
+    // Getter methods for the MutableLiveData objects
     public MutableLiveData<ArrayList<String>> getCategories() {
         return categories;
     }
@@ -195,6 +218,7 @@ public class AddEventViewModel extends ViewModel {
         return Objects.requireNonNull(this.data.getValue()).getEndDate();
     }
 
+    // Method to add a new tag
     public void addTag(String tag) {
         ArrayList<String> currentTags = (ArrayList<String>) Objects.requireNonNull(data.getValue()).getTags();
         if (currentTags != null) {
@@ -205,6 +229,7 @@ public class AddEventViewModel extends ViewModel {
         this.data.setValue(this.data.getValue());
     }
 
+    // Method to delete a tag
     public void deleteTag(String tag){
         ArrayList<String> currentTags = (ArrayList<String>) Objects.requireNonNull(data.getValue()).getTags();
         if (currentTags != null) {
@@ -215,6 +240,7 @@ public class AddEventViewModel extends ViewModel {
         this.data.setValue(this.data.getValue());
     }
 
+    // Method to check the validity of the event data
     private void checkValid(Event current) {
         if (current.getTitle().trim().length() <= 5){
             formState.setValue(new AddEventFormState(R.string.invalid_title,null,null,null,null,null,null ));
@@ -235,6 +261,7 @@ public class AddEventViewModel extends ViewModel {
         }
     }
 
+    // Method to save a bitmap to a file
     private File saveBitmapToFile(Bitmap bitmap) {
         Context context = AppContext.getContext();
         File file = new File(context.getCacheDir(), "image.jpg");
@@ -249,6 +276,7 @@ public class AddEventViewModel extends ViewModel {
         return file;
     }
 
+    // Method to fetch categories from the API
     private void fetchCategories(){
         apiService.getCategories("events").enqueue(new Callback<List<String>>() {
             @Override
