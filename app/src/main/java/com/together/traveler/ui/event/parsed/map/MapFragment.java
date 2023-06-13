@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.together.traveler.R;
 import com.together.traveler.databinding.FragmentMapBinding;
-import com.together.traveler.ui.event.EventViewModel;
 import com.together.traveler.ui.event.parsed.ParsedEventViewModel;
 
 import org.osmdroid.api.IMapController;
@@ -63,11 +62,11 @@ public class MapFragment extends Fragment {
 
         onCenterButton.setVisibility(View.GONE);
         locationSearch.setVisibility(View.GONE);
-//        map.setClickable(false);
-//        map.setFocusable(false);
-//        map.setFocusableInTouchMode(false);
-//        map.setOnTouchListener((v, event) -> true);
-//        disableClickEvents(map);
+        map.setClickable(false);
+        map.setFocusable(false);
+        map.setFocusableInTouchMode(false);
+        map.setOnTouchListener((v, event) -> true);
+        disableClickEvents(map);
 
 
         if (eventViewModel.getData().getValue() != null && eventViewModel.getData().getValue().getLatitude() != 0.0d) {

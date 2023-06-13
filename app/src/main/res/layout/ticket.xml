@@ -51,7 +51,6 @@
             android:layout_marginTop="-20dp"
             android:nestedScrollingEnabled="true"
             android:visibility="visible"
-            app:cardBackgroundColor="#FAFFFFFF"
             app:cardElevation="0dp"
             app:cardPreventCornerOverlap="true"
             app:layout_constraintBottom_toBottomOf="parent"

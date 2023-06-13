@@ -81,12 +81,12 @@ class AdminViewModel : ViewModel() {
 
     fun deleteCategory(name:String, type: String){
         if (type == "event"){
-            fetchDeleteCategories("events", name);
+            fetchDeleteCategories("events", name)
             val updatedList = _eventCategories.value?.filter { it != name }
             _eventCategories.value = updatedList
 //            deletedEventCategories.add(name)
         }else{
-            fetchDeleteCategories("places", name);
+            fetchDeleteCategories("places", name)
             val updatedList = _placeCategories.value?.filter { it != name }
             _placeCategories.value = updatedList
 //            deletedPlaceCategories.add(name)
@@ -137,7 +137,7 @@ class AdminViewModel : ViewModel() {
             e.printStackTrace()
         }
 
-        val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
+        val requestBody = json.toString().toRequestBody("application/json".toMediaTypeOrNull())
         Log.i(TAG, "verifyPlace: ")
         apiService.verifyAdminPlace(place._id, requestBody).enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {

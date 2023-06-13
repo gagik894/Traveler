@@ -17,11 +17,11 @@ public class User implements Parcelable {
     private String password;
     private String FCMToken;
     private float rating;
-    private Map<String, ArrayList<Event>> enrolledEvents = new HashMap<>();;
-    private Map<String, ArrayList<Event>> favoriteEvents = new HashMap<>();;
-    private Map<String, ArrayList<Event>> userEvents = new HashMap<>();;
+    private Map<String, ArrayList<Event>> enrolledEvents = new HashMap<>();
+    private Map<String, ArrayList<Event>> favoriteEvents = new HashMap<>();
+    private Map<String, ArrayList<Event>> userEvents = new HashMap<>();
 
-//    private ArrayList<Event> upcomingEvents = null;
+    //    private ArrayList<Event> upcomingEvents = null;
 //    private ArrayList<Event> savedEvents = null;
 //    private ArrayList<Event> userEvents = null;
     private boolean admin = false;

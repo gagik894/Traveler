@@ -116,7 +116,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardView5"
-            style="@style/CustomCardViewStyle.Light"
+            style="@style/UserBackground"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="170dp"
@@ -167,7 +167,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/event_past"
-                        android:textColor="@android:color/secondary_text_light"
+                        android:textColor="?android:textColorPrimary"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -213,7 +213,6 @@
 
                         <Button
                             android:id="@+id/userBtnTickets"
-                            style="?android:attr/buttonBarButtonStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -233,7 +232,7 @@
                             android:background="#00FFFFFF"
                             android:gravity="center"
                             android:text="@string/user_saved"
-                            android:textColor="@android:color/secondary_text_light"
+                            android:textColor="?android:textColorPrimary"
                             android:textSize="14sp" />
 
                         <Button
@@ -245,7 +244,7 @@
                             android:background="#00FFFFFF"
                             android:gravity="center"
                             android:text="@string/user_my_events"
-                            android:textColor="@android:color/secondary_text_light"
+                            android:textColor="?android:textColorPrimary"
                             android:textSize="14sp" />
 
                     </LinearLayout>

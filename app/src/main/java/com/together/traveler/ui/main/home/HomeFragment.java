@@ -32,14 +32,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.together.traveler.R;
-import com.together.traveler.adapter.EventCardsAdapter;
 import com.together.traveler.adapter.ParsedEventCardsAdapter;
 import com.together.traveler.databinding.FragmentHomeBinding;
-import com.together.traveler.model.ParsedEvent;
 import com.together.traveler.model.Event;
+import com.together.traveler.model.ParsedEvent;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
@@ -159,12 +157,8 @@ public class HomeFragment extends Fragment{
             parsedEventList.clear();
             parsedEventList.addAll(newEvents);
             parsedEventDiffResult.dispatchUpdatesTo(parsedEventCardsAdapter);
+            rvCards.smoothScrollToPosition(0);
         });
-
-
-
-
-
 
         homeViewModel.getCategoriesVisibility().observe(getViewLifecycleOwner(), visible->{
             chipGroup.setVisibility(visible? View.VISIBLE: View.GONE);
@@ -252,10 +246,10 @@ public class HomeFragment extends Fragment{
 
 
 class CombinedDiffCallback extends DiffUtil.Callback {
-    private List<Event> oldEvents;
-    private List<Event> newEvents;
-    private List<ParsedEvent> oldParsedEvents;
-    private List<ParsedEvent> newParsedEvents;
+    private final List<Event> oldEvents;
+    private final List<Event> newEvents;
+    private final List<ParsedEvent> oldParsedEvents;
+    private final List<ParsedEvent> newParsedEvents;
 
     public CombinedDiffCallback(List<Event> oldEvents, List<Event> newEvents, List<ParsedEvent> oldParsedEvents, List<ParsedEvent> newParsedEvents) {
         this.oldEvents = oldEvents;

@@ -8,13 +8,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.together.traveler.model.ParcedResponse;
-import com.together.traveler.model.ParsedEvent;
 import com.together.traveler.model.Event;
 import com.together.traveler.model.EventsResponse;
+import com.together.traveler.model.ParcedResponse;
+import com.together.traveler.model.ParsedEvent;
 import com.together.traveler.retrofit.ApiClient;
 import com.together.traveler.retrofit.ApiService;
-import com.together.traveler.webScraping.WebScraping;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,8 +47,6 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
     private CharSequence constraint;
     private final ApiService apiService;
     private final LocationProvider locationProvider;
-//    private final WebScraping webScraping;
-
     public HomeViewModel() {
         constraint = "";
         allEvents = new ArrayList<>();
@@ -64,8 +61,6 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
         locationName = new MutableLiveData<>();
         apiService = ApiClient.getRetrofitInstance().create(ApiService.class);
         locationProvider = new LocationProvider(this);
-//        webScraping = new WebScraping(HomeViewModel.this);
-//        webScraping.startScraping();
         fetchCategories();
         getLocationByIP();
     }
@@ -85,16 +80,6 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
         fetchEvents(locationName);
         fetchParcedEvents(locationName);
     }
-
-    public void addParsedEvents(ParsedEvent event){
-        allParsedEvents.add(event);
-        if (constraint == null || constraint.length() == 0){
-            parsedEvents.postValue(allParsedEvents);
-        }else{
-            filterEventsByCategory();
-        }
-    }
-
 
     public LiveData<ArrayList<Event>> getAllEvents() {
         return filteredEvents;

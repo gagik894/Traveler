@@ -24,10 +24,10 @@ public class ParsedEventCardsAdapter extends RecyclerView.Adapter<RecyclerView.V
     private static final int VIEW_TYPE_PARSED = 1;
     private static final int VIEW_TYPE_DIVIDER = 2;
 
-    private List<Event> events;
-    private List<ParsedEvent> parsedEvents;
-    private OnItemClickListener onItemClickListener;
-    private OnParsedItemClickListener onParsedItemClickListener;
+    private final List<Event> events;
+    private final List<ParsedEvent> parsedEvents;
+    private final OnItemClickListener onItemClickListener;
+    private final OnParsedItemClickListener onParsedItemClickListener;
     private Context context;
 
     public ParsedEventCardsAdapter(List<Event> events, List<ParsedEvent> parsedEvents, OnItemClickListener itemClickListener, OnParsedItemClickListener parsedItemClickListener) {

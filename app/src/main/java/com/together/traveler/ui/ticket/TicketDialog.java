@@ -31,7 +31,7 @@ import com.together.traveler.model.Event;
 public class TicketDialog extends Dialog {
     private final Event data;
     private OnImageLoadedListener listener;
-    private Context context;
+    private final Context context;
 
     public interface OnImageLoadedListener {
         void onImageLoaded();
