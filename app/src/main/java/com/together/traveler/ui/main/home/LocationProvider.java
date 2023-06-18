@@ -10,7 +10,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Looper;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
@@ -20,8 +20,6 @@ import com.together.traveler.context.AppContext;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class LocationProvider {
     private final String TAG = "LocationProvider";
@@ -35,29 +33,28 @@ public class LocationProvider {
     }
 
     public void getLastKnownLocation() {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        Executor executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            Looper.prepare();
-            Criteria criteria = new Criteria();
-            criteria.setAccuracy(Criteria.ACCURACY_FINE);
-            String provider = locationManager.getBestProvider(criteria, true);
 
-            if (provider != null && locationManager.isProviderEnabled(provider)) {
-                Location location = locationManager.getLastKnownLocation(provider);
-                if (location != null) {
-                    onLocationChangedListener.onLocationChanged(getNameFromLocation(location));
-                } else {
-                    locationManager.requestLocationUpdates(provider, 0, 0, locationListener);
-                }
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager == null) {
+            return;
+        }
+
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        String provider = locationManager.getBestProvider(criteria, true);
+
+        if (provider != null && locationManager.isProviderEnabled(provider)) {
+            Location location = locationManager.getLastKnownLocation(provider);
+            if (location != null) {
+                onLocationChangedListener.onLocationChanged(getNameFromLocation(location));
+            } else {
+                locationManager.requestLocationUpdates(provider, 0, 0, locationListener);
             }
-            Looper.loop();
-        });
-
-
-
+        }
     }
 
     private final LocationListener locationListener = new LocationListener() {
@@ -65,10 +62,21 @@ public class LocationProvider {
         public void onLocationChanged(Location location) {
             Log.i(TAG, "onLocationChanged: " + location);
             onLocationChangedListener.onLocationChanged(getNameFromLocation(location));
-            // Remove the location listener after receiving a single update
             locationManager.removeUpdates(this);
         }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            getLastKnownLocation();
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {}
     };
+
 
     private String getNameFromLocation(Location location) {
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
@@ -76,12 +84,27 @@ public class LocationProvider {
         String cityName = "";
         try {
             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            cityName = addresses.get(0).getLocality();
+            if (!addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                cityName = address.getLocality();
+
+                if (cityName == null) {
+                    cityName = address.getSubLocality();
+                }
+                if (cityName == null) {
+                    cityName = address.getAdminArea();
+                }
+                if (cityName.equals("Moskva")) {
+                    cityName = "Moscow";
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return cityName;
     }
+
+
 
     public interface OnLocationChangedListener {
         void onLocationChanged(String cityName);
