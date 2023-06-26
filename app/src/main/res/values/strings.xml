@@ -16,7 +16,22 @@
     <string name="qr" translatable="false">Qr</string>
     <string name="phone_icon" translatable="false">phone</string>
     <string name="link_icon" translatable="false">link</string>
-
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="back_action">Back</string>
+    <string name="emoji_selector_desc">Emoji selector</string>
+    <string name="emoji_selector_bt_desc">Show Emoji selector</string>
+    <string name="dm_desc">Direct Message</string>
+    <string name="attach_photo_desc">Attach Photo</string>
+    <string name="map_selector_desc">Location selector</string>
+    <string name="videochat_desc">Start videochat</string>
+    <string name="textfield_desc">Text input</string>
+    <string name="not_available">Functionality currently not available</string>
+    <string name="not_available_subtitle">Grab a beverage and check back later!</string>
+    <string name="attached_image">Attached image</string>
+    <string name="search">Search</string>
+    <string name="info">Information</string>
+    <string name="more_options">More options</string>
 
     <!--    login-->
     <string name="title_activity_login" translatable="false">LoginActivity</string>
@@ -232,6 +247,13 @@
     <string name="change_new_password">Enter new password</string>
     <string name="change_repeat_new_password">Repeat_new_password</string>
     <string name="pref_category_title_admin">Admin</string>
+    <string name="author_me">Me</string>
+    <string name="now">Now</string>
+    <string name="jumpBottom">Jump to bottom</string>
+    <string name="emojis_label">Emojis</string>
+    <string name="stickers_label">Stickers</string>
+    <string name="send">Send</string>
+    <string name="textfield_hint">Message</string>
 
 
 </resources>

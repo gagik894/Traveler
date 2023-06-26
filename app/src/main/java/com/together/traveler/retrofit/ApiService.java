@@ -1,12 +1,13 @@
 package com.together.traveler.retrofit;
 
+import com.together.traveler.model.Chat;
+import com.together.traveler.model.ChatInfo;
 import com.together.traveler.model.CheckTicketResponse;
 import com.together.traveler.model.Event;
 import com.together.traveler.model.EventsResponse;
 import com.together.traveler.model.LoginResponse;
 import com.together.traveler.model.MapItem;
 import com.together.traveler.model.ParcedResponse;
-import com.together.traveler.model.ParsedEvent;
 import com.together.traveler.model.Place;
 import com.together.traveler.model.User;
 
@@ -34,6 +35,12 @@ public interface ApiService {
 
     @GET("parce")
     Call<ParcedResponse> getParcedEvents(@Query("location") String location);
+
+    @GET("chats")
+    Call<List<ChatInfo>> getChats();
+
+    @GET("chats/chat/{id}")
+    Call<Chat> getChat(@Path("id") String id);
 
     @GET("{type}")
     Call<List<MapItem>> getMapItems(@Path("type") String type, @Query("fields") String fields);
@@ -103,6 +110,9 @@ public interface ApiService {
     Call<String> changeAvatar(
             @Part MultipartBody.Part filePart
     );
+
+    @POST("chats/new/{id}")
+    Call<Void> addMessage(@Path("id") String id, @Body RequestBody requestBody);
 
     @POST("auth/change/password")
     Call<LoginResponse> changePassword(@Body RequestBody requestBody);

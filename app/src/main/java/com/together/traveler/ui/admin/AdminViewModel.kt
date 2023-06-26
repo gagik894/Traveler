@@ -8,7 +8,6 @@ import com.together.traveler.retrofit.ApiClient
 import com.together.traveler.retrofit.ApiService
 import kotlinx.coroutines.flow.MutableStateFlow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONException
 import org.json.JSONObject
