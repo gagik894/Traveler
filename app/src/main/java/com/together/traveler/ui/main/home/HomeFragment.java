@@ -2,6 +2,7 @@ package com.together.traveler.ui.main.home;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +37,7 @@ import com.together.traveler.adapter.ParsedEventCardsAdapter;
 import com.together.traveler.databinding.FragmentHomeBinding;
 import com.together.traveler.model.Event;
 import com.together.traveler.model.ParsedEvent;
+import com.together.traveler.ui.chat.ChatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +81,7 @@ public class HomeFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final ImageButton chatBtn = binding.homeBtnChat;
         rvCards = binding.rvHome;
         swipeRefreshLayout = binding.cardSwipeRefreshLayout;
         progressBar = binding.homePb;
@@ -104,7 +107,7 @@ public class HomeFragment extends Fragment{
                 return false;
             }
         });
-
+        chatBtn.setOnClickListener(v->startActivity(new Intent(requireActivity(), ChatActivity.class)));
         rvCards.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

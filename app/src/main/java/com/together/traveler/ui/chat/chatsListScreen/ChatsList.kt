@@ -1,6 +1,8 @@
 package com.together.traveler.ui.chat.chatsListScreen
 
+import android.content.Intent
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,16 +46,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.together.traveler.R
 import com.together.traveler.model.ChatInfo
+import com.together.traveler.ui.main.MainActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatsScreen(navController: NavHostController, modifier: Modifier = Modifier) {
+fun ChatsScreen(navController: NavHostController, modifier: Modifier = Modifier, navigateToHome: () -> Unit) {
     val chatsViewModel = viewModel<ChatsViewModel>()
 
     val uiState by chatsViewModel.uiState.collectAsState()
@@ -66,6 +70,7 @@ fun ChatsScreen(navController: NavHostController, modifier: Modifier = Modifier)
         Log.i("chat", "navigateToChat: $chatItemId")
         navController.navigate("singleChatScreen/$chatItemId")
     }
+
 
     val scrollState = rememberLazyListState()
     val topBarState = rememberTopAppBarState()
@@ -82,7 +87,7 @@ fun ChatsScreen(navController: NavHostController, modifier: Modifier = Modifier)
                         contentDescription = stringResource(R.string.back_action),
                         modifier = Modifier
                             .size(64.dp)
-//                            .clickable(onClick = onNavIconPressed)
+                            .clickable(onClick = navigateToHome)
                             .padding(16.dp)
                     )
                 }

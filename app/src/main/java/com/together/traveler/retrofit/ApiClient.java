@@ -14,8 +14,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    private static final String TAG = "ApiClient";
+//    public static final String BASEURL = "http://localhost:3333/";
+    public static final String BASEURL = "https://traveler-ynga.onrender.com/";
 
+    private static final String TAG = "ApiClient";
     private static Retrofit retrofit = null;
     private static final Gson gson = new GsonBuilder()
             .setLenient()
@@ -37,8 +39,7 @@ public class ApiClient {
         httpClient.addInterceptor(loggingInterceptor);
 
             retrofit = new Retrofit.Builder()
-//                    .baseUrl("https://traveler-ynga.onrender.com/")
-                    .baseUrl("http://localhost:3333/")
+                    .baseUrl(BASEURL)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(httpClient.build())
                     .build();
