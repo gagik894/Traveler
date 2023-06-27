@@ -42,6 +42,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -67,6 +68,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.google.gson.Gson
 import com.together.traveler.R
 import com.together.traveler.model.Message
 import com.together.traveler.ui.chat.SymbolAnnotationType
@@ -75,10 +77,15 @@ import com.together.traveler.ui.chat.components.UserInput
 import com.together.traveler.ui.chat.components.ChatAppBar
 import com.together.traveler.ui.chat.components.FunctionalityNotAvailablePopup
 import com.together.traveler.ui.chat.messageFormatter
+import io.socket.client.Socket
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.util.Date
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
 @Composable
 fun SingleChatScreen(
     modifier: Modifier = Modifier,
@@ -93,13 +100,32 @@ fun SingleChatScreen(
             chatViewModel.fetchData(_id)
         }
     }
-    val messages: List<Message> by remember(uiState) {
-        derivedStateOf {
-            uiState.data.chat
+    var messages by remember { mutableStateOf(emptyList<Message>()) }
+    val socket: Socket by remember { mutableStateOf(createSocketConnection()) }
+    val gson = Gson()
+    val authorMe = uiState.data.user._id
+
+    DisposableEffect(Unit) {
+        // Subscribe to the "message" event
+        socket.on("newMessage") { args ->
+            Log.i("newMessage", "SingleChatScreen: ")
+            val jsonObject = args[0] as JSONObject
+            val jsonString = jsonObject.toString()
+            val message = gson.fromJson(jsonString, Message::class.java)
+            chatViewModel.addMessage(message)
+        }
+
+        // Join the chat room/event
+        socket.emit("join", _id)
+
+        onDispose {
+            // Disconnect the socket when the Composable is no longer in use
+            socket.disconnect()
         }
     }
+
     val context = LocalContext.current
-    val authorMe = uiState.data.user._id
+
     val timeNow = Date()
 
     val scrollState = rememberLazyListState()
@@ -135,9 +161,16 @@ fun SingleChatScreen(
                 scrollState = scrollState,
                 navigateToProfile = {}
             )
+//            Messages(
+//                authorMe = authorMe,
+//                messages = messages,
+//                modifier = Modifier.weight(1f),
+//                scrollState = scrollState,
+//                navigateToProfile = {}
+//            )
             UserInput(
                 onMessageSent = { content ->
-                    chatViewModel.addMessage(content)
+                    chatViewModel.addMessageToDb(content)
                 },
                 resetScroll = {
                     scope.launch {

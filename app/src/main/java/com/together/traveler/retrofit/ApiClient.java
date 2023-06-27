@@ -37,8 +37,8 @@ public class ApiClient {
         httpClient.addInterceptor(loggingInterceptor);
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://traveler-ynga.onrender.com/")
-//                    .baseUrl("http://localhost:3333/")
+//                    .baseUrl("https://traveler-ynga.onrender.com/")
+                    .baseUrl("http://localhost:3333/")
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(httpClient.build())
                     .build();

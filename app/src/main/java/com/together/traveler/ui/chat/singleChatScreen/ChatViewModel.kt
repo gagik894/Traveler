@@ -27,10 +27,7 @@ class ChatViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState.asStateFlow()
 
-    fun addMessage(content: String) {
-        Log.i("asd", "addMessage: " + uiState.value.data.user)
-        val message = Message(content = content, timestamp = Date(), userId = uiState.value.data.user)
-        addMessageToDb(message)
+    fun addMessage(message: Message) {
         val currentData = _uiState.value.data
         val updatedChat = currentData.chat.toMutableList().apply {
             add(0, message)
@@ -39,7 +36,8 @@ class ChatViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(data = updatedData)
     }
 
-    private fun addMessageToDb(message: Message) {
+    fun addMessageToDb(content: String) {
+        val message = Message(content = content, timestamp = Date(), userId = uiState.value.data.user)
         val json = JSONObject()
         try {
             json.put("content", message.content)
