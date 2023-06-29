@@ -76,6 +76,7 @@ public class HomeViewModel extends ViewModel implements LocationProvider.OnLocat
     }
 
     public void setLocationName(String locationName){
+        locationName = locationName.trim();
         this.locationName.postValue(locationName);
         fetchEvents(locationName);
         fetchParcedEvents(locationName);

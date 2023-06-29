@@ -16,18 +16,18 @@
     <string name="qr" translatable="false">Qr</string>
     <string name="phone_icon" translatable="false">phone</string>
     <string name="link_icon" translatable="false">link</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="back_action">Back</string>
-    <string name="emoji_selector_desc">Emoji selector</string>
-    <string name="emoji_selector_bt_desc">Show Emoji selector</string>
-    <string name="dm_desc">Direct Message</string>
-    <string name="attach_photo_desc">Attach Photo</string>
-    <string name="map_selector_desc">Location selector</string>
-    <string name="videochat_desc">Start videochat</string>
-    <string name="textfield_desc">Text input</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="back_action" translatable="false">Back</string>
+    <string name="emoji_selector_desc" translatable="false">Emoji selector</string>
+    <string name="emoji_selector_bt_desc" translatable="false">Show Emoji selector</string>
+    <string name="dm_desc" translatable="false">Direct Message</string>
+    <string name="attach_photo_desc" translatable="false">Attach Photo</string>
+    <string name="map_selector_desc" translatable="false">Location selector</string>
+    <string name="videochat_desc" translatable="false">Start videochat</string>
+    <string name="textfield_desc" translatable="false">Text input</string>
     <string name="not_available">Functionality currently not available</string>
-    <string name="not_available_subtitle">Grab a beverage and check back later!</string>
+    <string name="not_available_subtitle" translatable="false">Grab a beverage and check back later!</string>
     <string name="attached_image">Attached image</string>
     <string name="search">Search</string>
     <string name="info">Information</string>
@@ -45,7 +45,7 @@
     <string name="action_sign_up">Sign up</string>
     <string name="sign_in">Sign In.</string>
     <string name="prompt_username">Username</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="prompt_repeat_password">Repeat password</string>
 
     <!--    login+signup-->
@@ -90,7 +90,7 @@
     <!--    place-->
     <string name="place_read_more">more</string>
     <string name="place_read_less">less</string>
-    <string name="place_image">Place image</string>
+    <string name="place_image" translatable="false">Place image</string>
     <string name="place_about">Description</string>
     <string name="place_location">Location</string>
     <string name="place_rate">Rate this place</string>
@@ -102,23 +102,23 @@
     <string name="place_tomorrow">Tomorrow</string>
 
     <!--    event card-->
-    <string name="event_card_image">Card event image</string>
+    <string name="event_card_image" translatable="false">Card event image</string>
 
     <!--    user-->
-    <string name="user_profile_image">Profile image</string>
+    <string name="user_profile_image" translatable="false">Profile image</string>
     <string name="user_my_events">MY EVENTS</string>
     <string name="user_saved">MY FAVORITES</string>
     <string name="user_upcoming">MY TICKETS</string>
     <string name="user_events">EVENTS</string>
 
     <!--    navigation-->
-    <string name="nav_user">user</string>
+    <string name="nav_user">profile</string>
     <string name="nav_map">map</string>
     <string name="nav_add">add</string>
     <string name="nav_ticket">ticket</string>
     <string name="nav_home">home</string>
-    <string name="title_activity_signup">SignupActivity</string>
-    <string name="title_activity_verify">VerifyActivity</string>
+    <string name="title_activity_signup" translatable="false">SignupActivity</string>
+    <string name="title_activity_verify" translatable="false">VerifyActivity</string>
 
     <!--    add event-->
     <string name="add_start_date_and_time">Event starts</string>
@@ -134,7 +134,7 @@
     <string name="add_create_event">Create Event</string>
     <string name="add_upload_photo">Upload a photo</string>
     <string name="add_select_photo">Select Photo</string>
-    <string name="add_capture_photo">Capture Photo</string>
+    <string name="add_capture_photo" translatable="false">Capture Photo</string>
     <string name="add_photo_permission_rationale">We need permission to access your device\'s camera and gallery to add a photo to your event.</string>
     <string name="add_select_category">Category</string>
     <string name="add_select_tickets">Tickets</string>
@@ -151,8 +151,8 @@
 
     <!--    add errors-->
     <string name="invalid_name">Name is required</string>
-    <string name="invalid_title">Title must be more then 5 characters</string>
-    <string name="invalid_description">Description must be more then 10 characters</string>
+    <string name="invalid_title">Title must be more than 5 characters</string>
+    <string name="invalid_description">Description must be more than 10 characters</string>
     <string name="invalid_location">Location is required</string>
     <string name="invalid_dates">Open times are required</string>
     <string name="invalid_url">Must be valid URL</string>
@@ -177,14 +177,14 @@
     <string name="map_btn_places">Places</string>
 
     <!--    sPen-->
-    <string name="move_car">Move Car</string>
-    <string name="scroll_down">Scroll down</string>
-    <string name="scroll_up">Scroll up</string>
-    <string name="switch_menu_right">Switch right</string>
-    <string name="switch_menu_left">Switch left</string>
-    <string name="pause_or_resume">Pause or Resume</string>
-    <string name="restart">Restart</string>
-    <string name="open_add">Open add</string>
+    <string name="move_car" translatable="false">Move Car</string>
+    <string name="scroll_down" translatable="false">Scroll down</string>
+    <string name="scroll_up" translatable="false">Scroll up</string>
+    <string name="switch_menu_right" translatable="false">Switch right</string>
+    <string name="switch_menu_left" translatable="false">Switch left</string>
+    <string name="pause_or_resume" translatable="false">Pause or Resume</string>
+    <string name="restart" translatable="false">Restart</string>
+    <string name="open_add" translatable="false">Open add</string>
 
     <!--    home location dialog-->
     <string name="home_search">Find events in</string>
@@ -207,8 +207,8 @@
     <string name="title_activity_settings">Settings</string>
 
     <!--    dialog-->
-    <string name="dialog_cancel">Cancel</string>
-    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel" translatable="false">Cancel</string>
+    <string name="dialog_ok" translatable="false">OK</string>
 
     <!--    settings-->
     <string name="settings_delete_confirm_title">Confirm account deletion</string>
@@ -219,7 +219,7 @@
     <string name="pref_title_admin_page_button">Admin page</string>
     <string name="default_language">English</string>
     <string name="pref_title_change_username_button">Change username</string>
-    <string name="pref_key_change_password_button">prefBtnPassword</string>
+    <string name="pref_key_change_password_button" translatable="false">prefBtnPassword</string>
     <string name="pref_title_change_password_button">Change Password</string>
     <string name="pref_title_push_switch">Push notifications</string>
     <string name="pref_summary_push_switch">Enable push notifications</string>
@@ -231,8 +231,8 @@
     <string name="title_activity_admin">Admin Page</string>
     <string name="pref_category_title_languages">Language</string>
     <string name="pref_category_title_notifications">Notifications</string>
-    <string name="pref_category_title_account">Account</string>
-    <string name="pref_category_title_danger_zone">Danger zone</string>
+    <string name="pref_category_title_account" translatable="false">Account</string>
+    <string name="pref_category_title_danger_zone" translatable="false">Danger zone</string>
     <string name="pref_category_title_auth">Authentification</string>
     <string name="user_follow">Follow</string>
     <string name="user_unfollow">Unfollow</string>
@@ -243,9 +243,9 @@
     <string name="homee_divider_bottom">Discover more from other platforms</string>
     <string name="verify_sec_code">Sec code from email</string>
     <string name="button_next">next</string>
-    <string name="title_activity_check_email">CheckEmailActivity</string>
+    <string name="title_activity_check_email" translatable="false">CheckEmailActivity</string>
     <string name="change_new_password">Enter new password</string>
-    <string name="change_repeat_new_password">Repeat_new_password</string>
+    <string name="change_repeat_new_password">Repeat new password</string>
     <string name="pref_category_title_admin">Admin</string>
     <string name="author_me">Me</string>
     <string name="now">Now</string>

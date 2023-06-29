@@ -257,16 +257,15 @@ fun Messages(
 
                 Log.i("asd", "Messages: " + isFirstMessageByAuthor + isLastMessageByAuthor)
 
-                // Hardcode day dividers for simplicity
-                if (index == messages.size - 1) {
-                    item {
-                        DayHeader("20 Aug")
-                    }
-                } else if (index == 2) {
-                    item {
-                        DayHeader("Today")
-                    }
-                }
+//                if (index == messages.size - 1) {
+//                    item {
+//                        DayHeader("20 Aug")
+//                    }
+//                } else if (index == 2) {
+//                    item {
+//                        DayHeader("Today")
+//                    }
+//                }
 
                 item {
                     Message(
